@@ -43,7 +43,6 @@ abstract final class AppTheme {
       fontFamily: AppTypography.body.fontFamily,
       dividerColor: AppColors.borderHairline,
       splashFactory: InkRipple.splashFactory,
-
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.surfaceBase,
         foregroundColor: AppColors.textPrimary,
@@ -51,17 +50,15 @@ abstract final class AppTheme {
         centerTitle: false,
         titleTextStyle: AppTypography.subheading,
       ),
-
-      cardTheme: CardThemeData(
+      cardTheme: const CardThemeData(
         color: AppColors.surfaceRaised,
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.radiusXl,
-          side: const BorderSide(color: AppColors.borderHairline),
+          side: BorderSide(color: AppColors.borderHairline),
         ),
       ),
-
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: accent,
@@ -70,22 +67,20 @@ abstract final class AppTheme {
           minimumSize: const Size.fromHeight(AppSpacing.xl4),
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl2),
           textStyle: AppTypography.subheading.copyWith(fontSize: 16),
-          shape: RoundedRectangleBorder(borderRadius: AppRadius.radiusLg),
+          shape: const RoundedRectangleBorder(borderRadius: AppRadius.radiusLg),
           elevation: 0,
         ),
       ),
-
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           backgroundColor: AppColors.fillSubtle,
           foregroundColor: AppColors.textPrimary,
           minimumSize: const Size.fromHeight(AppSpacing.xl4),
           side: const BorderSide(color: AppColors.borderDefault),
-          shape: RoundedRectangleBorder(borderRadius: AppRadius.radiusLg),
+          shape: const RoundedRectangleBorder(borderRadius: AppRadius.radiusLg),
           textStyle: AppTypography.subheading.copyWith(fontSize: 15),
         ),
       ),
-
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: accent,
@@ -95,16 +90,14 @@ abstract final class AppTheme {
           ),
         ),
       ),
-
       iconButtonTheme: IconButtonThemeData(
         style: IconButton.styleFrom(
           backgroundColor: AppColors.fillSubtle,
           foregroundColor: AppColors.textPrimary,
           minimumSize: const Size.square(AppSpacing.xl3),
-          shape: RoundedRectangleBorder(borderRadius: AppRadius.radiusMd),
+          shape: const RoundedRectangleBorder(borderRadius: AppRadius.radiusMd),
         ),
       ),
-
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: accent,
         foregroundColor: AppColors.onAccent,
@@ -113,7 +106,6 @@ abstract final class AppTheme {
           borderRadius: BorderRadius.circular(20),
         ),
       ),
-
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.fillSubtle,
@@ -122,24 +114,23 @@ abstract final class AppTheme {
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
         ),
-        border: OutlineInputBorder(
+        border: const OutlineInputBorder(
           borderRadius: AppRadius.radiusLg,
-          borderSide: const BorderSide(color: AppColors.borderDefault),
+          borderSide: BorderSide(color: AppColors.borderDefault),
         ),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderRadius: AppRadius.radiusLg,
-          borderSide: const BorderSide(color: AppColors.borderDefault),
+          borderSide: BorderSide(color: AppColors.borderDefault),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadius.radiusLg,
           borderSide: BorderSide(color: accent, width: 1.5),
         ),
-        errorBorder: OutlineInputBorder(
+        errorBorder: const OutlineInputBorder(
           borderRadius: AppRadius.radiusLg,
-          borderSide: const BorderSide(color: AppColors.statusRejected),
+          borderSide: BorderSide(color: AppColors.statusRejected),
         ),
       ),
-
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.fillSubtle,
         labelStyle: AppTypography.body.copyWith(
@@ -151,25 +142,23 @@ abstract final class AppTheme {
           horizontal: AppSpacing.xs,
           vertical: 7,
         ),
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: AppRadius.radiusFull,
-          side: const BorderSide(color: AppColors.borderDefault),
+          side: BorderSide(color: AppColors.borderDefault),
         ),
       ),
-
       dialogTheme: DialogThemeData(
         backgroundColor: AppColors.surfaceRaised,
-        shape: RoundedRectangleBorder(borderRadius: AppRadius.radiusXl),
+        shape: const RoundedRectangleBorder(borderRadius: AppRadius.radiusXl),
         titleTextStyle: AppTypography.title.copyWith(fontSize: 19),
         contentTextStyle: AppTypography.body,
       ),
-
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.surfaceFloat,
         contentTextStyle: AppTypography.body.copyWith(
           color: AppColors.textPrimary,
         ),
-        shape: RoundedRectangleBorder(borderRadius: AppRadius.radiusLg),
+        shape: const RoundedRectangleBorder(borderRadius: AppRadius.radiusLg),
         behavior: SnackBarBehavior.floating,
       ),
     );

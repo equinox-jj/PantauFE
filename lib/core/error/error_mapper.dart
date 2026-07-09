@@ -101,7 +101,7 @@ String? _extractMessage(Object? data) {
 Map<String, List<String>> _parseFieldErrors(Object? data) {
   final result = <String, List<String>>{};
   if (data is! Map) return result;
-  
+
   final errors = data['errors'];
   if (errors is Map) {
     errors.forEach((key, value) {
