@@ -6,8 +6,8 @@ enum InputBorderType {
   none,
 }
 
-class CustomFormField extends StatefulWidget {
-  const CustomFormField({
+class CustomTextField extends StatefulWidget {
+  const CustomTextField({
     super.key,
     this.borderType = InputBorderType.outline,
   });
@@ -15,10 +15,10 @@ class CustomFormField extends StatefulWidget {
   final InputBorderType borderType;
 
   @override
-  State<CustomFormField> createState() => _CustomFormFieldState();
+  State<CustomTextField> createState() => _CustomTextFieldState();
 }
 
-class _CustomFormFieldState extends State<CustomFormField> {
+class _CustomTextFieldState extends State<CustomTextField> {
   final ValueNotifier<bool> _isObscure = .new(true);
 
   @override
