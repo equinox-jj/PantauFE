@@ -1,1 +1,1 @@
-
+abstract final class BaseLocalDataSource {}

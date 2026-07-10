@@ -1,1 +1,1 @@
-
+abstract final class BaseRepository {}
