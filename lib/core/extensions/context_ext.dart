@@ -12,4 +12,6 @@ extension ContextExt on BuildContext {
 
   double get screenWidth => MediaQuery.sizeOf(this).width;
   double get screenHeight => MediaQuery.sizeOf(this).height;
+  EdgeInsets get viewInsets => MediaQuery.viewInsetsOf(this);
+  EdgeInsets get padding => MediaQuery.paddingOf(this);
 }
