@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class DashboardPage extends StatelessWidget {
-  const DashboardPage({super.key});
+  const DashboardPage({
+    super.key,
+    required this.navigationShell,
+  });
+
+  final StatefulNavigationShell navigationShell;
 
   @override
   Widget build(BuildContext context) {
-    return const DashboardUI();
-  }
-}
-
-class DashboardUI extends StatefulWidget {
-  const DashboardUI({super.key});
-
-  @override
-  State<DashboardUI> createState() => _DashboardUIState();
-}
-
-class _DashboardUIState extends State<DashboardUI> {
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text("Dashboard Page")));
+    return Scaffold(
+      body: navigationShell,
+    );
   }
 }
