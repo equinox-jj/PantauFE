@@ -10,9 +10,9 @@ part 'auth_di.g.dart';
 
 @Riverpod(keepAlive: true)
 AuthRemoteDataSource authRemoteDataSource(Ref ref) {
-  final dio = ref.watch(dioProvider);
+  final dioClient = ref.watch(dioClientProvider);
 
-  return AuthRemoteDataSourceImpl(dio: dio);
+  return AuthRemoteDataSourceImpl(dioClient: dioClient);
 }
 
 @Riverpod(keepAlive: true)
@@ -24,12 +24,16 @@ AuthRepository authRepository(Ref ref) {
   );
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 LoginUsecase loginUsecase(Ref ref) {
-  return LoginUsecase();
+  final authRepository = ref.read(authRepositoryProvider);
+
+  return LoginUsecase(authRepository: authRepository);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 RegisterUsecase registerUsecase(Ref ref) {
-  return RegisterUsecase();
+  final authRepository = ref.read(authRepositoryProvider);
+
+  return RegisterUsecase(authRepository: authRepository);
 }

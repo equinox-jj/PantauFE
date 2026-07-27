@@ -50,45 +50,46 @@ final class SessionManagerProvider
 
 String _$sessionManagerHash() => r'589198793f9a487002d1ab3e7748fe6cb0b03e96';
 
-@ProviderFor(dio)
-final dioProvider = DioProvider._();
+@ProviderFor(dioClient)
+final dioClientProvider = DioClientProvider._();
 
-final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
-    with $Provider<Dio> {
-  DioProvider._()
+final class DioClientProvider
+    extends $FunctionalProvider<DioClient, DioClient, DioClient>
+    with $Provider<DioClient> {
+  DioClientProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'dioProvider',
+        name: r'dioClientProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$dioHash();
+  String debugGetCreateSourceHash() => _$dioClientHash();
 
   @$internal
   @override
-  $ProviderElement<Dio> $createElement($ProviderPointer pointer) =>
+  $ProviderElement<DioClient> $createElement($ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  Dio create(Ref ref) {
-    return dio(ref);
+  DioClient create(Ref ref) {
+    return dioClient(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Dio value) {
+  Override overrideWithValue(DioClient value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<Dio>(value),
+      providerOverride: $SyncValueProvider<DioClient>(value),
     );
   }
 }
 
-String _$dioHash() => r'7b72daa13674a140fc7eedcabb7e137595c67e6f';
+String _$dioClientHash() => r'd3a73475845c080c24a31f76f64c4297eb9f4536';
 
 @ProviderFor(authInterceptor)
 final authInterceptorProvider = AuthInterceptorProvider._();
@@ -131,54 +132,6 @@ final class AuthInterceptorProvider
 }
 
 String _$authInterceptorHash() => r'a43beb2f7ba4192180cff18f0d6d5b61a72b2af7';
-
-@ProviderFor(refreshInterceptor)
-final refreshInterceptorProvider = RefreshInterceptorProvider._();
-
-final class RefreshInterceptorProvider
-    extends
-        $FunctionalProvider<
-          RefreshInterceptor,
-          RefreshInterceptor,
-          RefreshInterceptor
-        >
-    with $Provider<RefreshInterceptor> {
-  RefreshInterceptorProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'refreshInterceptorProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$refreshInterceptorHash();
-
-  @$internal
-  @override
-  $ProviderElement<RefreshInterceptor> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
-
-  @override
-  RefreshInterceptor create(Ref ref) {
-    return refreshInterceptor(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(RefreshInterceptor value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<RefreshInterceptor>(value),
-    );
-  }
-}
-
-String _$refreshInterceptorHash() =>
-    r'a8096eb9d2179af2232ccc0723a619453f9501e3';
 
 @ProviderFor(tokenStorage)
 final tokenStorageProvider = TokenStorageProvider._();

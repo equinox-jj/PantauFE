@@ -1,1 +1,2 @@
-export 'auth_entity.dart';
+export 'login.dart';
+export 'register.dart';

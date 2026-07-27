@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/theme/theme.dart';
+import 'features/auth/presentation/pages/login/login_page.dart';
 
 void main() {
   runApp(
@@ -16,9 +17,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return MaterialApp(
       title: 'Pantau',
       theme: AppTheme.dark(),
+      home: const LoginPage(),
     );
   }
 }

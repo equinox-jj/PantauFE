@@ -1,1 +1,2 @@
-export 'auth_mapper.dart';
+export 'login_mapper.dart';
+export 'register_mapper.dart';

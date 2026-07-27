@@ -55,7 +55,7 @@ final class AuthRemoteDataSourceProvider
 }
 
 String _$authRemoteDataSourceHash() =>
-    r'b6fcc19981fe0a74c63dabb6baf792483e312a14';
+    r'83759467bf61c03cf433b26d1126b19ab1d2b493';
 
 @ProviderFor(authRepository)
 final authRepositoryProvider = AuthRepositoryProvider._();
@@ -110,7 +110,7 @@ final class LoginUsecaseProvider
         argument: null,
         retry: null,
         name: r'loginUsecaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -137,7 +137,7 @@ final class LoginUsecaseProvider
   }
 }
 
-String _$loginUsecaseHash() => r'455baf4c6d7623c43c01cedce8683ad84a6c5a17';
+String _$loginUsecaseHash() => r'f62760df14c3e853f959fc5c11504bc3684436e8';
 
 @ProviderFor(registerUsecase)
 final registerUsecaseProvider = RegisterUsecaseProvider._();
@@ -152,7 +152,7 @@ final class RegisterUsecaseProvider
         argument: null,
         retry: null,
         name: r'registerUsecaseProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -179,4 +179,4 @@ final class RegisterUsecaseProvider
   }
 }
 
-String _$registerUsecaseHash() => r'0fbe691b3d62bf59e59a01f6331682216b91ee3e';
+String _$registerUsecaseHash() => r'f6d2f7e2cb633d1332fa8dc1f559adc0c943abe0';

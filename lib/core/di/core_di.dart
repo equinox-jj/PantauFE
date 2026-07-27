@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,14 +13,12 @@ SessionManager sessionManager(Ref ref) {
 }
 
 @Riverpod(keepAlive: true)
-Dio dio(Ref ref) {
+DioClient dioClient(Ref ref) {
   final authInterceptor = ref.watch(authInterceptorProvider);
-  final refreshInterceptor = ref.watch(refreshInterceptorProvider);
 
   return DioClient(
     authInterceptor: authInterceptor,
-    refreshInterceptor: refreshInterceptor,
-  ).dio;
+  );
 }
 
 @Riverpod(keepAlive: true)
@@ -29,20 +26,6 @@ AuthInterceptor authInterceptor(Ref ref) {
   final tokenStorage = ref.watch(tokenStorageProvider);
 
   return AuthInterceptor(tokenStorage);
-}
-
-@Riverpod(keepAlive: true)
-RefreshInterceptor refreshInterceptor(Ref ref) {
-  final tokenStorage = ref.watch(tokenStorageProvider);
-  final sessionManager = ref.watch(sessionManagerProvider);
-  final dio = ref.watch(dioProvider);
-
-  return RefreshInterceptor(
-    tokenStorage: tokenStorage,
-    sessionManager: sessionManager,
-    refreshDio: dio,
-    retryDio: dio,
-  );
 }
 
 @Riverpod(keepAlive: true)
