@@ -6,19 +6,21 @@ enum InputBorderType {
   none,
 }
 
-class CustomTextField extends StatefulWidget {
-  const CustomTextField({
+class AppTextField extends StatefulWidget {
+  const AppTextField({
     super.key,
+    this.controller,
     this.borderType = InputBorderType.outline,
   });
 
+  final TextEditingController? controller;
   final InputBorderType borderType;
 
   @override
-  State<CustomTextField> createState() => _CustomTextFieldState();
+  State<AppTextField> createState() => _AppTextFieldState();
 }
 
-class _CustomTextFieldState extends State<CustomTextField> {
+class _AppTextFieldState extends State<AppTextField> {
   final ValueNotifier<bool> _isObscure = .new(true);
 
   @override
@@ -31,8 +33,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
       valueListenable: _isObscure,
-      builder: (context, isObscure, child) {
+      builder: (context, isObscure, _) {
         return TextFormField(
+          controller: widget.controller,
           decoration: InputDecoration(
             border: _border,
           ),

@@ -9,9 +9,7 @@ part 'login_notifier.g.dart';
 @riverpod
 class LoginUser extends _$LoginUser {
   @override
-  AsyncValue<Login?> build() {
-    return const AsyncData(null);
-  }
+  AsyncValue<Login?> build() => const AsyncData(null);
 
   Future<void> login({
     required String email,
