@@ -4,22 +4,29 @@ import '../../../../di/di.dart';
 import '../../../../domain/entity/entity.dart';
 import '../../../../domain/usecase/usecase.dart';
 
-part 'login_notifier.g.dart';
+part 'register_notifier.g.dart';
 
 @riverpod
-class LoginUser extends _$LoginUser {
+class RegisterUser extends _$RegisterUser {
   @override
-  AsyncValue<Login?> build() => const AsyncData(null);
+  AsyncValue<Register?> build() {
+    return const AsyncData(null);
+  }
 
-  Future<void> login({
+  Future<void> register({
     required String email,
     required String password,
+    required String displayName,
   }) async {
     state = const AsyncLoading();
 
-    final loginUseCase = ref.read(loginUsecaseProvider);
-    final params = LoginParams(email: email, password: password);
-    final result = await loginUseCase(params);
+    final registerUseCase = ref.read(registerUsecaseProvider);
+    final params = RegisterParams(
+      email: email,
+      password: password,
+      displayName: displayName,
+    );
+    final result = await registerUseCase(params);
 
     result.fold(
       (l) => state = AsyncError(l, StackTrace.current),
