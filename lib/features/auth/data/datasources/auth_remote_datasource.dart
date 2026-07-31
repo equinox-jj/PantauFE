@@ -3,7 +3,7 @@ import 'package:pantau/features/auth/data/model/model.dart';
 import '../../../../core/base/base.dart';
 import '../../../../core/network/network.dart';
 
-abstract class AuthRemoteDataSource {
+abstract class AuthRemoteDataSource with BaseRemoteDataSource {
   Future<RegisterModel> register({
     required String email,
     required String password,
@@ -15,8 +15,7 @@ abstract class AuthRemoteDataSource {
   });
 }
 
-class AuthRemoteDataSourceImpl extends AuthRemoteDataSource
-    with BaseRemoteDataSource {
+class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
   AuthRemoteDataSourceImpl({
     required this._dioClient,
   });

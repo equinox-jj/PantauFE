@@ -1,13 +1,12 @@
 import 'package:fpdart/fpdart.dart';
 
-import '../../../../core/base/base.dart';
 import '../../../../core/error/error.dart';
 import '../../domain/entity/entity.dart';
 import '../../domain/repository/auth_repository.dart';
 import '../datasources/datasources.dart';
 import '../mapper/mapper.dart';
 
-class AuthRepositoryImpl extends AuthRepository with BaseRepository {
+class AuthRepositoryImpl extends AuthRepository {
   AuthRepositoryImpl({
     required this._authRemoteDataSource,
   });
