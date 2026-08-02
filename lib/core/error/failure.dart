@@ -17,9 +17,8 @@ sealed class Failure with _$Failure {
   ]) = TimeoutFailure;
 
   /// HTTP 400.
-  const factory Failure.badRequest([
-    @Default('Bad request') String message,
-  ]) = BadRequestFailure;
+  const factory Failure.badRequest([@Default('Bad request') String message]) =
+      BadRequestFailure;
 
   /// HTTP 401 (refresh failed / session expired).
   const factory Failure.unauthorized([
@@ -27,14 +26,12 @@ sealed class Failure with _$Failure {
   ]) = UnauthorizedFailure;
 
   /// HTTP 403.
-  const factory Failure.forbidden([
-    @Default('Forbidden') String message,
-  ]) = ForbiddenFailure;
+  const factory Failure.forbidden([@Default('Forbidden') String message]) =
+      ForbiddenFailure;
 
   /// HTTP 404.
-  const factory Failure.notFound([
-    @Default('Not found') String message,
-  ]) = NotFoundFailure;
+  const factory Failure.notFound([@Default('Not found') String message]) =
+      NotFoundFailure;
 
   /// HTTP 422 — per-field validation errors.
   const factory Failure.validation(
@@ -54,12 +51,10 @@ sealed class Failure with _$Failure {
   ]) = ServerFailure;
 
   /// Local storage / cache error.
-  const factory Failure.cache([
-    @Default('Cache error') String message,
-  ]) = CacheFailure;
+  const factory Failure.cache([@Default('Cache error') String message]) =
+      CacheFailure;
 
   /// Unclassified error.
-  const factory Failure.unknown([
-    @Default('Unexpected error') String message,
-  ]) = UnknownFailure;
+  const factory Failure.unknown([@Default('Unexpected error') String message]) =
+      UnknownFailure;
 }

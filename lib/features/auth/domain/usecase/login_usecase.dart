@@ -7,10 +7,7 @@ import '../entity/entity.dart';
 import '../repository/repository.dart';
 
 class LoginParams extends Equatable {
-  const LoginParams({
-    required this.email,
-    required this.password,
-  });
+  const LoginParams({required this.email, required this.password});
 
   final String email;
   final String password;
@@ -26,8 +23,5 @@ class LoginUsecase extends UseCase<Login, LoginParams> {
 
   @override
   Future<Either<Failure, Login>> call(LoginParams params) =>
-      _authRepository.login(
-        email: params.email,
-        password: params.password,
-      );
+      _authRepository.login(email: params.email, password: params.password);
 }

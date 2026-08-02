@@ -4,11 +4,8 @@ part 'register.freezed.dart';
 
 @freezed
 abstract class Register with _$Register {
-  factory Register({
-    bool? status,
-    String? message,
-    RegisterData? data,
-  }) = _Register;
+  factory Register({bool? status, String? message, RegisterData? data}) =
+      _Register;
 }
 
 @freezed

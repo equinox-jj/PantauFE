@@ -5,11 +5,7 @@ import '../../../../core/utils/extensions/extensions.dart';
 
 /// Screen title + subtitle used at the top of the login and register pages.
 class AuthHeader extends StatelessWidget {
-  const AuthHeader({
-    super.key,
-    required this.title,
-    required this.subtitle,
-  });
+  const AuthHeader({super.key, required this.title, required this.subtitle});
 
   final String title;
   final String subtitle;

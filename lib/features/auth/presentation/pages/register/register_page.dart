@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../../core/components/button/button.dart';
 import '../../../../../core/components/textfield/textfield.dart';
+import '../../../../../core/router/app_routes.dart';
 import '../../../../../core/theme/theme.dart';
 import '../../../../../core/utils/validators/validators.dart';
 import '../../widgets/auth_widgets.dart';
@@ -45,8 +47,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           password: _passwordController.text,
         );
   }
-
-  void _goToLogin() => Navigator.of(context).pop();
 
   @override
   Widget build(BuildContext context) {
@@ -108,9 +108,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   obscureText: true,
                   textInputAction: TextInputAction.done,
                   autofillHints: const [AutofillHints.newPassword],
-                  validator: AppValidators.confirmPassword(
-                    _passwordController,
-                  ),
+                  validator: AppValidators.confirmPassword(_passwordController),
                   onFieldSubmitted: (_) => _submit(),
                 ),
                 const Gap(AppSpacing.xl2),
@@ -123,7 +121,13 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                 AuthFooterPrompt(
                   promptText: 'Already have an account?',
                   actionText: 'Sign in',
-                  onPressed: _goToLogin,
+                  onPressed: () {
+                    if (context.canPop()) {
+                      context.pop();
+                    } else {
+                      context.go(AppRoutes.login);
+                    }
+                  },
                 ),
               ],
             ),

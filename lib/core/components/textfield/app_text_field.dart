@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 import '../../theme/theme.dart';
 import '../../utils/extensions/extensions.dart';
 
-enum InputBorderType {
-  outline,
-  underline,
-  none,
-}
+enum InputBorderType { outline, underline, none }
 
 /// Reusable form field styled from the app's [InputDecorationTheme].
 ///
@@ -120,10 +116,7 @@ class _AppTextFieldState extends State<AppTextField> {
           ),
           disabledBorder: _borderFor(AppColors.borderDefault),
           errorBorder: _borderFor(AppColors.statusRejected),
-          focusedErrorBorder: _borderFor(
-            AppColors.statusRejected,
-            width: 1.5,
-          ),
+          focusedErrorBorder: _borderFor(AppColors.statusRejected, width: 1.5),
           prefixIcon: widget.prefixIcon == null
               ? null
               : Icon(widget.prefixIcon, size: AppIconSizes.md),

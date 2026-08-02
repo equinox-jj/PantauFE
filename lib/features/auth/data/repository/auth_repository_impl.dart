@@ -7,9 +7,7 @@ import '../datasources/datasources.dart';
 import '../mapper/mapper.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
-  AuthRepositoryImpl({
-    required this._authRemoteDataSource,
-  });
+  AuthRepositoryImpl({required this._authRemoteDataSource});
 
   final AuthRemoteDataSource _authRemoteDataSource;
 
@@ -18,17 +16,15 @@ class AuthRepositoryImpl extends AuthRepository {
     required String email,
     required String password,
     required String displayName,
-  }) => safeCall(
-    () async {
-      final result = await _authRemoteDataSource.register(
-        email: email,
-        password: password,
-        displayName: displayName,
-      );
+  }) => safeCall(() async {
+    final result = await _authRemoteDataSource.register(
+      email: email,
+      password: password,
+      displayName: displayName,
+    );
 
-      return result.toEntity();
-    },
-  );
+    return result.toEntity();
+  });
 
   @override
   Future<Either<Failure, Login>> login({

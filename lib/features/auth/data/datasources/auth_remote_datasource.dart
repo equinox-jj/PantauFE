@@ -9,34 +9,24 @@ abstract class AuthRemoteDataSource with BaseRemoteDataSource {
     required String password,
     required String displayName,
   });
-  Future<LoginModel> login({
-    required String email,
-    required String password,
-  });
+  Future<LoginModel> login({required String email, required String password});
 }
 
 class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
-  AuthRemoteDataSourceImpl({
-    required this._dioClient,
-  });
+  AuthRemoteDataSourceImpl({required this._dioClient});
 
   final DioClient _dioClient;
 
   @override
-  Future<LoginModel> login({
-    required String email,
-    required String password,
-  }) => safeApiCall(() async {
-    final response = await _dioClient.post(
-      ApiEndpoints.login,
-      data: {
-        'email': email,
-        'password': password,
-      },
-    );
+  Future<LoginModel> login({required String email, required String password}) =>
+      safeApiCall(() async {
+        final response = await _dioClient.post(
+          ApiEndpoints.login,
+          data: {'email': email, 'password': password},
+        );
 
-    return LoginModel.fromJson(response.data);
-  });
+        return LoginModel.fromJson(response.data);
+      });
 
   @override
   Future<RegisterModel> register({
@@ -46,11 +36,7 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
   }) => safeApiCall(() async {
     final response = await _dioClient.post(
       ApiEndpoints.register,
-      data: {
-        'email': email,
-        'password': password,
-        'displayName': displayName,
-      },
+      data: {'email': email, 'password': password, 'displayName': displayName},
     );
 
     return RegisterModel.fromJson(response.data);

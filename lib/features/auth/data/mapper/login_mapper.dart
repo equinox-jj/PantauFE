@@ -3,11 +3,7 @@ import '../model/model.dart';
 
 extension LoginModelMapper on LoginModel {
   Login toEntity() {
-    return Login(
-      status: status,
-      message: message,
-      data: data?.toEntity(),
-    );
+    return Login(status: status, message: message, data: data?.toEntity());
   }
 }
 

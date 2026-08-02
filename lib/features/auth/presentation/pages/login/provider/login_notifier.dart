@@ -11,10 +11,7 @@ class LoginUser extends _$LoginUser {
   @override
   AsyncValue<Login?> build() => const AsyncData(null);
 
-  Future<void> login({
-    required String email,
-    required String password,
-  }) async {
+  Future<void> login({required String email, required String password}) async {
     state = const AsyncLoading();
 
     final loginUseCase = ref.read(loginUsecaseProvider);

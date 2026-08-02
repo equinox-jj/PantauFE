@@ -38,8 +38,6 @@ abstract final class AppShadows {
 
   /// 0 0 0 4 · teal .18 — focus ring (text fields)
   static List<BoxShadow> focusRing({Color color = AppColors.accent}) {
-    return [
-      BoxShadow(color: color.withValues(alpha: 0.18), spreadRadius: 4),
-    ];
+    return [BoxShadow(color: color.withValues(alpha: 0.18), spreadRadius: 4)];
   }
 }

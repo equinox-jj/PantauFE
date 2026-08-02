@@ -102,9 +102,7 @@ abstract final class AppTheme {
         backgroundColor: accent,
         foregroundColor: AppColors.onAccent,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,

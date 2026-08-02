@@ -6,10 +6,8 @@ import 'interceptors/logger_interceptor.dart';
 
 /// Builds and owns the configured [Dio] instance used across the app.
 class DioClient {
-  DioClient({
-    required AuthInterceptor authInterceptor,
-    Dio? dio,
-  }) : dio = dio ?? Dio() {
+  DioClient({required AuthInterceptor authInterceptor, Dio? dio})
+    : dio = dio ?? Dio() {
     this.dio
       ..options = BaseOptions(
         baseUrl: ApiEndpoints.baseUrl,
@@ -19,10 +17,7 @@ class DioClient {
         contentType: Headers.jsonContentType,
         responseType: ResponseType.json,
       )
-      ..interceptors.addAll([
-        authInterceptor,
-        LoggerInterceptor(),
-      ]);
+      ..interceptors.addAll([authInterceptor, LoggerInterceptor()]);
   }
 
   /// The configured Dio instance.

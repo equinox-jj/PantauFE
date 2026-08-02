@@ -3,11 +3,7 @@ import '../model/model.dart';
 
 extension RegisterModelMapper on RegisterModel {
   Register toEntity() {
-    return Register(
-      status: status,
-      message: message,
-      data: data?.toEntity(),
-    );
+    return Register(status: status, message: message, data: data?.toEntity());
   }
 }
 

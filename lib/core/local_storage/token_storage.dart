@@ -6,9 +6,7 @@ abstract interface class TokenStorage {
   Future<String?> readAccessToken();
 
   /// Persists both tokens atomically (from the caller's perspective).
-  Future<void> saveTokens({
-    required String accessToken,
-  });
+  Future<void> saveTokens({required String accessToken});
 
   /// Removes all stored tokens.
   Future<void> clear();
@@ -27,11 +25,8 @@ class SecureTokenStorageImpl implements TokenStorage {
   Future<String?> readAccessToken() => _storage.read(key: _kAccess);
 
   @override
-  Future<void> saveTokens({
-    required String accessToken,
-  }) async => await Future.wait([
-    _storage.write(key: _kAccess, value: accessToken),
-  ]);
+  Future<void> saveTokens({required String accessToken}) async =>
+      await Future.wait([_storage.write(key: _kAccess, value: accessToken)]);
 
   @override
   Future<void> clear() => _storage.deleteAll();

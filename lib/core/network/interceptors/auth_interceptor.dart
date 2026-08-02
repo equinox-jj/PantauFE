@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-import '../../storage/token_storage.dart';
+import '../../local_storage/token_storage.dart';
 import '../api_endpoints.dart';
 
 /// Attaches the `x-api-key` header to every request and a

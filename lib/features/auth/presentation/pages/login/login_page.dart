@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pantau/features/auth/presentation/pages/login/listener/listener.dart';
 
 import '../../../../../core/components/button/button.dart';
 import '../../../../../core/components/textfield/textfield.dart';
+import '../../../../../core/router/app_routes.dart';
 import '../../../../../core/theme/theme.dart';
 import '../../../../../core/utils/validators/validators.dart';
 import '../../widgets/auth_widgets.dart';
-import '../register/register_page.dart';
 import 'provider/provider.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -42,9 +43,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   void _goToRegister() {
-    Navigator.of(context).push<void>(
-      MaterialPageRoute(builder: (_) => const RegisterPage()),
-    );
+    context.push(AppRoutes.register);
   }
 
   @override

@@ -19,9 +19,7 @@ AuthRemoteDataSource authRemoteDataSource(Ref ref) {
 AuthRepository authRepository(Ref ref) {
   final authRemoteDataSource = ref.watch(authRemoteDataSourceProvider);
 
-  return AuthRepositoryImpl(
-    authRemoteDataSource: authRemoteDataSource,
-  );
+  return AuthRepositoryImpl(authRemoteDataSource: authRemoteDataSource);
 }
 
 @Riverpod(keepAlive: true)

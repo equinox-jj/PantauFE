@@ -5,10 +5,7 @@ import '../../../../../../core/components/dialog/dialog.dart';
 import '../provider/provider.dart';
 
 class RegisterListener extends ConsumerWidget {
-  const RegisterListener({
-    super.key,
-    required this.child,
-  });
+  const RegisterListener({super.key, required this.child});
 
   final Widget child;
 

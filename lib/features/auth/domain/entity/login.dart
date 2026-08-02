@@ -4,20 +4,14 @@ part 'login.freezed.dart';
 
 @freezed
 abstract class Login with _$Login {
-  const factory Login({
-    bool? status,
-    String? message,
-    LoginData? data,
-  }) = _Login;
+  const factory Login({bool? status, String? message, LoginData? data}) =
+      _Login;
 }
 
 @freezed
 abstract class LoginData with _$LoginData {
-  const factory LoginData({
-    String? token,
-    int? expiresIn,
-    LoginUser? user,
-  }) = _LoginData;
+  const factory LoginData({String? token, int? expiresIn, LoginUser? user}) =
+      _LoginData;
 }
 
 @freezed

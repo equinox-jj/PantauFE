@@ -13,7 +13,7 @@ analyzer:
 
 formatter:
   page_width: 80
-  trailing_commas: preserve
+  trailing_commas: automate
 
 linter:
   rules:

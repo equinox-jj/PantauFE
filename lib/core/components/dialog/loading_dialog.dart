@@ -9,10 +9,8 @@ class LoadingDialog extends StatelessWidget {
     builder: (context) => const LoadingDialog(),
   );
 
-  static void dismiss(BuildContext context) => Navigator.of(
-    context,
-    rootNavigator: true,
-  ).pop();
+  static void dismiss(BuildContext context) =>
+      Navigator.of(context, rootNavigator: true).pop();
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +19,7 @@ class LoadingDialog extends StatelessWidget {
         padding: const .all(16),
         child: const Row(
           spacing: 16,
-          children: [
-            CircularProgressIndicator(),
-            Text('Loading...'),
-          ],
+          children: [CircularProgressIndicator(), Text('Loading...')],
         ),
       ),
     );

@@ -5,10 +5,7 @@ import '../../../../../../core/components/dialog/dialog.dart';
 import '../provider/provider.dart';
 
 class LoginListener extends ConsumerWidget {
-  const LoginListener({
-    super.key,
-    required this.child,
-  });
+  const LoginListener({super.key, required this.child});
 
   final Widget child;
 

@@ -220,3 +220,91 @@ final class SecureStorageProvider
 }
 
 String _$secureStorageHash() => r'a4f75721472cf77465bf47f759c90de5ca30856e';
+
+@ProviderFor(sharedPreferences)
+final sharedPreferencesProvider = SharedPreferencesProvider._();
+
+final class SharedPreferencesProvider
+    extends
+        $FunctionalProvider<
+          SharedPreferences,
+          SharedPreferences,
+          SharedPreferences
+        >
+    with $Provider<SharedPreferences> {
+  SharedPreferencesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'sharedPreferencesProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$sharedPreferencesHash();
+
+  @$internal
+  @override
+  $ProviderElement<SharedPreferences> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  SharedPreferences create(Ref ref) {
+    return sharedPreferences(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SharedPreferences value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SharedPreferences>(value),
+    );
+  }
+}
+
+String _$sharedPreferencesHash() => r'41b3d24d1ce8e6baccadf2a46eeb128cfbbbb6e4';
+
+@ProviderFor(localPref)
+final localPrefProvider = LocalPrefProvider._();
+
+final class LocalPrefProvider
+    extends $FunctionalProvider<LocalPref, LocalPref, LocalPref>
+    with $Provider<LocalPref> {
+  LocalPrefProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'localPrefProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$localPrefHash();
+
+  @$internal
+  @override
+  $ProviderElement<LocalPref> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  LocalPref create(Ref ref) {
+    return localPref(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LocalPref value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LocalPref>(value),
+    );
+  }
+}
+
+String _$localPrefHash() => r'60563a77fa6de32395135c5a263188fc5bd7d6c0';

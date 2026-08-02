@@ -1,9 +1,10 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../local_storage/local_storage.dart';
 import '../network/interceptors/interceptors.dart';
 import '../network/network.dart';
-import '../storage/storage.dart';
 
 part 'core_di.g.dart';
 
@@ -16,9 +17,7 @@ SessionManager sessionManager(Ref ref) {
 DioClient dioClient(Ref ref) {
   final authInterceptor = ref.watch(authInterceptorProvider);
 
-  return DioClient(
-    authInterceptor: authInterceptor,
-  );
+  return DioClient(authInterceptor: authInterceptor);
 }
 
 @Riverpod(keepAlive: true)
@@ -38,4 +37,19 @@ TokenStorage tokenStorage(Ref ref) {
 @Riverpod(keepAlive: true)
 FlutterSecureStorage secureStorage(Ref ref) {
   return const FlutterSecureStorage();
+}
+
+@Riverpod(keepAlive: true)
+SharedPreferences sharedPreferences(Ref ref) {
+  throw UnimplementedError(
+    'sharedPreferencesProvider must be overridden in main() with a real '
+    'SharedPreferences instance.',
+  );
+}
+
+@Riverpod(keepAlive: true)
+LocalPref localPref(Ref ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
+
+  return LocalPref(prefs);
 }
