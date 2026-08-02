@@ -41,7 +41,7 @@ final class RegisterUserProvider
   }
 }
 
-String _$registerUserHash() => r'455dec1148c65b3f014268136e1d4a2376c2d151';
+String _$registerUserHash() => r'ce157cb80238527b50ad8e9c5f65093d1bd41b35';
 
 abstract class _$RegisterUser extends $Notifier<AsyncValue<Register?>> {
   AsyncValue<Register?> build();

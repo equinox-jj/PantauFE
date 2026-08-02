@@ -1,229 +1,281 @@
 import 'package:flutter/material.dart';
 
-enum ButtonVariant {
-  primary,
-  secondary,
-  ghost,
-  destructive,
-}
+import '../../theme/theme.dart';
 
-enum AppButtonSize {
-  small(40),
-  medium(48),
-  large(56);
+enum AppButtonVariant { primary, secondary, ghost }
 
-  const AppButtonSize(this.height);
-
-  final double height;
-}
-
+/// Reusable button styled from the Pantau style guide's "Buttons" section.
+///
+/// Covers the primary (accent gradient), secondary (outlined) and ghost
+/// (text-only) variants. Icon-only, FAB and dialog-height buttons are
+/// covered by [AppTheme]'s `iconButtonTheme`/`floatingActionButtonTheme`
+/// instead of this widget.
 class AppButton extends StatelessWidget {
   const AppButton({
     super.key,
     required this.text,
-    required this.onPressed,
-    this.variant = ButtonVariant.primary,
-    this.size = AppButtonSize.large,
-    this.width,
-    this.height,
-    this.padding,
-    this.borderRadius,
+    this.onPressed,
+    this.variant = AppButtonVariant.primary,
     this.leading,
     this.trailing,
-    this.iconSpacing = 8,
-    this.textStyle,
     this.isLoading = false,
-    this.expanded = true,
+    this.fullWidth = true,
   });
 
   final String text;
   final VoidCallback? onPressed;
-  final ButtonVariant variant;
-  final AppButtonSize size;
-  final double? width;
-  final double? height;
-  final EdgeInsetsGeometry? padding;
-  final BorderRadius? borderRadius;
+  final AppButtonVariant variant;
   final Widget? leading;
   final Widget? trailing;
-  final double iconSpacing;
-  final TextStyle? textStyle;
   final bool isLoading;
-  final bool expanded;
+  final bool fullWidth;
+
+  bool get _enabled => onPressed != null && !isLoading;
 
   @override
   Widget build(BuildContext context) {
-    final style = _buttonStyle(context);
-    Widget button;
+    final button = switch (variant) {
+      AppButtonVariant.primary => _PrimaryButton(
+        enabled: _enabled,
+        onPressed: onPressed,
+        text: text,
+        leading: leading,
+        trailing: trailing,
+        isLoading: isLoading,
+      ),
+      AppButtonVariant.secondary => _SecondaryButton(
+        enabled: _enabled,
+        onPressed: onPressed,
+        text: text,
+        leading: leading,
+        trailing: trailing,
+        isLoading: isLoading,
+      ),
+      AppButtonVariant.ghost => _GhostButton(
+        enabled: _enabled,
+        onPressed: onPressed,
+        text: text,
+        leading: leading,
+        trailing: trailing,
+        isLoading: isLoading,
+      ),
+    };
 
-    switch (variant) {
-      case ButtonVariant.primary:
-      case ButtonVariant.destructive:
-        button = FilledButton(
-          onPressed: isLoading ? null : onPressed,
-          style: style,
-          child: _buildChild(context),
-        );
+    if (!fullWidth) return button;
+    return SizedBox(width: double.infinity, child: button);
+  }
+}
 
-      case ButtonVariant.secondary:
-        button = OutlinedButton(
-          onPressed: isLoading ? null : onPressed,
-          style: style,
-          child: _buildChild(context),
-        );
+class _PrimaryButton extends StatelessWidget {
+  const _PrimaryButton({
+    required this.enabled,
+    required this.onPressed,
+    required this.text,
+    required this.leading,
+    required this.trailing,
+    required this.isLoading,
+  });
 
-      case ButtonVariant.ghost:
-        button = TextButton(
-          onPressed: isLoading ? null : onPressed,
-          style: style,
-          child: _buildChild(context),
-        );
-    }
+  final bool enabled;
+  final VoidCallback? onPressed;
+  final String text;
+  final Widget? leading;
+  final Widget? trailing;
+  final bool isLoading;
 
-    if (!expanded) {
-      return button;
-    }
-
-    return SizedBox(
-      width: width ?? double.infinity,
-      child: button,
+  @override
+  Widget build(BuildContext context) {
+    const accent = AppColors.accent;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: AppRadius.radiusLg,
+        gradient: enabled
+            ? LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: const [0, 0.58, 1],
+                colors: [
+                  Color.lerp(accent, Colors.white, 0.08)!,
+                  accent,
+                  Color.lerp(accent, Colors.black, 0.18)!,
+                ],
+              )
+            : null,
+        color: enabled ? null : AppColors.fillSubtle,
+        boxShadow: enabled ? AppShadows.accentGlow(accent: accent) : null,
+      ),
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          borderRadius: AppRadius.radiusLg,
+          onTap: enabled ? onPressed : null,
+          child: Container(
+            height: AppSpacing.xl4,
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl),
+            alignment: Alignment.center,
+            child: _ButtonContent(
+              text: text,
+              leading: leading,
+              trailing: trailing,
+              isLoading: isLoading,
+              textColor: enabled ? AppColors.onAccent : AppColors.textMuted,
+              fontSize: 16,
+            ),
+          ),
+        ),
+      ),
     );
   }
+}
 
-  Widget _buildChild(BuildContext context) {
-    if (isLoading) {
-      return SizedBox.square(
-        dimension: 20,
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          color: _foregroundColor(context),
+class _SecondaryButton extends StatelessWidget {
+  const _SecondaryButton({
+    required this.enabled,
+    required this.onPressed,
+    required this.text,
+    required this.leading,
+    required this.trailing,
+    required this.isLoading,
+  });
+
+  final bool enabled;
+  final VoidCallback? onPressed;
+  final String text;
+  final Widget? leading;
+  final Widget? trailing;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: AppRadius.radiusLg,
+        color: AppColors.fillSubtle,
+        border: Border.all(color: AppColors.borderDefault),
+      ),
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          borderRadius: AppRadius.radiusLg,
+          onTap: enabled ? onPressed : null,
+          child: Container(
+            height: AppSpacing.xl4,
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl2),
+            alignment: Alignment.center,
+            child: _ButtonContent(
+              text: text,
+              leading: leading,
+              trailing: trailing,
+              isLoading: isLoading,
+              textColor: enabled ? AppColors.textPrimary : AppColors.textMuted,
+              fontSize: 15,
+            ),
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class _GhostButton extends StatelessWidget {
+  const _GhostButton({
+    required this.enabled,
+    required this.onPressed,
+    required this.text,
+    required this.leading,
+    required this.trailing,
+    required this.isLoading,
+  });
+
+  final bool enabled;
+  final VoidCallback? onPressed;
+  final String text;
+  final Widget? leading;
+  final Widget? trailing;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        borderRadius: AppRadius.radiusSm,
+        onTap: enabled ? onPressed : null,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.xs2),
+          child: _ButtonContent(
+            text: text,
+            leading: leading,
+            trailing: trailing,
+            isLoading: isLoading,
+            textColor: enabled ? AppColors.accent : AppColors.textMuted,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ButtonContent extends StatelessWidget {
+  const _ButtonContent({
+    required this.text,
+    required this.leading,
+    required this.trailing,
+    required this.isLoading,
+    required this.textColor,
+    required this.fontSize,
+    this.fontWeight = FontWeight.w700,
+  });
+
+  final String text;
+  final Widget? leading;
+  final Widget? trailing;
+  final bool isLoading;
+  final Color textColor;
+  final double fontSize;
+  final FontWeight fontWeight;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isLoading) {
+      return SizedBox(
+        width: 18,
+        height: 18,
+        child: CircularProgressIndicator(strokeWidth: 2, color: textColor),
       );
     }
 
-    final children = <Widget>[
-      if (leading != null) ...[
-        IconTheme.merge(
-          data: IconThemeData(
-            size: textStyle?.fontSize != null
-                ? (textStyle?.fontSize ?? 0) + 2
-                : 20,
-          ),
-          child: leading!,
-        ),
-        SizedBox(width: iconSpacing),
-      ],
-      Flexible(
-        child: Text(
-          text,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-      if (trailing != null) ...[
-        SizedBox(width: iconSpacing),
-        IconTheme.merge(
-          data: IconThemeData(
-            size: textStyle?.fontSize != null
-                ? (textStyle?.fontSize ?? 0) + 2
-                : 20,
-          ),
-          child: trailing!,
-        ),
-      ],
-    ];
+    final textStyle = AppTypography.subheading.copyWith(
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: textColor,
+    );
+
+    if (leading == null && trailing == null) {
+      return Text(text, style: textStyle);
+    }
 
     return Row(
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: children,
+      children: [
+        if (leading != null) ...[
+          IconTheme(
+            data: IconThemeData(color: textColor, size: AppIconSizes.md),
+            child: leading!,
+          ),
+          const SizedBox(width: AppSpacing.xs2),
+        ],
+        Flexible(child: Text(text, style: textStyle)),
+        if (trailing != null) ...[
+          const SizedBox(width: AppSpacing.xs2),
+          IconTheme(
+            data: IconThemeData(color: textColor, size: AppIconSizes.md),
+            child: trailing!,
+          ),
+        ],
+      ],
     );
-  }
-
-  ButtonStyle _buttonStyle(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return ButtonStyle(
-      minimumSize: WidgetStatePropertyAll(
-        Size(
-          width ?? 0,
-          height ?? size.height,
-        ),
-      ),
-      padding: WidgetStatePropertyAll(
-        padding ??
-            const EdgeInsets.symmetric(
-              horizontal: 20,
-            ),
-      ),
-      backgroundColor: WidgetStatePropertyAll(
-        _backgroundColor(context),
-      ),
-      foregroundColor: WidgetStatePropertyAll(
-        _foregroundColor(context),
-      ),
-      side: WidgetStatePropertyAll(
-        _borderSide(context),
-      ),
-      elevation: WidgetStatePropertyAll(
-        variant == ButtonVariant.primary || variant == ButtonVariant.destructive
-            ? 0
-            : null,
-      ),
-      shape: WidgetStatePropertyAll(
-        RoundedRectangleBorder(
-          borderRadius: borderRadius ?? BorderRadius.circular(16),
-        ),
-      ),
-      textStyle: WidgetStatePropertyAll(
-        textStyle ??
-            theme.textTheme.labelLarge?.copyWith(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-      ),
-    );
-  }
-
-  Color _backgroundColor(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
-    switch (variant) {
-      case ButtonVariant.primary:
-        return scheme.primary;
-      case ButtonVariant.secondary:
-        return Colors.transparent;
-      case ButtonVariant.ghost:
-        return Colors.transparent;
-      case ButtonVariant.destructive:
-        return scheme.error;
-    }
-  }
-
-  Color _foregroundColor(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
-    switch (variant) {
-      case ButtonVariant.primary:
-        return scheme.onPrimary;
-      case ButtonVariant.secondary:
-        return scheme.primary;
-      case ButtonVariant.ghost:
-        return scheme.primary;
-      case ButtonVariant.destructive:
-        return scheme.onError;
-    }
-  }
-
-  BorderSide? _borderSide(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
-    switch (variant) {
-      case ButtonVariant.secondary:
-        return BorderSide(
-          color: scheme.outline,
-        );
-      default:
-        return null;
-    }
   }
 }

@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 import 'package:pantau/features/auth/presentation/pages/login/listener/listener.dart';
 
 import '../../../../../core/components/button/button.dart';
 import '../../../../../core/components/textfield/textfield.dart';
-import '../../../../../core/utils/extensions/extensions.dart';
+import '../../../../../core/theme/theme.dart';
+import '../../../../../core/utils/validators/validators.dart';
+import '../../widgets/auth_widgets.dart';
+import '../register/register_page.dart';
 import 'provider/provider.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
-  final TextEditingController _emailController = .new();
-  final TextEditingController _passwordController = .new();
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -25,50 +30,77 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     super.dispose();
   }
 
+  Future<void> _submit() async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+
+    await ref
+        .read(loginUserProvider.notifier)
+        .login(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+        );
+  }
+
+  void _goToRegister() {
+    Navigator.of(context).push<void>(
+      MaterialPageRoute(builder: (_) => const RegisterPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: LoginListener(
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              Text(
-                'Welcome back',
-                style: context.textTheme.headlineLarge,
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.xl,
+                vertical: AppSpacing.xl2,
               ),
-              Text(
-                'Sign in to keep tracking your reports.',
-                style: context.textTheme.bodyLarge,
-              ),
-              Text(
-                'Email',
-                style: context.textTheme.labelLarge,
-              ),
-              AppTextField(
-                controller: _emailController,
-              ),
-              Text(
-                'Password',
-                style: context.textTheme.labelLarge,
-              ),
-              AppTextField(
-                controller: _passwordController,
-              ),
-              AppButton(
-                text: 'Sign in',
-                trailing: const Icon(Icons.arrow_forward),
-                variant: ButtonVariant.primary,
-                onPressed: () async {
-                  await ref
-                      .read(loginUserProvider.notifier)
-                      .login(
-                        email: _emailController.text,
-                        password: _passwordController.text,
-                      );
-                },
-              ),
-            ],
+              children: [
+                const AuthHeader(
+                  title: 'Welcome back',
+                  subtitle: 'Sign in to keep tracking your reports.',
+                ),
+                const Gap(AppSpacing.xl2),
+                AppTextField(
+                  controller: _emailController,
+                  labelText: 'Email',
+                  hintText: 'you@example.com',
+                  prefixIcon: Icons.mail_outline,
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  autofillHints: const [AutofillHints.email],
+                  validator: AppValidators.email,
+                ),
+                const Gap(AppSpacing.md),
+                AppTextField(
+                  controller: _passwordController,
+                  labelText: 'Password',
+                  hintText: 'Enter your password',
+                  prefixIcon: Icons.lock_outline,
+                  obscureText: true,
+                  textInputAction: TextInputAction.done,
+                  autofillHints: const [AutofillHints.password],
+                  validator: AppValidators.password,
+                  onFieldSubmitted: (_) => _submit(),
+                ),
+                const Gap(AppSpacing.xl2),
+                AppButton(
+                  text: 'Sign in',
+                  trailing: const Icon(Icons.arrow_forward),
+                  onPressed: _submit,
+                ),
+                const Gap(AppSpacing.lg),
+                AuthFooterPrompt(
+                  promptText: "Don't have an account?",
+                  actionText: 'Sign up',
+                  onPressed: _goToRegister,
+                ),
+              ],
+            ),
           ),
         ),
       ),

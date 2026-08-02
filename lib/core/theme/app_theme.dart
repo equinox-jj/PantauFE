@@ -109,10 +109,15 @@ abstract final class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.fillSubtle,
-        hintStyle: AppTypography.body.copyWith(color: AppColors.textMuted),
+        hintStyle: AppTypography.body.copyWith(
+          fontSize: 15,
+          color: AppColors.textMuted,
+        ),
         labelStyle: AppTypography.label,
+        constraints: const BoxConstraints(minHeight: AppSpacing.xl4),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
+          vertical: AppSpacing.md,
         ),
         border: const OutlineInputBorder(
           borderRadius: AppRadius.radiusLg,

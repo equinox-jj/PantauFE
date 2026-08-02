@@ -65,7 +65,6 @@ dependencies:
   mason: ^0.1.2
   equatable: ^2.1.0
   flutter_secure_storage: ^10.3.1
-  dart_mappable: ^4.8.0
 
 dev_dependencies:
   flutter_test:

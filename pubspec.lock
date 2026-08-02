@@ -265,14 +265,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  dart_mappable:
-    dependency: "direct main"
-    description:
-      name: dart_mappable
-      sha256: "960746478faaa68ed6b9d3c6fd03c87c7b8614e6c33e75fe1b0c6d7a60adcf29"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.8.0"
   dart_polylabel2:
     dependency: transitive
     description:
@@ -1509,14 +1501,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.17"
-  type_plus:
-    dependency: transitive
-    description:
-      name: type_plus
-      sha256: d5d1019471f0d38b91603adb9b5fd4ce7ab903c879d2fbf1a3f80a630a03fcc9
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.1"
   typed_data:
     dependency: transitive
     description:
