@@ -25,6 +25,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 
   void _goToIndex(int index) {
     ref.read(onboardingIndexProvider.notifier).goTo(index);
+
     _pageController.animateToPage(
       index,
       duration: const Duration(milliseconds: 350),
@@ -34,9 +35,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final index = ref.watch(onboardingIndexProvider);
-    final isLastSlide = index == kOnboardingSlides.length - 1;
-
     return Scaffold(
       body: OnboardingListener(
         child: SafeArea(
@@ -63,24 +61,37 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                         OnboardingSlideView(data: kOnboardingSlides[i]),
                   ),
                 ),
-                OnboardingDotIndicator(
-                  count: kOnboardingSlides.length,
-                  activeIndex: index,
-                  onDotTap: _goToIndex,
+                Consumer(
+                  builder: (context, ref, child) {
+                    final index = ref.watch(onboardingIndexProvider);
+
+                    return OnboardingDotIndicator(
+                      count: kOnboardingSlides.length,
+                      activeIndex: index,
+                      onDotTap: _goToIndex,
+                    );
+                  },
                 ),
                 const Gap(AppSpacing.lg),
-                OnboardingNavControls(
-                  isFirstSlide: index == 0,
-                  isLastSlide: isLastSlide,
-                  onPrev: () => _goToIndex(index - 1),
-                  onNext: () {
-                    if (isLastSlide) {
-                      ref
-                          .read(onboardingCompletionProvider.notifier)
-                          .complete();
-                    } else {
-                      _goToIndex(index + 1);
-                    }
+                Consumer(
+                  builder: (context, ref, child) {
+                    final index = ref.watch(onboardingIndexProvider);
+                    final isLastSlide = index == kOnboardingSlides.length - 1;
+
+                    return OnboardingNavControls(
+                      isFirstSlide: index == 0,
+                      isLastSlide: isLastSlide,
+                      onPrev: () => _goToIndex(index - 1),
+                      onNext: () {
+                        if (isLastSlide) {
+                          ref
+                              .read(onboardingCompletionProvider.notifier)
+                              .complete();
+                        } else {
+                          _goToIndex(index + 1);
+                        }
+                      },
+                    );
                   },
                 ),
                 const Gap(AppSpacing.lg),

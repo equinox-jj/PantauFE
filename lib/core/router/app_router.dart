@@ -1,14 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/auth/presentation/pages/login/login_page.dart';
-import '../../features/auth/presentation/pages/register/register_page.dart';
-import '../../features/onboarding/presentation/pages/onboarding/onboarding_page.dart';
-import '../../features/onboarding/presentation/pages/splash/splash_page.dart';
+import '../../features/auth/presentation/pages/login/login.dart';
+import '../../features/auth/presentation/pages/register/register.dart';
+import '../../features/onboarding/presentation/pages/onboarding/onboarding.dart';
+import '../../features/onboarding/presentation/pages/splash/splash.dart';
 import 'app_routes.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
+    debugLogDiagnostics: kDebugMode,
     initialLocation: AppRoutes.splash,
     routes: [
       GoRoute(

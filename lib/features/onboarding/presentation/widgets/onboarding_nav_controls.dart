@@ -27,7 +27,7 @@ class OnboardingNavControls extends StatelessWidget {
           SizedBox(
             width: AppSpacing.xl4,
             height: AppSpacing.xl4,
-            child: OutlinedButton(
+            child: IconButton.outlined(
               onPressed: onPrev,
               style: OutlinedButton.styleFrom(
                 shape: const RoundedRectangleBorder(
@@ -35,7 +35,7 @@ class OnboardingNavControls extends StatelessWidget {
                 ),
                 side: const BorderSide(color: AppColors.borderDefault),
               ),
-              child: const Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
             ),
           ),
           const Gap(AppSpacing.xs),

@@ -8,7 +8,7 @@ import '../../../../../core/components/textfield/textfield.dart';
 import '../../../../../core/router/app_routes.dart';
 import '../../../../../core/theme/theme.dart';
 import '../../../../../core/utils/validators/validators.dart';
-import '../../widgets/auth_widgets.dart';
+import '../../widgets/widgets.dart';
 import 'listener/listener.dart';
 import 'provider/provider.dart';
 
