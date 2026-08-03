@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../local_storage/local_storage.dart';
+import '../location/location.dart';
 import '../network/interceptors/interceptors.dart';
 import '../network/network.dart';
 
@@ -23,8 +24,9 @@ DioClient dioClient(Ref ref) {
 @Riverpod(keepAlive: true)
 AuthInterceptor authInterceptor(Ref ref) {
   final tokenStorage = ref.watch(tokenStorageProvider);
+  final sessionManager = ref.watch(sessionManagerProvider);
 
-  return AuthInterceptor(tokenStorage);
+  return AuthInterceptor(tokenStorage, sessionManager);
 }
 
 @Riverpod(keepAlive: true)
@@ -52,4 +54,9 @@ LocalPref localPref(Ref ref) {
   final prefs = ref.watch(sharedPreferencesProvider);
 
   return LocalPref(prefs);
+}
+
+@Riverpod(keepAlive: true)
+LocationService locationService(Ref ref) {
+  return const GeolocatorLocationService();
 }

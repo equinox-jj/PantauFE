@@ -32,7 +32,7 @@ final class SplashProvider extends $AsyncNotifierProvider<Splash, String> {
   Splash create() => Splash();
 }
 
-String _$splashHash() => r'2f3c8eee2b73db7ff49147d7b61f4e460b13af5c';
+String _$splashHash() => r'cc041b021b9465aeedf5c61eb9e511283594c593';
 
 abstract class _$Splash extends $AsyncNotifier<String> {
   FutureOr<String> build();

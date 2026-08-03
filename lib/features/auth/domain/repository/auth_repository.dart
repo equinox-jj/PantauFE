@@ -14,4 +14,7 @@ abstract class AuthRepository with BaseRepository {
     required String email,
     required String password,
   });
+
+  /// Drops the stored session. Local-only — the API has no logout endpoint.
+  Future<Either<Failure, void>> logout();
 }

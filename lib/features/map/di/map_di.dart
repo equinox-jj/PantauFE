@@ -1,5 +1,47 @@
-class MapDI {
-  MapDI._();
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-  static Future<void> init() async {}
+import '../../../core/di/core_di.dart';
+import '../data/datasources/datasources.dart';
+import '../data/repository/repository.dart';
+import '../domain/repository/repository.dart';
+import '../domain/usecase/usecase.dart';
+
+part 'map_di.g.dart';
+
+@Riverpod(keepAlive: true)
+MapRemoteDataSource mapRemoteDataSource(Ref ref) {
+  final dioClient = ref.watch(dioClientProvider);
+
+  return MapRemoteDataSourceImpl(dioClient: dioClient);
+}
+
+@Riverpod(keepAlive: true)
+MapRepository mapRepository(Ref ref) {
+  final mapRemoteDataSource = ref.watch(mapRemoteDataSourceProvider);
+
+  return MapRepositoryImpl(mapRemoteDataSource: mapRemoteDataSource);
+}
+
+@Riverpod(keepAlive: true)
+GetNearbyReportsUsecase getNearbyReportsUsecase(Ref ref) {
+  return GetNearbyReportsUsecase(
+    mapRepository: ref.read(mapRepositoryProvider),
+  );
+}
+
+@Riverpod(keepAlive: true)
+GetReportCategoriesUsecase getReportCategoriesUsecase(Ref ref) {
+  return GetReportCategoriesUsecase(
+    mapRepository: ref.read(mapRepositoryProvider),
+  );
+}
+
+@Riverpod(keepAlive: true)
+GetReportDetailUsecase getReportDetailUsecase(Ref ref) {
+  return GetReportDetailUsecase(mapRepository: ref.read(mapRepositoryProvider));
+}
+
+@Riverpod(keepAlive: true)
+CreateReportUsecase createReportUsecase(Ref ref) {
+  return CreateReportUsecase(mapRepository: ref.read(mapRepositoryProvider));
 }

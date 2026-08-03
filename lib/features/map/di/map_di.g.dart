@@ -1,0 +1,292 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'map_di.dart';
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(mapRemoteDataSource)
+final mapRemoteDataSourceProvider = MapRemoteDataSourceProvider._();
+
+final class MapRemoteDataSourceProvider
+    extends
+        $FunctionalProvider<
+          MapRemoteDataSource,
+          MapRemoteDataSource,
+          MapRemoteDataSource
+        >
+    with $Provider<MapRemoteDataSource> {
+  MapRemoteDataSourceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mapRemoteDataSourceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mapRemoteDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<MapRemoteDataSource> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  MapRemoteDataSource create(Ref ref) {
+    return mapRemoteDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(MapRemoteDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<MapRemoteDataSource>(value),
+    );
+  }
+}
+
+String _$mapRemoteDataSourceHash() =>
+    r'c6968858a70629ca433b65ce8b43cc45c93760bb';
+
+@ProviderFor(mapRepository)
+final mapRepositoryProvider = MapRepositoryProvider._();
+
+final class MapRepositoryProvider
+    extends $FunctionalProvider<MapRepository, MapRepository, MapRepository>
+    with $Provider<MapRepository> {
+  MapRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mapRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mapRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<MapRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  MapRepository create(Ref ref) {
+    return mapRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(MapRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<MapRepository>(value),
+    );
+  }
+}
+
+String _$mapRepositoryHash() => r'95c640a23405c4b4b2ba129b8d818fbe6f2aa6b5';
+
+@ProviderFor(getNearbyReportsUsecase)
+final getNearbyReportsUsecaseProvider = GetNearbyReportsUsecaseProvider._();
+
+final class GetNearbyReportsUsecaseProvider
+    extends
+        $FunctionalProvider<
+          GetNearbyReportsUsecase,
+          GetNearbyReportsUsecase,
+          GetNearbyReportsUsecase
+        >
+    with $Provider<GetNearbyReportsUsecase> {
+  GetNearbyReportsUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'getNearbyReportsUsecaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$getNearbyReportsUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetNearbyReportsUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  GetNearbyReportsUsecase create(Ref ref) {
+    return getNearbyReportsUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetNearbyReportsUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetNearbyReportsUsecase>(value),
+    );
+  }
+}
+
+String _$getNearbyReportsUsecaseHash() =>
+    r'fad7724e5306c864d5a7d412fa5153a783794622';
+
+@ProviderFor(getReportCategoriesUsecase)
+final getReportCategoriesUsecaseProvider =
+    GetReportCategoriesUsecaseProvider._();
+
+final class GetReportCategoriesUsecaseProvider
+    extends
+        $FunctionalProvider<
+          GetReportCategoriesUsecase,
+          GetReportCategoriesUsecase,
+          GetReportCategoriesUsecase
+        >
+    with $Provider<GetReportCategoriesUsecase> {
+  GetReportCategoriesUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'getReportCategoriesUsecaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$getReportCategoriesUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetReportCategoriesUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  GetReportCategoriesUsecase create(Ref ref) {
+    return getReportCategoriesUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetReportCategoriesUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetReportCategoriesUsecase>(value),
+    );
+  }
+}
+
+String _$getReportCategoriesUsecaseHash() =>
+    r'4e93f2adf7512d14e89ce564c56b9f9ecb82a537';
+
+@ProviderFor(getReportDetailUsecase)
+final getReportDetailUsecaseProvider = GetReportDetailUsecaseProvider._();
+
+final class GetReportDetailUsecaseProvider
+    extends
+        $FunctionalProvider<
+          GetReportDetailUsecase,
+          GetReportDetailUsecase,
+          GetReportDetailUsecase
+        >
+    with $Provider<GetReportDetailUsecase> {
+  GetReportDetailUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'getReportDetailUsecaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$getReportDetailUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetReportDetailUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  GetReportDetailUsecase create(Ref ref) {
+    return getReportDetailUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetReportDetailUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetReportDetailUsecase>(value),
+    );
+  }
+}
+
+String _$getReportDetailUsecaseHash() =>
+    r'51b36a4991f0d6f77fbeac4b3ef6013f13a3915f';
+
+@ProviderFor(createReportUsecase)
+final createReportUsecaseProvider = CreateReportUsecaseProvider._();
+
+final class CreateReportUsecaseProvider
+    extends
+        $FunctionalProvider<
+          CreateReportUsecase,
+          CreateReportUsecase,
+          CreateReportUsecase
+        >
+    with $Provider<CreateReportUsecase> {
+  CreateReportUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'createReportUsecaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$createReportUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<CreateReportUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  CreateReportUsecase create(Ref ref) {
+    return createReportUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(CreateReportUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<CreateReportUsecase>(value),
+    );
+  }
+}
+
+String _$createReportUsecaseHash() =>
+    r'4ff4cad9acea345caa2ce02a25ac145ce14cde2c';

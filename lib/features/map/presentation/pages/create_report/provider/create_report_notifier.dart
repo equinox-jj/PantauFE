@@ -1,0 +1,43 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../../../di/di.dart';
+import '../../../../domain/entity/entity.dart';
+import '../../../../domain/usecase/usecase.dart';
+
+part 'create_report_notifier.g.dart';
+
+/// Submits a report. The photo travels as a file part of the same multipart
+/// request (see `docs/API_REQUEST.md`), so this is a single call and the page
+/// derives its progress copy from [AsyncValue.isLoading] — there is no
+/// multi-phase step to track.
+@riverpod
+class CreateReport extends _$CreateReport {
+  @override
+  AsyncValue<ReportDetail?> build() => const AsyncData(null);
+
+  Future<void> submit({
+    required String photoPath,
+    required int categoryId,
+    required String description,
+    required double latitude,
+    required double longitude,
+  }) async {
+    state = const AsyncLoading();
+
+    final result = await ref.read(createReportUsecaseProvider)(
+      CreateReportParams(
+        categoryId: categoryId,
+        description: description,
+        photoPath: photoPath,
+        latitude: latitude,
+        longitude: longitude,
+      ),
+    );
+    if (!ref.mounted) return;
+
+    result.fold(
+      (l) => state = AsyncError(l, StackTrace.current),
+      (r) => state = AsyncData(r),
+    );
+  }
+}

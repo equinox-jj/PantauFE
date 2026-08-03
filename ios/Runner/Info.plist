@@ -66,5 +66,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Pantau uses your location to show reports near you and to pin the issue you are reporting.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Pantau uses the camera so you can photograph the issue you are reporting.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Pantau needs photo access so you can attach an existing picture to a report.</string>
 </dict>
 </plist>

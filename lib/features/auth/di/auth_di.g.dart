@@ -96,7 +96,7 @@ final class AuthRepositoryProvider
   }
 }
 
-String _$authRepositoryHash() => r'a598a18bd722999e4d904ee3975f2b68b0785c0d';
+String _$authRepositoryHash() => r'04909707ab714b1cdd468e82d27c03fbe3d6c9d9';
 
 @ProviderFor(loginUsecase)
 final loginUsecaseProvider = LoginUsecaseProvider._();
@@ -138,6 +138,47 @@ final class LoginUsecaseProvider
 }
 
 String _$loginUsecaseHash() => r'f62760df14c3e853f959fc5c11504bc3684436e8';
+
+@ProviderFor(logoutUsecase)
+final logoutUsecaseProvider = LogoutUsecaseProvider._();
+
+final class LogoutUsecaseProvider
+    extends $FunctionalProvider<LogoutUsecase, LogoutUsecase, LogoutUsecase>
+    with $Provider<LogoutUsecase> {
+  LogoutUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'logoutUsecaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$logoutUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<LogoutUsecase> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  LogoutUsecase create(Ref ref) {
+    return logoutUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LogoutUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LogoutUsecase>(value),
+    );
+  }
+}
+
+String _$logoutUsecaseHash() => r'389267b6db4e22e721261c34c6a6a3c4b183181a';
 
 @ProviderFor(registerUsecase)
 final registerUsecaseProvider = RegisterUsecaseProvider._();

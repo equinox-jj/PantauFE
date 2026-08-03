@@ -18,8 +18,12 @@ AuthRemoteDataSource authRemoteDataSource(Ref ref) {
 @Riverpod(keepAlive: true)
 AuthRepository authRepository(Ref ref) {
   final authRemoteDataSource = ref.watch(authRemoteDataSourceProvider);
+  final tokenStorage = ref.watch(tokenStorageProvider);
 
-  return AuthRepositoryImpl(authRemoteDataSource: authRemoteDataSource);
+  return AuthRepositoryImpl(
+    authRemoteDataSource: authRemoteDataSource,
+    tokenStorage: tokenStorage,
+  );
 }
 
 @Riverpod(keepAlive: true)
@@ -27,6 +31,13 @@ LoginUsecase loginUsecase(Ref ref) {
   final authRepository = ref.read(authRepositoryProvider);
 
   return LoginUsecase(authRepository: authRepository);
+}
+
+@Riverpod(keepAlive: true)
+LogoutUsecase logoutUsecase(Ref ref) {
+  final authRepository = ref.read(authRepositoryProvider);
+
+  return LogoutUsecase(authRepository: authRepository);
 }
 
 @Riverpod(keepAlive: true)

@@ -6,18 +6,20 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/pages/login/login.dart';
 import '../../features/auth/presentation/pages/register/register.dart';
 import '../../features/dashboard/presentation/pages/dashboard/dashboard.dart';
+import '../../features/map/presentation/pages/create_report/create_report.dart';
 import '../../features/map/presentation/pages/map/map.dart';
 import '../../features/my_reports/presentation/pages/my_reports/my_reports.dart';
 import '../../features/onboarding/presentation/pages/onboarding/onboarding.dart';
 import '../../features/onboarding/presentation/pages/splash/splash.dart';
 import '../../features/profile/presentation/pages/profile/profile.dart';
 import '../../features/report/presentation/pages/feed/feed.dart';
+import '../di/core_di.dart';
 import 'app_routes.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-  return GoRouter(
+  final router = GoRouter(
     navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: kDebugMode,
     initialLocation: AppRoutes.splash,
@@ -37,6 +39,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.register,
         builder: (context, state) => const RegisterPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.createReport,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const CreateReportPage(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
@@ -78,4 +85,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
     ],
   );
+
+  // AuthInterceptor clears the token on a 401 and fires here; bounce the user
+  // out of the authenticated shell so they can sign in again.
+  final subscription = ref
+      .watch(sessionManagerProvider)
+      .onSessionExpired
+      .listen((_) => router.go(AppRoutes.login));
+
+  ref.onDispose(subscription.cancel);
+
+  return router;
 });

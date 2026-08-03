@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:pantau/features/auth/data/model/model.dart';
 
 import '../../../../core/base/base.dart';
@@ -23,6 +24,7 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
         final response = await _dioClient.post(
           ApiEndpoints.login,
           data: {'email': email, 'password': password},
+          options: Options(extra: {ApiEndpoints.kNoAuth: true}),
         );
 
         return LoginModel.fromJson(response.data);
@@ -37,6 +39,7 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
     final response = await _dioClient.post(
       ApiEndpoints.register,
       data: {'email': email, 'password': password, 'displayName': displayName},
+      options: Options(extra: {ApiEndpoints.kNoAuth: true}),
     );
 
     return RegisterModel.fromJson(response.data);

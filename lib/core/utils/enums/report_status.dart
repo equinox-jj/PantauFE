@@ -1,0 +1,34 @@
+/// Lifecycle of a report, shared by the map, feed, my-reports and resolver
+/// surfaces. Mirrors the backend `report_status` enum.
+enum ReportStatus {
+  reported('reported', 'Reported'),
+  acknowledged('acknowledged', 'Acknowledged'),
+  inProgress('in_progress', 'In progress'),
+  resolved('resolved', 'Resolved'),
+  closed('closed', 'Closed'),
+  rejected('rejected', 'Rejected'),
+
+  /// Fallback for a status this client build does not know yet. The UI must
+  /// degrade gracefully rather than crash on a newly added server status.
+  unknown('unknown', 'Unknown');
+
+  const ReportStatus(this.slug, this.label);
+
+  /// Wire value used by the API.
+  final String slug;
+
+  /// Human-readable label. Always rendered next to the status colour.
+  final String label;
+
+  /// Parses a wire value, falling back to [ReportStatus.unknown].
+  static ReportStatus fromSlug(String? slug) {
+    if (slug == null) return ReportStatus.unknown;
+    final normalized = slug.trim().toLowerCase();
+
+    for (final status in ReportStatus.values) {
+      if (status.slug == normalized) return status;
+    }
+
+    return ReportStatus.unknown;
+  }
+}

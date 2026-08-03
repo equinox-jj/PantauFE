@@ -30,6 +30,10 @@ class AppTextField extends StatefulWidget {
     this.onFieldSubmitted,
     this.enabled = true,
     this.focusNode,
+    this.maxLines = 1,
+    this.minLines,
+    this.maxLength,
+    this.counterText,
   });
 
   final TextEditingController? controller;
@@ -53,6 +57,14 @@ class AppTextField extends StatefulWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final bool enabled;
   final FocusNode? focusNode;
+  final int? maxLines;
+  final int? minLines;
+  final int? maxLength;
+
+  /// Passed straight through to [InputDecoration.counterText]. Pass `''` to
+  /// suppress Flutter's default unstyled "n/max" counter when [maxLength]
+  /// is set; leave null (the default) to keep the built-in counter.
+  final String? counterText;
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -92,6 +104,9 @@ class _AppTextFieldState extends State<AppTextField> {
         controller: widget.controller,
         focusNode: _focusNode,
         obscureText: _obscured,
+        maxLines: _obscured ? 1 : widget.maxLines,
+        minLines: widget.minLines,
+        maxLength: widget.maxLength,
         enabled: widget.enabled,
         validator: widget.validator,
         keyboardType: widget.keyboardType,
@@ -106,6 +121,7 @@ class _AppTextFieldState extends State<AppTextField> {
         ),
         decoration: InputDecoration(
           hintText: widget.hintText,
+          counterText: widget.counterText,
           border: _borderFor(AppColors.borderDefault),
           enabledBorder: _borderFor(
             widget.isValid ? AppColors.statusResolved : AppColors.borderDefault,

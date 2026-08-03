@@ -131,7 +131,7 @@ final class AuthInterceptorProvider
   }
 }
 
-String _$authInterceptorHash() => r'a43beb2f7ba4192180cff18f0d6d5b61a72b2af7';
+String _$authInterceptorHash() => r'c2f6a9bb15ae4d2b7133411d330e50249ddc57b9';
 
 @ProviderFor(tokenStorage)
 final tokenStorageProvider = TokenStorageProvider._();
@@ -308,3 +308,45 @@ final class LocalPrefProvider
 }
 
 String _$localPrefHash() => r'60563a77fa6de32395135c5a263188fc5bd7d6c0';
+
+@ProviderFor(locationService)
+final locationServiceProvider = LocationServiceProvider._();
+
+final class LocationServiceProvider
+    extends
+        $FunctionalProvider<LocationService, LocationService, LocationService>
+    with $Provider<LocationService> {
+  LocationServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'locationServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$locationServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<LocationService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  LocationService create(Ref ref) {
+    return locationService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LocationService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LocationService>(value),
+    );
+  }
+}
+
+String _$locationServiceHash() => r'4a075610b016afbc97f584adfdd937123238e614';
