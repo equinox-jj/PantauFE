@@ -25,6 +25,14 @@ abstract class MapRemoteDataSource with BaseRemoteDataSource {
     required double latitude,
     required double longitude,
   });
+
+  /// Forward-geocodes [query] through OpenStreetMap Nominatim. [viewBox] is the
+  /// pre-formatted `minLon,minLat,maxLon,maxLat` rectangle used to bias results.
+  Future<List<PlaceModel>> searchPlaces({
+    required String query,
+    String? viewBox,
+    int limit,
+  });
 }
 
 class MapRemoteDataSourceImpl extends MapRemoteDataSource {
@@ -102,5 +110,43 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
     );
 
     return CreateReportModel.fromJson(response.data);
+  });
+
+  @override
+  Future<List<PlaceModel>> searchPlaces({
+    required String query,
+    String? viewBox,
+    int limit = 6,
+  }) => safeApiCall(() async {
+    final response = await _dioClient.get<List<dynamic>>(
+      // Absolute URL, so Dio ignores the Pantau base URL for this call only.
+      'https://nominatim.openstreetmap.org/search',
+      options: Options(
+        // The Nominatim usage policy requires a User-Agent identifying the
+        // application; requests without one are rejected.
+        headers: const {'User-Agent': 'Pantau/1.0 (com.pantau.app)'},
+        // Keeps AuthInterceptor from attaching the user's Pantau access token
+        // to a third-party host.
+        extra: const {ApiEndpoints.kNoAuth: true},
+      ),
+      queryParameters: {
+        'q': query,
+        'format': 'jsonv2',
+        'limit': limit,
+        'addressdetails': 1,
+        // Indonesia only: short queries otherwise resolve to same-named
+        // places abroad far more often than to the intended one.
+        'countrycodes': 'id',
+        'accept-language': 'id',
+        // Sent without `bounded=1`, so this only ranks nearby hits higher
+        // instead of hiding everything outside the current camera.
+        'viewbox': ?viewBox,
+      },
+    );
+
+    return (response.data ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(PlaceModel.fromJson)
+        .toList(growable: false);
   });
 }

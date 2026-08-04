@@ -18,6 +18,8 @@ class AppTextField extends StatefulWidget {
     this.hintText,
     this.prefixIcon,
     this.suffixIcon,
+    this.onSuffixIconTap,
+    this.suffixIconTooltip,
     this.borderType = InputBorderType.outline,
     this.obscureText = false,
     this.isValid = false,
@@ -41,6 +43,14 @@ class AppTextField extends StatefulWidget {
   final String? hintText;
   final IconData? prefixIcon;
   final IconData? suffixIcon;
+
+  /// Makes [suffixIcon] a button. Without it the suffix is decoration only.
+  /// Ignored while [obscureText] or [isValid] own the suffix slot.
+  final VoidCallback? onSuffixIconTap;
+
+  /// Accessible name for the [onSuffixIconTap] button.
+  final String? suffixIconTooltip;
+
   final InputBorderType borderType;
   final bool obscureText;
 
@@ -150,7 +160,13 @@ class _AppTextFieldState extends State<AppTextField> {
               ? const Icon(Icons.check, color: AppColors.statusResolved)
               : widget.suffixIcon == null
               ? null
-              : Icon(widget.suffixIcon, size: AppIconSizes.md),
+              : widget.onSuffixIconTap == null
+              ? Icon(widget.suffixIcon, size: AppIconSizes.md)
+              : IconButton(
+                  tooltip: widget.suffixIconTooltip,
+                  onPressed: widget.onSuffixIconTap,
+                  icon: Icon(widget.suffixIcon, size: AppIconSizes.md),
+                ),
         ),
       ),
     );

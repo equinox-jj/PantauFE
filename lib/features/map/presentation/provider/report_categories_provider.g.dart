@@ -8,12 +8,18 @@ part of 'report_categories_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The seeded category taxonomy used by the compose form.
+/// The seeded category taxonomy.
+///
+/// Lives above the pages because two of them need it: the compose form's
+/// category selector and the map's filter chips.
 
 @ProviderFor(reportCategories)
 final reportCategoriesProvider = ReportCategoriesProvider._();
 
-/// The seeded category taxonomy used by the compose form.
+/// The seeded category taxonomy.
+///
+/// Lives above the pages because two of them need it: the compose form's
+/// category selector and the map's filter chips.
 
 final class ReportCategoriesProvider
     extends
@@ -25,7 +31,10 @@ final class ReportCategoriesProvider
     with
         $FutureModifier<List<ReportCategory>>,
         $FutureProvider<List<ReportCategory>> {
-  /// The seeded category taxonomy used by the compose form.
+  /// The seeded category taxonomy.
+  ///
+  /// Lives above the pages because two of them need it: the compose form's
+  /// category selector and the map's filter chips.
   ReportCategoriesProvider._()
     : super(
         from: null,

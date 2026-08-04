@@ -23,6 +23,13 @@ MapRepository mapRepository(Ref ref) {
 }
 
 @Riverpod(keepAlive: true)
+PlaceRepository placeRepository(Ref ref) {
+  final mapRemoteDataSource = ref.watch(mapRemoteDataSourceProvider);
+
+  return PlaceRepositoryImpl(mapRemoteDataSource: mapRemoteDataSource);
+}
+
+@Riverpod(keepAlive: true)
 GetNearbyReportsUsecase getNearbyReportsUsecase(Ref ref) {
   return GetNearbyReportsUsecase(
     mapRepository: ref.read(mapRepositoryProvider),
@@ -44,4 +51,11 @@ GetReportDetailUsecase getReportDetailUsecase(Ref ref) {
 @Riverpod(keepAlive: true)
 CreateReportUsecase createReportUsecase(Ref ref) {
   return CreateReportUsecase(mapRepository: ref.read(mapRepositoryProvider));
+}
+
+@Riverpod(keepAlive: true)
+SearchPlacesUsecase searchPlacesUsecase(Ref ref) {
+  return SearchPlacesUsecase(
+    placeRepository: ref.read(placeRepositoryProvider),
+  );
 }

@@ -98,6 +98,48 @@ final class MapRepositoryProvider
 
 String _$mapRepositoryHash() => r'95c640a23405c4b4b2ba129b8d818fbe6f2aa6b5';
 
+@ProviderFor(placeRepository)
+final placeRepositoryProvider = PlaceRepositoryProvider._();
+
+final class PlaceRepositoryProvider
+    extends
+        $FunctionalProvider<PlaceRepository, PlaceRepository, PlaceRepository>
+    with $Provider<PlaceRepository> {
+  PlaceRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'placeRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$placeRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<PlaceRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  PlaceRepository create(Ref ref) {
+    return placeRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PlaceRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PlaceRepository>(value),
+    );
+  }
+}
+
+String _$placeRepositoryHash() => r'222e229e04c741a98824532ef5c57d247d35bb79';
+
 @ProviderFor(getNearbyReportsUsecase)
 final getNearbyReportsUsecaseProvider = GetNearbyReportsUsecaseProvider._();
 
@@ -290,3 +332,51 @@ final class CreateReportUsecaseProvider
 
 String _$createReportUsecaseHash() =>
     r'4ff4cad9acea345caa2ce02a25ac145ce14cde2c';
+
+@ProviderFor(searchPlacesUsecase)
+final searchPlacesUsecaseProvider = SearchPlacesUsecaseProvider._();
+
+final class SearchPlacesUsecaseProvider
+    extends
+        $FunctionalProvider<
+          SearchPlacesUsecase,
+          SearchPlacesUsecase,
+          SearchPlacesUsecase
+        >
+    with $Provider<SearchPlacesUsecase> {
+  SearchPlacesUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'searchPlacesUsecaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$searchPlacesUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<SearchPlacesUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  SearchPlacesUsecase create(Ref ref) {
+    return searchPlacesUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SearchPlacesUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SearchPlacesUsecase>(value),
+    );
+  }
+}
+
+String _$searchPlacesUsecaseHash() =>
+    r'5cede8743bea51a507e24b20d6b6d5cd739cc8ae';

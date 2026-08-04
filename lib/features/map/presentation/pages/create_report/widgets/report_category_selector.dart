@@ -5,7 +5,7 @@ import 'package:gap/gap.dart';
 import '../../../../../../core/error/error.dart';
 import '../../../../../../core/theme/theme.dart';
 import '../../../../domain/entity/entity.dart';
-import '../provider/provider.dart';
+import '../../../provider/provider.dart';
 
 /// Choice chips for the seeded category taxonomy, with its own loading and
 /// error states.

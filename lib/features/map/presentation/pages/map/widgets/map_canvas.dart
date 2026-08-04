@@ -4,8 +4,10 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../../../core/theme/theme.dart';
 import '../../../../domain/entity/entity.dart';
 import '../provider/provider.dart';
+import 'map_pin_marker.dart';
 import 'report_cluster_marker.dart';
 import 'report_marker.dart';
 
@@ -49,7 +51,15 @@ class MapCanvas extends StatelessWidget {
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.pantau.app',
         ),
+        // Below the markers: the ring is context, not a target, so a report
+        // pin is never covered by its tint.
+        const _LoadedAreaLayer(),
         _ReportClusterLayer(onReportTap: onReportTap),
+        // Above the clusters: the two place pins anchor everything else on
+        // screen and must never be buried under a cluster bubble. The searched
+        // pin sits last — it is what the user just asked to look at.
+        const _CurrentLocationLayer(),
+        const _SearchedPlaceLayer(),
         const RichAttributionWidget(
           attributions: [TextSourceAttribution('OpenStreetMap contributors')],
         ),
@@ -58,8 +68,105 @@ class MapCanvas extends StatelessWidget {
   }
 }
 
-/// Marker layer for the reports of the current camera. Reads the memoised
-/// list so markers stay put across a pan refetch instead of blinking out.
+/// Ring around the centre the reports were fetched for, drawn at the same
+/// [kNearbyRadiusInMeters] the fetch asked for.
+///
+/// Follows the fetch rather than a pin: after "Search this area" the loaded
+/// centre is the camera's, not the user's, and a ring drawn on the pin would
+/// then promise coverage that was never loaded.
+class _LoadedAreaLayer extends StatelessWidget {
+  const _LoadedAreaLayer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, _) {
+        final center = ref.watch(loadedAreaProvider);
+        if (center == null) return const SizedBox.shrink();
+
+        return CircleLayer(
+          circles: [
+            // Ground-measured, in the accent colour matching [MapPinMarker].
+            CircleMarker(
+              point: center,
+              radius: kNearbyRadiusInMeters.toDouble(),
+              useRadiusInMeter: true,
+              color: AppColors.teal400.withValues(alpha: 0.12),
+              borderColor: AppColors.teal400.withValues(alpha: 0.55),
+              borderStrokeWidth: 2,
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// Single pin for the place the user searched for, or nothing when no search
+/// is active. Its own layer so a reports refetch never rebuilds it.
+class _SearchedPlaceLayer extends StatelessWidget {
+  const _SearchedPlaceLayer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, _) {
+        final place = ref.watch(searchedPlaceProvider);
+        if (place == null) return const SizedBox.shrink();
+
+        return MarkerLayer(
+          markers: [
+            _placePin(
+              point: LatLng(place.latitude, place.longitude),
+              child: MapPinMarker(label: 'Searched place: ${place.name}'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// Single pin for the device position, or nothing until one resolves. Its own
+/// layer so a re-locate repaints the pin alone.
+class _CurrentLocationLayer extends StatelessWidget {
+  const _CurrentLocationLayer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, _) {
+        final position = ref.watch(currentLocationProvider);
+        if (position == null) return const SizedBox.shrink();
+
+        return MarkerLayer(
+          markers: [
+            _placePin(
+              point: position,
+              child: const MapPinMarker(label: 'Your location'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// A [MapPinMarker] sized and anchored for the map: the pin's tip, not its
+/// centre, sits on the coordinate.
+Marker _placePin({required LatLng point, required MapPinMarker child}) {
+  return Marker(
+    point: point,
+    width: MapPinMarker.size,
+    height: MapPinMarker.size,
+    alignment: Alignment.topCenter,
+    child: child,
+  );
+}
+
+/// Marker layer for the reports of the current camera. Reads the memoised,
+/// category-filtered list so markers stay put across a pan refetch instead of
+/// blinking out.
 class _ReportClusterLayer extends StatelessWidget {
   const _ReportClusterLayer({required this.onReportTap});
 
@@ -86,7 +193,7 @@ class _ReportClusterLayer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final reports = ref.watch(visibleReportsProvider);
+        final reports = ref.watch(filteredReportsProvider);
 
         return MarkerClusterLayerWidget(
           options: MarkerClusterLayerOptions(

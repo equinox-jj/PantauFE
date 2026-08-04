@@ -6,6 +6,13 @@ import '../../../../domain/usecase/usecase.dart';
 
 part 'nearby_reports_notifier.g.dart';
 
+/// Ground radius every nearby-reports fetch asks for, and the radius of the
+/// ring drawn around the user's place on the map.
+///
+/// Fixed rather than derived from the camera: the ring is a promise about
+/// which reports are loaded, so the two must be the same number.
+const int kNearbyRadiusInMeters = 1000;
+
 /// Nearby reports for the current map camera. Keeping the previous markers
 /// on screen while a pan refetch is in flight is not this notifier's job —
 /// `visibleReportsProvider` memoises the last loaded list for that.

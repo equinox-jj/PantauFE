@@ -1,3 +1,9 @@
+export 'current_location_provider.dart';
+export 'filtered_reports_provider.dart';
+export 'loaded_area_provider.dart';
+export 'map_category_filter.dart';
 export 'map_location_notifier.dart';
 export 'nearby_reports_notifier.dart';
+export 'place_search_notifier.dart';
+export 'searched_place_provider.dart';
 export 'visible_reports_provider.dart';
