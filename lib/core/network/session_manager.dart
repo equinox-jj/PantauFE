@@ -8,11 +8,9 @@ class SessionManager {
   /// Emits when refresh fails and the user must re-authenticate.
   Stream<void> get onSessionExpired => _controller.stream;
 
-  /// Signals that the session has expired.
   void notifyExpired() {
     if (!_controller.isClosed) _controller.add(null);
   }
 
-  /// Closes the underlying stream.
   void dispose() => _controller.close();
 }

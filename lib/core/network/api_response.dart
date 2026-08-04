@@ -18,13 +18,10 @@ class ApiResponse<T> {
     );
   }
 
-  /// The decoded payload, or null when the body carried no `data`.
+  /// Null when the body carried no `data`.
   final T? data;
 
-  /// Optional server message.
   final String? message;
-
-  /// Optional status code echoed by the server body.
   final int? statusCode;
 }
 
@@ -53,21 +50,17 @@ class PaginatedResponse<T> {
     );
   }
 
-  /// Decoded page items.
   final List<T> items;
 
-  /// Current 1-based page number.
+  /// 1-based.
   final int page;
 
-  /// Items per page.
   final int perPage;
 
-  /// Total items across all pages.
+  /// Across all pages.
   final int total;
 
-  /// Total number of pages.
   final int totalPages;
 
-  /// True when [page] is not the last page.
   bool get hasNextPage => page < totalPages;
 }

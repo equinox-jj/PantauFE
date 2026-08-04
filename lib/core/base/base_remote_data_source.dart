@@ -3,12 +3,11 @@ import 'package:dio/dio.dart';
 import '../error/error_mapper.dart';
 import '../error/exceptions.dart';
 
-/// Mixed into remote data sources to centralize DioException → AppException
-/// translation. Data sources call [safeApiCall] around each request.
+/// Centralizes DioException-to-AppException translation. Data sources wrap
+/// each request in [safeApiCall].
 mixin BaseRemoteDataSource {
-  /// Runs [request], translating any [DioException] into the matching
-  /// [AppException]. [AppException]s thrown inside [request] pass through;
-  /// anything else becomes an [UnknownException].
+  /// Runs [request], translating any [DioException] into its [AppException].
+  /// [AppException]s pass through; anything else becomes [UnknownException].
   Future<T> safeApiCall<T>(Future<T> Function() request) async {
     try {
       return await request();

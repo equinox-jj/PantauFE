@@ -11,10 +11,10 @@ import 'map_pin_marker.dart';
 import 'report_cluster_marker.dart';
 import 'report_marker.dart';
 
-/// The map surface itself: base tiles, clustered report markers, attribution.
+/// Base tiles, clustered report markers, attribution.
 ///
-/// Built once per page mount — only the marker layer subscribes to the
-/// reports provider, so a refetch never rebuilds [FlutterMap] or its tiles.
+/// Only the marker layer subscribes to the reports provider, so a refetch
+/// never rebuilds [FlutterMap] or its tiles.
 class MapCanvas extends StatelessWidget {
   const MapCanvas({
     super.key,
@@ -46,18 +46,16 @@ class MapCanvas extends StatelessWidget {
         ),
       ),
       children: [
-        // Muted base tiles so the status colours stay dominant.
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.pantau.app',
         ),
-        // Below the markers: the ring is context, not a target, so a report
-        // pin is never covered by its tint.
+        // Below the markers: the ring is context, not a target, so its tint
+        // never covers a report pin.
         const _LoadedAreaLayer(),
         _ReportClusterLayer(onReportTap: onReportTap),
-        // Above the clusters: the two place pins anchor everything else on
-        // screen and must never be buried under a cluster bubble. The searched
-        // pin sits last — it is what the user just asked to look at.
+        // Above the clusters: place pins must never be buried under a cluster
+        // bubble. The searched pin sits last — it is what the user asked for.
         const _CurrentLocationLayer(),
         const _SearchedPlaceLayer(),
         const RichAttributionWidget(
@@ -68,12 +66,11 @@ class MapCanvas extends StatelessWidget {
   }
 }
 
-/// Ring around the centre the reports were fetched for, drawn at the same
-/// [kNearbyRadiusInMeters] the fetch asked for.
+/// [kNearbyRadiusInMeters] ring around the centre the reports were fetched for.
 ///
 /// Follows the fetch rather than a pin: after "Search this area" the loaded
-/// centre is the camera's, not the user's, and a ring drawn on the pin would
-/// then promise coverage that was never loaded.
+/// centre is the camera's, so a ring on the pin would promise coverage that
+/// was never loaded.
 class _LoadedAreaLayer extends StatelessWidget {
   const _LoadedAreaLayer();
 
@@ -86,7 +83,6 @@ class _LoadedAreaLayer extends StatelessWidget {
 
         return CircleLayer(
           circles: [
-            // Ground-measured, in the accent colour matching [MapPinMarker].
             CircleMarker(
               point: center,
               radius: kNearbyRadiusInMeters.toDouble(),
@@ -102,8 +98,8 @@ class _LoadedAreaLayer extends StatelessWidget {
   }
 }
 
-/// Single pin for the place the user searched for, or nothing when no search
-/// is active. Its own layer so a reports refetch never rebuilds it.
+/// Pin for the searched place. Its own layer so a reports refetch never
+/// rebuilds it.
 class _SearchedPlaceLayer extends StatelessWidget {
   const _SearchedPlaceLayer();
 
@@ -127,8 +123,8 @@ class _SearchedPlaceLayer extends StatelessWidget {
   }
 }
 
-/// Single pin for the device position, or nothing until one resolves. Its own
-/// layer so a re-locate repaints the pin alone.
+/// Pin for the device position. Its own layer so a re-locate repaints the pin
+/// alone.
 class _CurrentLocationLayer extends StatelessWidget {
   const _CurrentLocationLayer();
 
@@ -152,8 +148,8 @@ class _CurrentLocationLayer extends StatelessWidget {
   }
 }
 
-/// A [MapPinMarker] sized and anchored for the map: the pin's tip, not its
-/// centre, sits on the coordinate.
+/// A [MapPinMarker] anchored so its tip, not its centre, sits on the
+/// coordinate.
 Marker _placePin({required LatLng point, required MapPinMarker child}) {
   return Marker(
     point: point,
@@ -164,9 +160,8 @@ Marker _placePin({required LatLng point, required MapPinMarker child}) {
   );
 }
 
-/// Marker layer for the reports of the current camera. Reads the memoised,
-/// category-filtered list so markers stay put across a pan refetch instead of
-/// blinking out.
+/// Marker layer for the current camera's reports. Reads the memoised,
+/// category-filtered list so markers stay put across a pan refetch.
 class _ReportClusterLayer extends StatelessWidget {
   const _ReportClusterLayer({required this.onReportTap});
 

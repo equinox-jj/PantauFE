@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../core/theme/theme.dart';
 
-/// The reporter's photo — hero of the sheet — with its own loading and
-/// error fallbacks.
+/// The reporter's photo, with its own loading and error fallbacks.
 class ReportDetailPhoto extends StatelessWidget {
   const ReportDetailPhoto({super.key, required this.photoUrl});
 

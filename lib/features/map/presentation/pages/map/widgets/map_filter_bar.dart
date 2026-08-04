@@ -9,11 +9,9 @@ import '../provider/provider.dart';
 
 /// The category filter chips across the top of the map (FR-10).
 ///
-/// The "All" chip is rendered outside the taxonomy subscription: whatever the
-/// fetch is doing, the filter stays clearable.
-///
-/// Positioning, the scrim, and the safe area belong to [MapTopBar] — this is
-/// only the chip row, so the top bar can swap it for the search results panel.
+/// The "All" chip renders outside the taxonomy subscription, so the filter
+/// stays clearable whatever the fetch is doing. Positioning, the scrim, and
+/// the safe area belong to [MapTopBar].
 class MapFilterBar extends StatelessWidget {
   const MapFilterBar({super.key});
 
@@ -26,8 +24,8 @@ class MapFilterBar extends StatelessWidget {
   }
 }
 
-/// Horizontally scrolling chip strip. Never wraps — a second line of chips
-/// would eat the map.
+/// Horizontally scrolling chip strip. Never wraps — a second line would eat
+/// the map.
 class _FilterChipRow extends StatelessWidget {
   const _FilterChipRow();
 
@@ -68,8 +66,7 @@ class _CategoryChips extends StatelessWidget {
   final int? selectedId;
   final ValueChanged<int> onSelected;
 
-  /// Chips shown behind the skeleton while the taxonomy loads. Their labels
-  /// are never read — only their widths shape the shimmer.
+  /// Placeholders while the taxonomy loads — only their widths matter.
   static const _skeletonLabels = ['Pothole', 'Streetlight', 'Flooding'];
 
   @override
@@ -87,8 +84,8 @@ class _CategoryChips extends StatelessWidget {
               selectedId: selectedId,
               onSelected: onSelected,
             ),
-          // Both a failed fetch and an unusable taxonomy leave the user with
-          // nothing to filter by, and both recover the same way.
+          // A failed fetch and an unusable taxonomy both leave nothing to
+          // filter by, and both recover the same way.
           _ => _RetryChip(
             onTap: () => ref.invalidate(reportCategoriesProvider),
           ),
@@ -167,8 +164,7 @@ class _RetryChip extends StatelessWidget {
 /// A single pill.
 ///
 /// Not a Material [ChoiceChip]: the global chip theme fills with
-/// `AppColors.fillSubtle` (4% white), which is invisible over map tiles. Chips
-/// on the map need an opaque fill of their own.
+/// `AppColors.fillSubtle` (4% white), invisible over map tiles.
 class _FilterChip extends StatelessWidget {
   const _FilterChip({
     required this.label,

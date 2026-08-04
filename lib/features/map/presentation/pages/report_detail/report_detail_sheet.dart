@@ -11,10 +11,8 @@ import 'provider/provider.dart';
 import 'widgets/widgets.dart';
 
 /// Bottom sheet showing one report: photo, status, category, description,
-/// coordinates and timestamps.
-///
-/// The sheet chrome (safe area and padding) is built once; only the body
-/// swaps between the loading, error and content states.
+/// coordinates and timestamps. The chrome is built once; only the body swaps
+/// between the loading, error and content states.
 class ReportDetailSheet extends StatelessWidget {
   const ReportDetailSheet({super.key, required this.reportId});
 
@@ -24,10 +22,9 @@ class ReportDetailSheet extends StatelessWidget {
   static Future<void> show(BuildContext context, {required String reportId}) {
     return showModalBottomSheet<void>(
       context: context,
-      // The map tab lives inside the dashboard shell's IndexedStack; without
-      // the root navigator the barrier and sheet are scoped to the branch
-      // navigator, leaving the bottom nav bar uncovered and the sheet
-      // double-padding for its inset.
+      // The map tab lives in the dashboard shell's IndexedStack; without the
+      // root navigator the barrier scopes to the branch navigator, leaving the
+      // bottom nav bar uncovered and the sheet double-padded.
       useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.surfaceSurface,

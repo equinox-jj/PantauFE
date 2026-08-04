@@ -6,16 +6,15 @@ import '../../../../domain/usecase/usecase.dart';
 
 part 'nearby_reports_notifier.g.dart';
 
-/// Ground radius every nearby-reports fetch asks for, and the radius of the
-/// ring drawn around the user's place on the map.
+/// Ground radius of every nearby-reports fetch, and of the ring drawn on the
+/// map.
 ///
-/// Fixed rather than derived from the camera: the ring is a promise about
-/// which reports are loaded, so the two must be the same number.
+/// Fixed rather than derived from the camera: the ring promises which reports
+/// are loaded, so the two must be the same number.
 const int kNearbyRadiusInMeters = 1000;
 
-/// Nearby reports for the current map camera. Keeping the previous markers
-/// on screen while a pan refetch is in flight is not this notifier's job —
-/// `visibleReportsProvider` memoises the last loaded list for that.
+/// Nearby reports for the current map camera. Holding the previous markers
+/// during a pan refetch is `visibleReportsProvider`'s job, not this one's.
 @riverpod
 class NearbyReports extends _$NearbyReports {
   /// Camera used by the most recent [load] call, replayed by [refresh].
@@ -23,8 +22,8 @@ class NearbyReports extends _$NearbyReports {
   double? _longitude;
   int? _radiusInMeters;
 
-  /// Monotonically increasing id guarding against out-of-order responses:
-  /// a slow, superseded request must not overwrite a newer one's state.
+  /// Guards against out-of-order responses: a superseded request must not
+  /// overwrite a newer one's state.
   int _requestId = 0;
 
   @override
@@ -50,8 +49,7 @@ class NearbyReports extends _$NearbyReports {
     );
     final result = await usecase(params);
     if (!ref.mounted) return;
-    // A newer load() started while this one was in flight — its result
-    // (whichever arrives) owns the state now, so this stale one is dropped.
+    // A newer load() owns the state now — drop this stale result.
     if (requestId != _requestId) return;
 
     result.fold(
@@ -60,9 +58,8 @@ class NearbyReports extends _$NearbyReports {
     );
   }
 
-  /// Replays the last-used camera so a mutation elsewhere (e.g. submitting a
-  /// report) can refresh the list without wiping it via `invalidate`. A safe
-  /// no-op if [load] has never been called.
+  /// Replays the last camera so a mutation elsewhere can refresh the list
+  /// without wiping it via `invalidate`. No-op if [load] never ran.
   Future<void> refresh() {
     final latitude = _latitude;
     final longitude = _longitude;

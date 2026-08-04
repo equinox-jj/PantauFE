@@ -17,14 +17,12 @@ typedef _PermissionOverlay = ({
 /// Full-screen cover shown when location access is unavailable.
 ///
 /// Blocking is the point: without a position the map cannot centre, locate or
-/// pin a report, so it covers the controls too. It is the last layer of the
-/// map stack for that reason. It owns its own subscription, so a location
-/// change repaints this layer alone.
+/// pin, so the cover hides the controls too — hence the last layer of the map
+/// stack. Owns its subscription, so a location change repaints it alone.
 class MapPermissionOverlay extends StatelessWidget {
   const MapPermissionOverlay({super.key});
 
-  /// Copy and recovery action for the map's permission-related overlay.
-  /// Every non-success [LocationResult] is a designed state, not a silent
+  /// Every blocking [LocationResult] gets a designed state, not a silent
   /// fallback to the Jakarta camera with a passing snackbar.
   _PermissionOverlay? _overlayFor(WidgetRef ref, LocationResult? result) {
     return switch (result) {

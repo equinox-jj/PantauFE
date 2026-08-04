@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/theme.dart';
 
-/// Tap-able progress dots for the onboarding carousel. Built with
-/// [ListView.builder] — never `.map`/`forEach` — per the project's widget
-/// rules.
+/// Tap-able progress dots for the onboarding carousel.
 class OnboardingDotIndicator extends StatelessWidget {
   const OnboardingDotIndicator({
     super.key,

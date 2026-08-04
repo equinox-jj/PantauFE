@@ -6,13 +6,12 @@ import 'package:latlong2/latlong.dart';
 
 import '../../../../../../core/theme/theme.dart';
 
-/// Mini-map whose fixed centre pin marks where the report will be filed.
-/// The user pans the map under the pin to correct the auto-detected spot.
+/// Mini-map whose fixed centre pin marks where the report will be filed; the
+/// user pans the map under the pin.
 ///
-/// [center] and [isLocating] arrive as listenables rather than plain values:
-/// panning emits a new centre on every frame, and rebuilding [FlutterMap]
-/// that often would thrash the tile layer. Only the coordinate readout and
-/// the locate button listen.
+/// [center] and [isLocating] are listenables, not plain values: panning emits
+/// a new centre every frame, and rebuilding [FlutterMap] that often would
+/// thrash the tile layer. Only the readout and locate button listen.
 class ReportLocationPicker extends StatelessWidget {
   const ReportLocationPicker({
     super.key,
@@ -34,14 +33,11 @@ class ReportLocationPicker extends StatelessWidget {
   final VoidCallback onUseMyLocation;
   final ValueListenable<bool> isLocating;
 
-  /// Height of the mini-map preview; the spacing scale has no token sized
-  /// for a map viewport, so it's declared locally.
+  /// Local: the spacing scale has no token sized for a map viewport.
   static const double _mapHeight = 200;
 
-  /// Lifts the centre pin glyph so its tip — not its bounding-box centre —
-  /// lands on the map's centre point. Scaled to keep the same offset-to-size
-  /// ratio (0.6) the previous 40px icon used at a 24px offset, now that the
-  /// icon is [AppIconSizes.xl] (32px): 32 * 0.6 = 19.2.
+  /// Lifts the pin so its tip, not its bounding-box centre, lands on the map
+  /// centre. 0.6 of [AppIconSizes.xl] (32px).
   static const double _pinTipOffset = 19.2;
 
   @override

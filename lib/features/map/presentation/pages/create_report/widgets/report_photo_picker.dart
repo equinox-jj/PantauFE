@@ -17,16 +17,14 @@ class ReportPhotoPicker extends StatelessWidget {
 
   final String? photoPath;
 
-  /// Null disables the picker (e.g. while submitting), rendering the
-  /// disabled affordance instead of an inert tap target.
+  /// Null disables the picker (e.g. while submitting), rendering the disabled
+  /// affordance instead of an inert tap target.
   final VoidCallback? onPick;
 
-  /// Set after a failed validation pass to explain the photo is required.
+  /// Set after a failed validation pass.
   final String? errorText;
 
-  /// No token in the spacing/opacity scale covers a disabled-affordance
-  /// dim, so it's declared locally (matching how [ReportLocationPicker]
-  /// declares its own one-off constants).
+  /// Local: no token in the scale covers a disabled-affordance dim.
   static const double _disabledOpacity = 0.5;
 
   @override

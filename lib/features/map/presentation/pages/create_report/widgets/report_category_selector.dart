@@ -7,11 +7,11 @@ import '../../../../../../core/theme/theme.dart';
 import '../../../../domain/entity/entity.dart';
 import '../../../provider/provider.dart';
 
-/// Choice chips for the seeded category taxonomy, with its own loading and
-/// error states.
+/// Choice chips for the category taxonomy, with their own loading and error
+/// states.
 ///
-/// Only the chip row subscribes to the taxonomy: the label and the validation
-/// message around it are built once and left alone when the fetch settles.
+/// Only the chip row subscribes to the taxonomy; the label and validation
+/// message around it are built once.
 class ReportCategorySelector extends StatelessWidget {
   const ReportCategorySelector({
     super.key,

@@ -8,7 +8,7 @@ import '../enums/enums.dart';
 /// Colour never carries meaning alone: every consumer pairs [color] with
 /// [ReportStatus.label] and [icon] (NFR-8).
 extension ReportStatusX on ReportStatus {
-  /// Marker/chip fill colour.
+  /// Marker/chip fill.
   Color get color => switch (this) {
     ReportStatus.reported => AppColors.statusReported,
     ReportStatus.acknowledged => AppColors.statusAcknowledged,
@@ -19,7 +19,7 @@ extension ReportStatusX on ReportStatus {
     ReportStatus.unknown => AppColors.statusClosed,
   };
 
-  /// Ink colour with sufficient contrast on top of [color].
+  /// Contrasts against [color].
   Color get inkColor => switch (this) {
     ReportStatus.reported => AppColors.statusReportedInk,
     ReportStatus.acknowledged => AppColors.statusAcknowledgedInk,
@@ -30,7 +30,7 @@ extension ReportStatusX on ReportStatus {
     ReportStatus.unknown => AppColors.statusClosedInk,
   };
 
-  /// Glyph shown beside the label so the state reads without colour.
+  /// Shown beside the label so the state reads without colour.
   IconData get icon => switch (this) {
     ReportStatus.reported => Icons.report_gmailerrorred,
     ReportStatus.acknowledged => Icons.visibility_outlined,

@@ -34,9 +34,9 @@ class AuthInterceptor extends Interceptor {
   ) async {
     final noAuth = err.requestOptions.extra[ApiEndpoints.kNoAuth] == true;
 
-    // A 401 on an authenticated call means the stored token is no longer good.
-    // Drop it and let the router send the user back to login. Auth endpoints
-    // are excluded — there a 401 just means wrong credentials.
+    // A 401 here means the stored token is dead: drop it and let the router
+    // send the user to login. Excluded on auth endpoints, where a 401 only
+    // means wrong credentials.
     if (!noAuth && err.response?.statusCode == 401) {
       await _tokenStorage.clear();
       _sessionManager.notifyExpired();

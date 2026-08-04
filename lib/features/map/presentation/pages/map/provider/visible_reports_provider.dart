@@ -5,13 +5,12 @@ import 'nearby_reports_notifier.dart';
 
 part 'visible_reports_provider.g.dart';
 
-/// The report list currently on screen: the last successfully loaded page of
-/// [nearbyReportsProvider], held across its loading and error states.
+/// The last successfully loaded page of [nearbyReportsProvider], held across
+/// its loading and error states.
 ///
-/// Markers would otherwise blink out on every pan-triggered refetch, and the
-/// empty/error overlays would flash over a map that still has pins on it.
-/// Listening (not watching) is what makes it a memo — the previous list
-/// survives until a newer one arrives.
+/// Markers would otherwise blink out on every pan refetch. Listening rather
+/// than watching is what memoises it: the previous list survives until a newer
+/// one arrives.
 @riverpod
 class VisibleReports extends _$VisibleReports {
   @override

@@ -7,9 +7,8 @@ enum AppButtonVariant { primary, secondary, ghost }
 /// Reusable button styled from the Pantau style guide's "Buttons" section.
 ///
 /// Covers the primary (accent gradient), secondary (outlined) and ghost
-/// (text-only) variants. Icon-only, FAB and dialog-height buttons are
-/// covered by [AppTheme]'s `iconButtonTheme`/`floatingActionButtonTheme`
-/// instead of this widget.
+/// (text-only) variants. Icon-only, FAB and dialog-height buttons come from
+/// [AppTheme]'s `iconButtonTheme`/`floatingActionButtonTheme` instead.
 class AppButton extends StatelessWidget {
   const AppButton({
     super.key,

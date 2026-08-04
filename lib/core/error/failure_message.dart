@@ -2,7 +2,6 @@ import 'failure.dart';
 
 /// Human-readable message for any [Failure] variant.
 extension FailureMessage on Failure {
-  /// The display message carried by this failure.
   String get displayMessage => switch (this) {
     NetworkFailure(:final message) => message,
     TimeoutFailure(:final message) => message,

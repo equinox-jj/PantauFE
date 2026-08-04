@@ -21,12 +21,11 @@ typedef _PhotoField = ({String? path, String? error});
 /// Category slot state: the chosen id and the validation message for it.
 typedef _CategoryField = ({int? id, String? error});
 
-/// Compose flow: photo → pin → category → description → submit.
+/// Compose flow: photo, pin, category, description, submit.
 ///
-/// Form state is local to the page (matching the login/register pages); the
-/// notifier owns only the two-call submit sequence. Each field is a
-/// [ValueNotifier] rather than `setState` state, so picking a photo or
-/// dragging the pin repaints that one row instead of the whole form.
+/// Form state is local to the page (matching login/register); the notifier
+/// owns only the submit sequence. Each field is a [ValueNotifier] rather than
+/// `setState` state, so picking a photo repaints one row, not the whole form.
 class CreateReportPage extends ConsumerStatefulWidget {
   const CreateReportPage({super.key});
 
@@ -96,8 +95,8 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
     final source = await PhotoSourceSheet.show(context);
     if (source == null) return;
 
-    // image_picker re-encodes and orientation-corrects while picking, which
-    // covers the on-device compression requirement without a new package.
+    // image_picker re-encodes and orientation-corrects while picking, covering
+    // the on-device compression requirement without a new package.
     final file = await _imagePicker.pickImage(
       source: source,
       imageQuality: 70,
@@ -139,10 +138,9 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      // Submitting streams the photo to the server; leaving mid-flight via
-      // the back gesture/button would abandon the flow silently while the
-      // request keeps running. Only the gate rebuilds — the form below is
-      // handed through as a prebuilt child.
+      // Blocks back while the photo uploads; leaving mid-flight would abandon
+      // the flow silently. Only the gate rebuilds — the form is a prebuilt
+      // child.
       builder: (context, ref, child) => PopScope(
         canPop: !ref.watch(
           createReportProvider.select((state) => state.isLoading),

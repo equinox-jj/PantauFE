@@ -6,9 +6,8 @@ part 'searched_place_provider.g.dart';
 
 /// The place the user jumped to, marked with a pin on the map.
 ///
-/// Separate from [PlaceSearch] because the two have different lifetimes: the
-/// result list disappears as soon as the panel closes, while the pin stays
-/// until the user clears the search field.
+/// Separate from [PlaceSearch] for lifetime: the result list dies with the
+/// panel, the pin stays until the search field is cleared.
 @riverpod
 class SearchedPlace extends _$SearchedPlace {
   @override

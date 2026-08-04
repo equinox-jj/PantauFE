@@ -14,23 +14,20 @@ typedef _SheetStatus = ({
   Widget? action,
 });
 
-/// The compact sheet that explains why the map has no markers: a failed load,
-/// a filter that matched nothing, or an area nobody has reported in.
+/// Explains why the map has no markers: a failed load, a filter that matched
+/// nothing, or an area nobody has reported in.
 ///
-/// It is not a modal — the map stays pannable underneath, which is the way
-/// out of all three states. It owns its own subscriptions, so a reports
-/// change repaints this sheet alone and never the map.
-///
-/// Sizing is left to the sheet: it is the last child of the bottom-anchored
-/// column in `MapPage`, so growing it lifts the locate button and the report
-/// FAB instead of hiding behind them.
+/// Not a modal — the map stays pannable underneath, which is the way out of
+/// all three states. Owns its subscriptions, so a reports change repaints the
+/// sheet alone. Sizing is left to the sheet: as the last child of `MapPage`'s
+/// bottom column, growing it lifts the locate button and report FAB.
 class MapStatusSheet extends StatelessWidget {
   const MapStatusSheet({super.key, required this.onRetry});
 
   final VoidCallback onRetry;
 
-  /// The status worth showing, or null when the markers on screen speak for
-  /// themselves (or a load is still in flight and might yet produce some).
+  /// The status worth showing, or null when markers are on screen or a load is
+  /// still in flight.
   _SheetStatus? _statusFor(WidgetRef ref) {
     final reports = ref.watch(filteredReportsProvider);
     if (reports.isNotEmpty) return null;
@@ -50,8 +47,8 @@ class MapStatusSheet extends StatelessWidget {
       );
     }
 
-    // A category filter that matched nothing is not an empty area: the map may
-    // still be holding markers of every other category.
+    // A filter that matched nothing is not an empty area: other categories may
+    // still have markers here.
     final hasUnfilteredReports = ref.watch(visibleReportsProvider).isNotEmpty;
 
     if (hasUnfilteredReports) {
@@ -95,7 +92,7 @@ class MapStatusSheet extends StatelessWidget {
           curve: Curves.easeOutCubic,
           alignment: Alignment.bottomCenter,
           // Zero height rather than [SizedBox.shrink] so the collapse animates
-          // downward only and never narrows the column mid-flight.
+          // downward only, never narrowing the column mid-flight.
           child: status == null
               ? const SizedBox(width: double.infinity)
               : _StatusCard(status: status),
@@ -164,8 +161,8 @@ class _StatusCard extends StatelessWidget {
   }
 }
 
-/// Accent medallion for the status icon — the empty state's 96px tile cut
-/// down to something a sheet this short can carry.
+/// Accent medallion for the status icon — the empty state's 96px tile scaled
+/// down for a sheet this short.
 class _IconTile extends StatelessWidget {
   const _IconTile({required this.icon});
 
@@ -186,8 +183,7 @@ class _IconTile extends StatelessWidget {
   }
 }
 
-/// Decorative handle matching the report detail sheet, so both surfaces read
-/// as the same kind of thing.
+/// Decorative handle matching the report detail sheet.
 class _SheetGrabber extends StatelessWidget {
   const _SheetGrabber();
 

@@ -10,9 +10,8 @@ class OnboardingCompletion extends _$OnboardingCompletion {
   @override
   AsyncValue<bool> build() => const AsyncData(false);
 
-  /// Marks onboarding as seen. Best-effort: navigation should proceed even
-  /// if persistence fails — worst case the user sees onboarding again next
-  /// launch, which is an acceptable degradation, not an error state.
+  /// Marks onboarding as seen. Best-effort: navigation proceeds even if
+  /// persistence fails — worst case the user sees onboarding again.
   Future<void> complete() async {
     state = const AsyncLoading();
 

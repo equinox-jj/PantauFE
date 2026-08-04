@@ -4,9 +4,8 @@ part 'map_category_filter.g.dart';
 
 /// The category the map is filtered to, or `null` for "All" (FR-10).
 ///
-/// Deliberately holds an id rather than a `ReportCategory`: the taxonomy is
-/// fetched asynchronously and can be refetched, so a selection stored as an
-/// entity would go stale against a newer list.
+/// Holds an id rather than a `ReportCategory`: the taxonomy can be refetched,
+/// so a selection stored as an entity would go stale.
 @riverpod
 class MapCategoryFilter extends _$MapCategoryFilter {
   @override
@@ -14,7 +13,6 @@ class MapCategoryFilter extends _$MapCategoryFilter {
 
   void select(int? categoryId) => state = categoryId;
 
-  /// Back to "All". Same effect as `select(null)`; named for what the empty
-  /// state's action means rather than for the value it passes.
+  /// Back to "All". Named for the empty state's action, not the value.
   void clear() => state = null;
 }

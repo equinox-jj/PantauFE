@@ -3,10 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 
-/// Type scale from the Pantau design system.
-///
-/// Primary family is Plus Jakarta Sans (UI, headings & body); IBM Plex Mono
-/// is reserved for labels, data & coordinates (see [mono]).
+/// Type scale from the Pantau design system. Plus Jakarta Sans for UI,
+/// headings and body; IBM Plex Mono for labels, data and coordinates.
 abstract final class AppTypography {
   static TextStyle _jakarta({
     required double fontSize,

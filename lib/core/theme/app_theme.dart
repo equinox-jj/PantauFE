@@ -5,10 +5,8 @@ import 'app_radius.dart';
 import 'app_spacing.dart';
 import 'app_typography.dart';
 
-/// Assembles the Pantau design tokens into a [ThemeData].
-///
-/// The design system is dark-only ("Status is the product"), so there is
-/// no light variant.
+/// Assembles the Pantau design tokens into a [ThemeData]. Dark-only by
+/// design — there is no light variant.
 abstract final class AppTheme {
   static ThemeData dark({Color accent = AppColors.accent}) {
     final colorScheme = ColorScheme.dark(

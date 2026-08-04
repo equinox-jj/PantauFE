@@ -7,9 +7,8 @@ enum InputBorderType { outline, underline, none }
 
 /// Reusable form field styled from the app's [InputDecorationTheme].
 ///
-/// Renders an optional label above the field (matches the design system's
-/// external-label convention) and, when [obscureText] is true, an
-/// eye-icon toggle so callers don't need to manage that state themselves.
+/// Renders an optional external label above the field and, when [obscureText]
+/// is true, an eye-icon toggle callers don't have to manage.
 class AppTextField extends StatefulWidget {
   const AppTextField({
     super.key,
@@ -54,9 +53,8 @@ class AppTextField extends StatefulWidget {
   final InputBorderType borderType;
   final bool obscureText;
 
-  /// Marks the field as validated (green border + check suffix), matching
-  /// the style guide's "Valid" field state. Ignored while [obscureText] is
-  /// true, since that state already owns the suffix slot.
+  /// Green border + check suffix. Ignored while [obscureText] owns the suffix
+  /// slot.
   final bool isValid;
   final FormFieldValidator<String>? validator;
   final TextInputType? keyboardType;
@@ -71,9 +69,8 @@ class AppTextField extends StatefulWidget {
   final int? minLines;
   final int? maxLength;
 
-  /// Passed straight through to [InputDecoration.counterText]. Pass `''` to
-  /// suppress Flutter's default unstyled "n/max" counter when [maxLength]
-  /// is set; leave null (the default) to keep the built-in counter.
+  /// Passed to [InputDecoration.counterText]. `''` suppresses Flutter's
+  /// unstyled "n/max" counter when [maxLength] is set.
   final String? counterText;
 
   @override

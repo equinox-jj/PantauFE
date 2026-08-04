@@ -17,8 +17,7 @@ class MapSearchField extends StatefulWidget {
   /// The trimmed query. Never called with an empty string.
   final ValueChanged<String> onSubmitted;
 
-  /// Fired by the trailing clear button — drops both the results panel and
-  /// the pin on the map.
+  /// Fired by the clear button — drops both the results panel and the pin.
   final VoidCallback onCleared;
 
   /// Height [AppTextField] settles at under the app's input theme, published
@@ -32,8 +31,8 @@ class MapSearchField extends StatefulWidget {
 class _MapSearchFieldState extends State<MapSearchField> {
   final TextEditingController _controller = TextEditingController();
 
-  /// Drives the trailing button only. Held in state rather than read from the
-  /// controller so the icon swaps as the user types.
+  /// Held in state rather than read from the controller, so the trailing icon
+  /// swaps as the user types.
   bool _hasText = false;
 
   @override
@@ -73,9 +72,8 @@ class _MapSearchFieldState extends State<MapSearchField> {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      // The field's own fill is translucent, so the map would otherwise show
-      // through it. An opaque plate behind it also carries the drop shadow
-      // that lifts the field off the tiles.
+      // The field's own fill is translucent, so the map would show through.
+      // This opaque plate also carries the shadow lifting it off the tiles.
       decoration: const BoxDecoration(
         color: AppColors.surfaceFloat,
         borderRadius: AppRadius.radiusLg,

@@ -8,8 +8,7 @@ enum ReportStatus {
   closed('closed', 'Closed'),
   rejected('rejected', 'Rejected'),
 
-  /// Fallback for a status this client build does not know yet. The UI must
-  /// degrade gracefully rather than crash on a newly added server status.
+  /// Fallback for a server status this build does not know yet.
   unknown('unknown', 'Unknown');
 
   const ReportStatus(this.slug, this.label);
@@ -17,7 +16,7 @@ enum ReportStatus {
   /// Wire value used by the API.
   final String slug;
 
-  /// Human-readable label. Always rendered next to the status colour.
+  /// Always rendered next to the status colour.
   final String label;
 
   /// Parses a wire value, falling back to [ReportStatus.unknown].

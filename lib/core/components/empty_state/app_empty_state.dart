@@ -3,11 +3,11 @@ import 'package:gap/gap.dart';
 
 import '../../theme/theme.dart';
 
-/// Designed empty state — icon medallion, headline and supporting copy, with
-/// an optional primary action.
+/// Icon medallion, headline and supporting copy, with an optional primary
+/// action.
 ///
-/// Empty states are a first-class screen state in the design system (NFR-8),
-/// so every list/map surface renders this rather than a blank canvas.
+/// Empty states are a first-class screen state (NFR-8), so every list/map
+/// surface renders this rather than a blank canvas.
 class AppEmptyState extends StatelessWidget {
   const AppEmptyState({
     super.key,

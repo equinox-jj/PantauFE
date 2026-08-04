@@ -20,7 +20,6 @@ class DioClient {
       ..interceptors.addAll([authInterceptor, LoggerInterceptor()]);
   }
 
-  /// The configured Dio instance.
   final Dio dio;
 
   Future<Response<T>> get<T>(

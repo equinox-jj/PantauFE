@@ -2,8 +2,8 @@ import '../../domain/entity/entity.dart';
 import '../model/model.dart';
 
 extension PlaceModelListMapper on List<PlaceModel> {
-  /// Maps the hits that carry usable coordinates, dropping the rest — a row
-  /// the map cannot move to is worse than a shorter result list.
+  /// Drops hits without usable coordinates — a row the map cannot move to is
+  /// worse than a shorter list.
   List<Place> toEntities() =>
       map((e) => e.toEntity()).whereType<Place>().toList(growable: false);
 }
@@ -15,9 +15,9 @@ extension PlaceModelMapper on PlaceModel {
     final longitude = double.tryParse(lon ?? '');
     if (latitude == null || longitude == null) return null;
 
-    // `display_name` is a comma-separated trail from the most specific part
-    // outwards ("Monas, Gambir, Jakarta Pusat, ..."). The head is the title
-    // when Nominatim gives no `name`, and the tail is always the subtitle.
+    // `display_name` runs most-specific-first ("Monas, Gambir, Jakarta
+    // Pusat"). Head is the title when there is no `name`; tail is the
+    // subtitle.
     final segments = (displayName ?? '')
         .split(',')
         .map((segment) => segment.trim())

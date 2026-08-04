@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../core/theme/theme.dart';
 
-/// Teardrop pin used for the map's two singular places: where the user is and
-/// where they searched.
+/// Teardrop pin for the map's two singular places: where the user is and where
+/// they searched.
 ///
-/// Deliberately not a circle — report markers are status-coloured circles, so
-/// the shape alone tells a place apart from a report. The two places share the
-/// accent colour and are told apart by position and by the semantics [label].
+/// Not a circle — report markers are status-coloured circles, so shape alone
+/// tells a place apart from a report. The two pins share the accent colour and
+/// differ only by position and the semantics [label].
 class MapPinMarker extends StatelessWidget {
   const MapPinMarker({super.key, required this.label});
 

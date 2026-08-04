@@ -25,8 +25,8 @@ class Splash extends _$Splash {
     final token = await tokenFuture;
     await delay;
 
-    // A stored token means the session survived the restart — skip login (and
-    // onboarding, which an authenticated user has necessarily already passed).
+    // A stored token means the session survived the restart — skip login and
+    // onboarding, which an authenticated user has already passed.
     if (token != null && token.isNotEmpty) return AppRoutes.dashboard;
 
     return result.fold(

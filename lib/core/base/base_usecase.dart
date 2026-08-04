@@ -5,7 +5,6 @@ import 'package:pantau/core/error/failure.dart';
 ///
 /// [T] is the success value; [Params] is the input (use [NoParams] for none).
 abstract class UseCase<T, Params> {
-  /// Executes the operation.
   Future<Either<Failure, T>> call(Params params);
 }
 

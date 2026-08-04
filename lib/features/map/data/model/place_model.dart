@@ -5,10 +5,9 @@ part 'place_model.g.dart';
 
 /// One Nominatim search hit.
 ///
-/// Unlike the Pantau API, Nominatim answers with a bare JSON array and no
-/// `{status, message, data}` envelope, so this models a single element rather
-/// than the whole response. Coordinates arrive as strings and stay strings
-/// here — the mapper parses them.
+/// Nominatim answers with a bare JSON array and no `{status, message, data}`
+/// envelope, so this models one element, not the response. Coordinates arrive
+/// as strings and stay strings here — the mapper parses them.
 @freezed
 abstract class PlaceModel with _$PlaceModel {
   const factory PlaceModel({

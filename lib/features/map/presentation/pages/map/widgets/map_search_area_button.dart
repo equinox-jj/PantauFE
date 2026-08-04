@@ -4,9 +4,8 @@ import '../../../../../../core/theme/theme.dart';
 
 /// Manual refetch trigger for the camera the user has panned to.
 ///
-/// Panning is free: the map never fetches on its own. This pill is the only
-/// way a camera move turns into a request, so the user pays for the reports
-/// they actually asked for.
+/// The map never fetches on its own; this pill is the only way a camera move
+/// turns into a request.
 class MapSearchAreaButton extends StatelessWidget {
   const MapSearchAreaButton({super.key, required this.onPressed});
 

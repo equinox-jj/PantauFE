@@ -15,15 +15,10 @@ import 'listener/listener.dart';
 import 'provider/provider.dart';
 import 'widgets/widgets.dart';
 
-/// Home tab — nearby reports on an OSM map with clustered markers.
+/// Nearby reports on an OSM map with clustered markers.
 ///
-/// The page owns the camera and the fetch triggers only; every provider read
-/// that drives pixels lives in a [Consumer] below, so a reports refetch or a
-/// location change repaints one layer instead of the whole stack.
-///
-/// Panning never fetches. Once the camera drifts away from what was last
-/// loaded, a "Search this area" pill appears and the user decides whether the
-/// request is worth making.
+/// Panning never fetches; once the camera drifts from the loaded area a
+/// "Search this area" pill appears and the user triggers the request.
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({super.key});
 
@@ -35,25 +30,21 @@ class _MapPageState extends ConsumerState<MapPage> {
   /// Jakarta — fallback camera when the device position is unavailable.
   static const _fallbackCenter = LatLng(-6.2088, 106.8456);
 
-  /// Chosen so the [kNearbyRadiusInMeters] ring fills most of the view: any
-  /// wider and the corners show map the reports were never fetched for.
+  /// Chosen so the [kNearbyRadiusInMeters] ring fills most of the view.
   static const _initialZoom = 14.5;
   static const _distance = Distance();
 
-  /// How far the camera centre may drift from the last loaded centre, as a
-  /// fraction of [kNearbyRadiusInMeters], before the results on screen stop
-  /// describing what the user is looking at.
+  /// Allowed camera drift from the loaded centre, as a fraction of
+  /// [kNearbyRadiusInMeters].
   static const _centreDriftFraction = 0.3;
 
   final MapController _mapController = MapController();
 
-  /// Centre the reports on screen were loaded around. Null until the first
-  /// load. No matching radius field — every fetch uses
-  /// [kNearbyRadiusInMeters].
+  /// Centre the visible reports were loaded around. Null until the first load.
   LatLng? _loadedCenter;
 
-  /// Visibility of the "Search this area" pill. A [ValueNotifier] rather than
-  /// [setState] so toggling it repaints the pill alone, never the map.
+  /// A [ValueNotifier] rather than [setState] so toggling the pill repaints it
+  /// alone, never the map.
   final ValueNotifier<bool> _canSearchArea = ValueNotifier(false);
 
   @override
@@ -71,16 +62,14 @@ class _MapPageState extends ConsumerState<MapPage> {
     super.dispose();
   }
 
-  /// Whether the camera has walked far enough from the loaded centre that the
-  /// reports on screen no longer describe what the user is looking at.
+  /// Whether the camera drifted far enough that the visible reports no longer
+  /// describe what the user is looking at.
   ///
-  /// Zoom is not part of this: the fetch radius is fixed, so a zoom-out shows
-  /// ground outside the loaded circle but adds no reports to ask for — only
-  /// moving the centre does.
+  /// Zoom is ignored: the fetch radius is fixed, so only moving the centre
+  /// adds reports to ask for.
   bool _cameraLeftLoadedArea(MapCamera camera) {
     final loadedCenter = _loadedCenter;
-    // Nothing loaded yet (the startup fetch failed or never ran) — offering
-    // the search is the only way back.
+    // Nothing loaded yet — offering the search is the only way back.
     if (loadedCenter == null) return true;
 
     final drift = _distance.as(LengthUnit.Meter, loadedCenter, camera.center);
@@ -100,17 +89,16 @@ class _MapPageState extends ConsumerState<MapPage> {
   }
 
   /// Fetches reports for [camera]'s centre. Shared by the "Search this area"
-  /// pill and the error state's retry action so both stay in sync.
+  /// pill and the error state's retry action.
   void _loadReportsForCamera(MapCamera camera) =>
       _loadReportsAround(camera.center);
 
   /// Loads the reports within [kNearbyRadiusInMeters] of [center] and retires
-  /// the pill — the reports arriving are the ones for this view.
+  /// the pill.
   void _loadReportsAround(LatLng center) {
     _loadedCenter = center;
     _canSearchArea.value = false;
-    // Moves the ring with the fetch, so it never marks ground the reports on
-    // screen were not loaded for.
+    // Moves the ring with the fetch, so it never marks unloaded ground.
     ref.read(loadedAreaProvider.notifier).update(center);
 
     ref
@@ -123,10 +111,9 @@ class _MapPageState extends ConsumerState<MapPage> {
   }
 
   void _handleLocated(LocationResult result) {
-    // The device position is unavailable (denied, services off, or failed) —
-    // fall back to the Jakarta camera so the map still has reports to show.
-    // Deliberately the only other fetch trigger at startup: fetching the
-    // fallback up front would double-hit the API on every cold open.
+    // Position unavailable — fall back to the Jakarta camera. Kept as the only
+    // other startup fetch trigger; fetching the fallback up front would
+    // double-hit the API on every cold open.
     if (result is! LocationSuccess) {
       _loadReportsAround(_fallbackCenter);
       return;
@@ -138,9 +125,8 @@ class _MapPageState extends ConsumerState<MapPage> {
     _loadReportsAround(center);
   }
 
-  /// Runs a place search biased toward what the user is currently looking at,
-  /// so "Gambir" resolves to the one on screen before the one three provinces
-  /// away.
+  /// Runs a place search biased toward the visible bounds, so "Gambir"
+  /// resolves to the one on screen first.
   void _searchPlaces(String query) {
     final bounds = _mapController.camera.visibleBounds;
 
@@ -157,7 +143,7 @@ class _MapPageState extends ConsumerState<MapPage> {
         );
   }
 
-  /// Clears both halves of the search: the results panel and the pin.
+  /// Clears both the results panel and the pin.
   void _clearSearch() {
     ref.read(placeSearchProvider.notifier).clear();
     ref.read(searchedPlaceProvider.notifier).clear();
@@ -201,9 +187,8 @@ class _MapPageState extends ConsumerState<MapPage> {
               onMapEvent: _handleMapEvent,
               onReportTap: _openReport,
             ),
-            // Both sit below the top bar in paint order: their offset is
-            // measured against the collapsed bar, so an open results panel —
-            // which is taller — must cover them rather than be covered.
+            // Below the top bar in paint order: their offset assumes the
+            // collapsed bar, so an open results panel must cover them.
             _SearchAreaControl(
               topOffset: MediaQuery.paddingOf(context).top + MapTopBar.height,
               canSearch: _canSearchArea,
@@ -221,8 +206,8 @@ class _MapPageState extends ConsumerState<MapPage> {
               onStartReport: _startReport,
               onRetry: () => _loadReportsForCamera(_mapController.camera),
             ),
-            // Last layer: a map without a position cannot locate or pin, so
-            // the permission cover hides the controls along with the map.
+            // Last layer: without a position the controls are useless, so the
+            // permission cover hides them along with the map.
             const MapPermissionOverlay(),
           ],
         ),
@@ -231,12 +216,10 @@ class _MapPageState extends ConsumerState<MapPage> {
   }
 }
 
-/// The bottom of the map: locate button, report FAB, and the status sheet
-/// under them.
+/// Locate button, report FAB, and the status sheet under them.
 ///
-/// A column rather than three positioned layers so the controls ride on top
-/// of the sheet — when it appears they lift by exactly its height, with no
-/// offset constant to keep in sync.
+/// A column rather than three positioned layers, so the controls lift by
+/// exactly the sheet's height with no offset constant to keep in sync.
 class _BottomStack extends StatelessWidget {
   const _BottomStack({required this.onStartReport, required this.onRetry});
 
@@ -264,8 +247,7 @@ class _BottomStack extends StatelessWidget {
               ],
             ),
           ),
-          // Doubles as the controls' clearance from the bottom edge while the
-          // sheet is collapsed.
+          // Doubles as bottom-edge clearance while the sheet is collapsed.
           const Gap(AppSpacing.md),
           MapStatusSheet(onRetry: onRetry),
         ],
@@ -274,12 +256,10 @@ class _BottomStack extends StatelessWidget {
   }
 }
 
-/// The "Search this area" pill, shown only once the camera has left the area
-/// the current markers were loaded for.
+/// The "Search this area" pill, shown once the camera leaves the loaded area.
 ///
 /// Shares the slot under the top bar with [_ReportsLoadingIndicator]: tapping
-/// the pill hides it and starts the fetch the spinner then reports on, so the
-/// two are never on screen together.
+/// the pill hides it and starts the fetch, so the two never overlap.
 class _SearchAreaControl extends StatelessWidget {
   const _SearchAreaControl({
     required this.topOffset,
@@ -287,8 +267,7 @@ class _SearchAreaControl extends StatelessWidget {
     required this.onPressed,
   });
 
-  /// Clearance from the top so the pill sits below the filter chips instead
-  /// of behind them.
+  /// Clearance so the pill sits below the filter chips, not behind them.
   final double topOffset;
 
   final ValueListenable<bool> canSearch;
@@ -308,13 +287,12 @@ class _SearchAreaControl extends StatelessWidget {
   }
 }
 
-/// Thin progress bar for an in-flight refetch, shown over the map while the
-/// previous markers stay visible.
+/// Spinner for an in-flight refetch, shown over the map while the previous
+/// markers stay visible.
 class _ReportsLoadingIndicator extends StatelessWidget {
   const _ReportsLoadingIndicator({required this.topOffset});
 
-  /// Clearance from the top so the spinner sits below the filter chips
-  /// instead of behind them.
+  /// Clearance so the spinner sits below the filter chips, not behind them.
   final double topOffset;
 
   @override

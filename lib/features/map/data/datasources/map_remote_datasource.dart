@@ -26,8 +26,8 @@ abstract class MapRemoteDataSource with BaseRemoteDataSource {
     required double longitude,
   });
 
-  /// Forward-geocodes [query] through OpenStreetMap Nominatim. [viewBox] is the
-  /// pre-formatted `minLon,minLat,maxLon,maxLat` rectangle used to bias results.
+  /// Forward-geocodes [query] through OpenStreetMap Nominatim. [viewBox] is a
+  /// pre-formatted `minLon,minLat,maxLon,maxLat` rectangle biasing results.
   Future<List<PlaceModel>> searchPlaces({
     required String query,
     String? viewBox,
@@ -82,8 +82,8 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
     required double latitude,
     required double longitude,
   }) => safeApiCall(() async {
-    // Field names and types follow docs/API_REQUEST.md: every scalar is sent
-    // as a form-data text part, the photo as the `photo` file part.
+    // Field names follow docs/API_REQUEST.md: scalars as form-data text parts,
+    // the photo as the `photo` file part.
     final formData = FormData.fromMap({
       'categoryId': '$categoryId',
       'description': description,
@@ -98,10 +98,9 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
     final response = await _dioClient.post(
       MapEndpoint.reports,
       data: formData,
-      // Dio applies sendTimeout to streaming the whole request body, so the
-      // global 10s default is too tight for a photo on a weak uplink.
-      // Longer, request-scoped timeouts only — the DioClient defaults stay
-      // untouched for every other call.
+      // Dio applies sendTimeout to the whole request body, so the global 10s
+      // default is too tight for a photo on a weak uplink. Request-scoped, so
+      // the DioClient defaults stay untouched.
       options: Options(
         contentType: 'multipart/form-data',
         sendTimeout: const Duration(seconds: 60),
@@ -122,11 +121,10 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
       // Absolute URL, so Dio ignores the Pantau base URL for this call only.
       'https://nominatim.openstreetmap.org/search',
       options: Options(
-        // The Nominatim usage policy requires a User-Agent identifying the
-        // application; requests without one are rejected.
+        // Required by the Nominatim usage policy; requests without one are
+        // rejected.
         headers: const {'User-Agent': 'Pantau/1.0 (com.pantau.app)'},
-        // Keeps AuthInterceptor from attaching the user's Pantau access token
-        // to a third-party host.
+        // Keeps AuthInterceptor from sending the Pantau token to a third party.
         extra: const {ApiEndpoints.kNoAuth: true},
       ),
       queryParameters: {
@@ -134,12 +132,12 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
         'format': 'jsonv2',
         'limit': limit,
         'addressdetails': 1,
-        // Indonesia only: short queries otherwise resolve to same-named
-        // places abroad far more often than to the intended one.
+        // Indonesia only: short queries otherwise resolve to same-named places
+        // abroad.
         'countrycodes': 'id',
         'accept-language': 'id',
-        // Sent without `bounded=1`, so this only ranks nearby hits higher
-        // instead of hiding everything outside the current camera.
+        // Sent without `bounded=1`, so it ranks nearby hits higher rather than
+        // hiding everything outside the camera.
         'viewbox': ?viewBox,
       },
     );

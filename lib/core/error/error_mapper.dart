@@ -3,9 +3,7 @@ import 'package:dio/dio.dart';
 import 'exceptions.dart';
 import 'failure.dart';
 
-// Re-export so callers that import only error_mapper.dart also get the Failure
-// subtypes (e.g. ValidationFailure, UnknownFailure) without needing a separate
-// import of failure.dart.
+// So callers importing only error_mapper.dart also get the Failure subtypes.
 export 'failure.dart';
 
 /// Converts a [DioException] into a typed [AppException].
@@ -94,10 +92,9 @@ String? _extractMessage(Object? data) {
   return null;
 }
 
-/// Tolerant parser for HTTP 422 bodies. Accepts either:
-/// `{"errors": {"email": ["msg", ...]}}` (object shape) or
-/// `{"errors": [{"field": "email", "message": "msg"}, ...]}` (list shape),
-/// normalizing both to `field → [messages]`.
+/// Tolerant parser for HTTP 422 bodies. Normalizes both
+/// `{"errors": {"email": ["msg"]}}` and
+/// `{"errors": [{"field": "email", "message": "msg"}]}` to `field: [messages]`.
 Map<String, List<String>> _parseFieldErrors(Object? data) {
   final result = <String, List<String>>{};
   if (data is! Map) return result;

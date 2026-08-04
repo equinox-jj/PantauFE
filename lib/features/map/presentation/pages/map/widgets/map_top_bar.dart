@@ -8,11 +8,11 @@ import 'map_filter_bar.dart';
 import 'map_search_field.dart';
 import 'map_search_results.dart';
 
-/// Everything pinned to the top of the map: the place-search field, and below
-/// it either the search results or the category filter chips.
+/// The place-search field, and below it either the search results or the
+/// category filter chips.
 ///
 /// Owns the scrim and the safe area for both, so the strip fades into the map
-/// as one surface instead of two stacked gradients.
+/// as one surface.
 class MapTopBar extends StatelessWidget {
   const MapTopBar({
     super.key,
@@ -29,13 +29,12 @@ class MapTopBar extends StatelessWidget {
 
   final ValueChanged<Place> onPlaceSelected;
 
-  /// Height of the scrim below the content, so the bar fades into the map
-  /// instead of ending on a hard edge.
+  /// Scrim below the content, so the bar fades out instead of ending on a
+  /// hard edge.
   static const _scrimFade = AppSpacing.xl2;
 
   /// Height below the status bar, for anything the map stacks under the bar.
-  /// Measured against the chip row — the results panel is taller, but it only
-  /// exists while a search is open.
+  /// Measured against the chip row, not the taller results panel.
   static const height =
       AppSpacing.xs2 +
       MapSearchField.height +
@@ -82,8 +81,8 @@ class MapTopBar extends StatelessWidget {
 }
 
 /// Scrim behind the bar. Opaque only where the status bar text sits, then
-/// steps down through partial alphas — a single hard stop to transparent read
-/// as a dark slab hanging under the search field.
+/// stepped through partial alphas — a single hard stop to transparent read as
+/// a dark slab under the search field.
 const _scrim = LinearGradient(
   begin: Alignment.topCenter,
   end: Alignment.bottomCenter,
@@ -109,8 +108,8 @@ class _SearchResultsOrFilters extends StatelessWidget {
     return Consumer(
       builder: (context, ref, child) {
         final state = ref.watch(placeSearchProvider);
-        // A null state is the closed panel; loading, failed, and empty
-        // searches all still have one to show.
+        // Null means the panel is closed; loading, failed, and empty searches
+        // all still have something to show.
         if (state == null) return child!;
 
         return Padding(

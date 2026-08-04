@@ -4,11 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../../core/theme/theme.dart';
 import '../../../../domain/entity/entity.dart';
 
-/// Result panel under the search field, covering the loading, error, empty,
-/// and data states of a place search.
+/// Result panel under the search field: loading, error, empty, and data
+/// states of a place search.
 ///
-/// It replaces the category chips while a search is active rather than
-/// floating over them, so the two never fight for the same strip of map.
+/// Replaces the category chips while a search is active rather than floating
+/// over them, so the two never fight for the same strip of map.
 class MapSearchResults extends StatelessWidget {
   const MapSearchResults({
     super.key,

@@ -3,7 +3,6 @@
 sealed class AppException implements Exception {
   const AppException(this.message);
 
-  /// Human-readable description of the failure.
   final String message;
 
   @override
@@ -47,7 +46,7 @@ class ValidationException extends AppException {
     super.message = 'Validation failed',
   ]);
 
-  /// Field name → list of error messages for that field.
+  /// Field name to that field's error messages.
   final Map<String, List<String>> fieldErrors;
 }
 
@@ -60,7 +59,6 @@ class TooManyRequestsException extends AppException {
 class ServerException extends AppException {
   const ServerException(this.statusCode, [super.message = 'Server error']);
 
-  /// The 5xx status code returned by the server.
   final int statusCode;
 }
 

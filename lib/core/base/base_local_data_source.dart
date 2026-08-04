@@ -1,10 +1,9 @@
 import '../error/exceptions.dart';
 
-/// Mixed into local data sources to centralize cache-error translation.
-/// Wraps each local operation, converting any failure into [CacheException].
+/// Centralizes cache-error translation for local data sources.
 mixin BaseLocalDataSource {
-  /// Runs [op]; any throw becomes a [CacheException]. An already-typed
-  /// [CacheException] passes through unchanged.
+  /// Runs [op]; any throw becomes a [CacheException], and an existing one
+  /// passes through unchanged.
   Future<T> safeCacheCall<T>(Future<T> Function() op) async {
     try {
       return await op();

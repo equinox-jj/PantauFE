@@ -6,10 +6,9 @@ import '../../../../domain/usecase/usecase.dart';
 
 part 'create_report_notifier.g.dart';
 
-/// Submits a report. The photo travels as a file part of the same multipart
-/// request (see `docs/API_REQUEST.md`), so this is a single call and the page
-/// derives its progress copy from [AsyncValue.isLoading] — there is no
-/// multi-phase step to track.
+/// Submits a report. The photo rides along as a file part of the same
+/// multipart request (see `docs/API_REQUEST.md`), so this is one call and the
+/// page derives its progress copy from [AsyncValue.isLoading].
 @riverpod
 class CreateReport extends _$CreateReport {
   @override

@@ -12,8 +12,8 @@ import '../provider/provider.dart';
 class MapListener extends ConsumerWidget {
   const MapListener({super.key, required this.onLocated, required this.child});
 
-  /// Called with every settled [LocationResult] — including the failure
-  /// cases, which the page turns into a fallback camera and fetch.
+  /// Called with every settled [LocationResult], failures included — the page
+  /// turns those into a fallback camera and fetch.
   final ValueChanged<LocationResult> onLocated;
 
   final Widget child;
