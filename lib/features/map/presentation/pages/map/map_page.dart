@@ -6,8 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../../../../../core/location/location.dart';
 import '../../../../../core/router/app_routes.dart';
+import '../../../../../core/service/service.dart';
 import '../../../../../core/theme/theme.dart';
 import '../../../domain/entity/entity.dart';
 import '../report_detail/report_detail.dart';

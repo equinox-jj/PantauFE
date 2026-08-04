@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../../core/error/error.dart';
-import '../../../../../../core/location/location.dart';
+import '../../../../../../core/service/service.dart';
 import '../../../../../../core/theme/theme.dart';
 import '../provider/provider.dart';
 

@@ -9,7 +9,7 @@ import 'package:latlong2/latlong.dart';
 import '../../../../../core/components/button/button.dart';
 import '../../../../../core/components/textfield/textfield.dart';
 import '../../../../../core/di/core_di.dart';
-import '../../../../../core/location/location.dart';
+import '../../../../../core/service/service.dart';
 import '../../../../../core/theme/theme.dart';
 import 'listener/listener.dart';
 import 'provider/provider.dart';

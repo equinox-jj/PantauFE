@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../../core/components/button/button.dart';
 import '../../../../../../core/components/empty_state/empty_state.dart';
-import '../../../../../../core/location/location.dart';
+import '../../../../../../core/service/service.dart';
 import '../../../../../../core/theme/theme.dart';
 import '../provider/provider.dart';
 import 'map_permission_state.dart';

@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../../../core/di/core_di.dart';
-import '../../../../../../core/location/location.dart';
+import '../../../../../../core/service/service.dart';
 
 part 'map_location_notifier.g.dart';
 
