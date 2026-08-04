@@ -123,22 +123,22 @@ class _StatusCard extends StatelessWidget {
         top: false,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
-            AppSpacing.lg,
-            AppSpacing.xs,
-            AppSpacing.lg,
-            AppSpacing.lg,
+            AppSpacing.md,
+            AppSpacing.xs2,
+            AppSpacing.md,
+            AppSpacing.md,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Center(child: _SheetGrabber()),
-              const Gap(AppSpacing.md),
+              const Gap(AppSpacing.xs),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _IconTile(icon: status.icon),
-                  const Gap(AppSpacing.md),
+                  const Gap(AppSpacing.xs),
                   Expanded(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -153,7 +153,7 @@ class _StatusCard extends StatelessWidget {
                 ],
               ),
               if (status.action case final action?) ...[
-                const Gap(AppSpacing.md),
+                const Gap(AppSpacing.xs),
                 Align(alignment: Alignment.centerRight, child: action),
               ],
             ],
@@ -174,14 +174,14 @@ class _IconTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 40,
-      height: 40,
+      width: 32,
+      height: 32,
       decoration: BoxDecoration(
         color: AppColors.fillAccent,
         borderRadius: AppRadius.radiusMd,
         border: Border.all(color: AppColors.borderAccent),
       ),
-      child: Icon(icon, size: 20, color: AppColors.accent),
+      child: Icon(icon, size: 16, color: AppColors.accent),
     );
   }
 }

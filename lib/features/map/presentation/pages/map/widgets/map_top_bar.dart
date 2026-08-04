@@ -31,7 +31,7 @@ class MapTopBar extends StatelessWidget {
 
   /// Height of the scrim below the content, so the bar fades into the map
   /// instead of ending on a hard edge.
-  static const _scrimFade = AppSpacing.lg;
+  static const _scrimFade = AppSpacing.xl2;
 
   /// Height below the status bar, for anything the map stacks under the bar.
   /// Measured against the chip row — the results panel is taller, but it only
@@ -50,18 +50,7 @@ class MapTopBar extends StatelessWidget {
       left: 0,
       right: 0,
       child: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppColors.surfaceBase,
-              AppColors.surfaceBase,
-              Colors.transparent,
-            ],
-            stops: [0, 0.62, 1],
-          ),
-        ),
+        decoration: const BoxDecoration(gradient: _scrim),
         child: SafeArea(
           bottom: false,
           child: Padding(
@@ -91,6 +80,22 @@ class MapTopBar extends StatelessWidget {
     );
   }
 }
+
+/// Scrim behind the bar. Opaque only where the status bar text sits, then
+/// steps down through partial alphas — a single hard stop to transparent read
+/// as a dark slab hanging under the search field.
+const _scrim = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: [
+    AppColors.surfaceBase,
+    Color(0xD9050C0B), // surfaceBase · .85
+    Color(0x8C050C0B), // surfaceBase · .55
+    Color(0x33050C0B), // surfaceBase · .2
+    Colors.transparent,
+  ],
+  stops: [0, 0.35, 0.62, 0.82, 1],
+);
 
 /// The second row of the bar. Shows the results panel while a search is open
 /// and the chips otherwise — never both, so nothing overlaps.
