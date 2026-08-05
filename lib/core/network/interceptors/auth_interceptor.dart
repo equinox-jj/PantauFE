@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../../local_storage/token_storage.dart';
 import '../api_endpoints.dart';
-import '../session_manager.dart';
+import '../../router/session_manager.dart';
 
 /// Attaches the `x-api-key` header to every request and a
 /// `Authorization: Bearer` header unless the request is flagged `noAuth`.

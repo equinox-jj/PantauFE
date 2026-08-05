@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../local_storage/local_storage.dart';
 import '../network/interceptors/interceptors.dart';
 import '../network/network.dart';
+import '../router/router.dart';
 import '../service/service.dart';
 
 part 'core_di.g.dart';
