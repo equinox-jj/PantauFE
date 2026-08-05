@@ -45,6 +45,15 @@ class MapRepositoryImpl extends MapRepository {
       });
 
   @override
+  Future<Either<Failure, List<StatusHistoryEntry>>> getReportHistory(
+    String id,
+  ) => safeCall(() async {
+    final result = await _mapRemoteDataSource.getReportHistory(id);
+
+    return result.toEntities();
+  });
+
+  @override
   Future<Either<Failure, ReportDetail>> createReport({
     required int categoryId,
     required String description,

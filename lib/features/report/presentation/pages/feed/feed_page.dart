@@ -11,8 +11,6 @@ import '../../../../../core/router/app_routes.dart';
 import '../../../../../core/service/service.dart';
 import '../../../../../core/theme/theme.dart';
 import '../../../../../core/utils/helpers/helpers.dart';
-import '../../../../map/presentation/pages/report_detail/report_detail.dart';
-import '../../../domain/entity/entity.dart';
 import 'listener/listener.dart';
 import 'provider/provider.dart';
 import 'widgets/feed_widgets.dart';
@@ -65,11 +63,11 @@ class _FeedPageState extends ConsumerState<FeedPage> {
   void _openSettings() =>
       ref.read(feedLocationProvider.notifier).openSettings();
 
-  void _openReport(FeedReport report) {
-    final id = report.id;
+  void _openReport(FeedItem item) {
+    final id = item.report.id;
     if (id == null) return;
 
-    ReportDetailSheet.show(context, reportId: id);
+    context.push(AppRoutes.reportDetailPath(id), extra: item.distanceInMeters);
   }
 
   void _startReport() => context.push(AppRoutes.createReport);
@@ -196,7 +194,7 @@ class _FeedBody extends StatelessWidget {
     required this.onStartReport,
   });
 
-  final ValueChanged<FeedReport> onReportTap;
+  final ValueChanged<FeedItem> onReportTap;
   final VoidCallback onRetry;
   final VoidCallback onLocate;
   final VoidCallback onOpenSettings;
@@ -236,7 +234,7 @@ class _NearbyBody extends StatelessWidget {
     required this.onStartReport,
   });
 
-  final ValueChanged<FeedReport> onReportTap;
+  final ValueChanged<FeedItem> onReportTap;
   final VoidCallback onRetry;
   final VoidCallback onLocate;
   final VoidCallback onOpenSettings;
@@ -310,7 +308,7 @@ class _MyReportsBody extends StatelessWidget {
     required this.onStartReport,
   });
 
-  final ValueChanged<FeedReport> onReportTap;
+  final ValueChanged<FeedItem> onReportTap;
   final VoidCallback onRetry;
   final VoidCallback onStartReport;
 
@@ -359,7 +357,7 @@ class _FeedList extends StatelessWidget {
   const _FeedList({required this.items, required this.onReportTap});
 
   final List<FeedItem> items;
-  final ValueChanged<FeedReport> onReportTap;
+  final ValueChanged<FeedItem> onReportTap;
 
   @override
   Widget build(BuildContext context) {
@@ -382,7 +380,7 @@ class _FeedList extends StatelessWidget {
             // until the new one decodes.
             key: ValueKey<Object>(item.report.id ?? index),
             item: item,
-            onTap: () => onReportTap(item.report),
+            onTap: () => onReportTap(item),
           );
         },
       ),

@@ -99,4 +99,8 @@ abstract final class AppTypography {
     letterSpacing: 2.5,
     color: AppColors.accent,
   );
+
+  /// 10.5 · small mono metadata size — report detail's meta line and the
+  /// status timeline card's per-step timestamps share this scale.
+  static const double metaMonoSize = 10.5;
 }

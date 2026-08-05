@@ -9,6 +9,12 @@ abstract final class AppRoutes {
   /// Full-screen compose flow, pushed over the dashboard shell.
   static const String createReport = '/create-report';
 
+  /// Full-screen report detail, pushed over the dashboard shell.
+  static const String reportDetail = '/reports/:id';
+
+  /// Path for [reportDetail] with [id] filled in.
+  static String reportDetailPath(String id) => '/reports/$id';
+
   // Dashboard shell — one branch (and one navigation stack) per tab.
   static const String map = '/map';
   static const String feed = '/feed';
@@ -23,6 +29,7 @@ abstract final class AppRoutes {
     login,
     register,
     createReport,
+    reportDetail,
     map,
     feed,
     profile,

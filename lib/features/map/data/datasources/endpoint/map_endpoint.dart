@@ -5,4 +5,6 @@ abstract final class MapEndpoint {
   static const String reports = '/reports';
 
   static String reportDetail(String id) => '/reports/$id';
+
+  static String reportHistory(String id) => '/reports/$id/history';
 }

@@ -8,6 +8,7 @@ import '../../features/auth/presentation/pages/register/register.dart';
 import '../../features/dashboard/presentation/pages/dashboard/dashboard.dart';
 import '../../features/map/presentation/pages/create_report/create_report.dart';
 import '../../features/map/presentation/pages/map/map.dart';
+import '../../features/map/presentation/pages/report_detail/report_detail.dart';
 import '../../features/onboarding/presentation/pages/onboarding/onboarding.dart';
 import '../../features/onboarding/presentation/pages/splash/splash.dart';
 import '../../features/profile/presentation/pages/profile/profile.dart';
@@ -43,6 +44,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.createReport,
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const CreateReportPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.reportDetail,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => ReportDetailPage(
+          reportId: state.pathParameters['id'] ?? '',
+          // The map and the feed hand over the distance they already computed;
+          // a cold deep link has no extra, and the line is dropped.
+          distanceInMeters: state.extra is double
+              ? state.extra as double?
+              : null,
+        ),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>

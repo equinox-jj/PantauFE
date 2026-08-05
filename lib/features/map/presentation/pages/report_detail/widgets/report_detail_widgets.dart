@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../../../core/theme/theme.dart';
-import '../../../../../../core/utils/enums/enums.dart';
-import '../../../../../../core/utils/extensions/extensions.dart';
 
-/// The reporter's photo, with its own loading and error fallbacks.
+/// The reporter's photo, with its own loading and error fallbacks. Fills the
+/// box it is given; the hero owns the sizing and the clipping.
 class ReportDetailPhoto extends StatelessWidget {
   const ReportDetailPhoto({super.key, required this.photoUrl});
 
@@ -14,26 +13,23 @@ class ReportDetailPhoto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final url = photoUrl;
+    if (url == null || url.isEmpty) {
+      return const _PhotoFallback(label: 'No photo attached');
+    }
 
-    return ClipRRect(
-      borderRadius: AppRadius.radiusXl,
-      child: AspectRatio(
-        aspectRatio: 4 / 3,
-        child: url == null || url.isEmpty
-            ? const _PhotoFallback(label: 'No photo attached')
-            : Image.network(
-                url,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, progress) => progress == null
-                    ? child
-                    : const ColoredBox(
-                        color: AppColors.surfaceRaised,
-                        child: Center(child: CircularProgressIndicator()),
-                      ),
-                errorBuilder: (context, error, stackTrace) =>
-                    const _PhotoFallback(label: 'Photo unavailable'),
-              ),
-      ),
+    return Image.network(
+      url,
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
+      loadingBuilder: (context, child, progress) => progress == null
+          ? child
+          : const ColoredBox(
+              color: AppColors.surfaceRaised,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+      errorBuilder: (context, error, stackTrace) =>
+          const _PhotoFallback(label: 'Photo unavailable'),
     );
   }
 }
@@ -92,41 +88,6 @@ class ReportDetailRow extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-/// Status pill: colour + icon + label, never colour alone.
-class ReportStatusChip extends StatelessWidget {
-  const ReportStatusChip({super.key, required this.status});
-
-  final ReportStatus status;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.xs,
-        vertical: 7,
-      ),
-      decoration: BoxDecoration(
-        color: status.color,
-        borderRadius: AppRadius.radiusFull,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(status.icon, size: AppIconSizes.sm, color: status.inkColor),
-          const Gap(AppSpacing.xs2),
-          Text(
-            status.label,
-            style: AppTypography.label.copyWith(
-              fontWeight: FontWeight.w700,
-              color: status.inkColor,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

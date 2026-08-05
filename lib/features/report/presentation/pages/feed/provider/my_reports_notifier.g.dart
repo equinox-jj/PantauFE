@@ -56,7 +56,7 @@ final class MyReportsProvider
   }
 }
 
-String _$myReportsHash() => r'cac290a6ef6c44fc380a3cf05d05fb20122ecde8';
+String _$myReportsHash() => r'79df4803820fdc0ad122d3fdd075f457265d2530';
 
 /// The caller's own reports, newest first.
 ///

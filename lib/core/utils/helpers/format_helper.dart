@@ -23,3 +23,11 @@ String formatShortAge(DateTime value, {DateTime? now}) {
 
   return '${elapsed.inDays ~/ 365}y';
 }
+
+/// Sentence-shaped age used by the report detail screen (`just now`, `2h ago`,
+/// `3d ago`). Wraps [formatShortAge] so both surfaces agree on the thresholds.
+String formatRelativeAge(DateTime value, {DateTime? now}) {
+  final age = formatShortAge(value, now: now);
+
+  return age == 'now' ? 'just now' : '$age ago';
+}

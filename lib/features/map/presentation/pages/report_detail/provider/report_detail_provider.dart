@@ -6,8 +6,8 @@ import '../../../../domain/usecase/usecase.dart';
 
 part 'report_detail_provider.g.dart';
 
-/// Loads one report by id. Throws the [Failure] so the sheet can render it
-/// through `AsyncValue.error`.
+/// Loads one report by id. Throws the [Failure] so [ReportDetailPage] can
+/// render it through `AsyncValue.error`.
 @riverpod
 Future<ReportDetail> reportDetail(Ref ref, String reportId) async {
   final usecase = ref.watch(getReportDetailUsecaseProvider);

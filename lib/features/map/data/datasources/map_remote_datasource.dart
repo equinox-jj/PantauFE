@@ -15,6 +15,7 @@ abstract class MapRemoteDataSource with BaseRemoteDataSource {
   });
   Future<ReportCategoriesModel> getReportCategories();
   Future<ReportDetailModel> getReportDetail(String id);
+  Future<StatusHistoryModel> getReportHistory(String id);
 
   /// Creates a report. The photo at [photoPath] is uploaded in the same
   /// multipart request — the API has no separate upload endpoint.
@@ -73,6 +74,27 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
 
     return ReportDetailModel.fromJson(response.data);
   });
+
+  @override
+  Future<StatusHistoryModel> getReportHistory(String id) =>
+      safeApiCall(() async {
+        final response = await _dioClient.get(MapEndpoint.reportHistory(id));
+        final data = response.data;
+
+        // docs/Pantau_openapi.yaml types this response as a bare array, while
+        // every other endpoint wraps its payload in {status, message, data}.
+        // Both shapes are accepted so the screen survives either backend.
+        if (data is List) {
+          return StatusHistoryModel(
+            data: data
+                .whereType<Map<String, dynamic>>()
+                .map(StatusHistoryEntryModel.fromJson)
+                .toList(growable: false),
+          );
+        }
+
+        return StatusHistoryModel.fromJson(data);
+      });
 
   @override
   Future<CreateReportModel> createReport({

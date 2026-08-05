@@ -49,6 +49,13 @@ GetReportDetailUsecase getReportDetailUsecase(Ref ref) {
 }
 
 @Riverpod(keepAlive: true)
+GetReportHistoryUsecase getReportHistoryUsecase(Ref ref) {
+  return GetReportHistoryUsecase(
+    mapRepository: ref.read(mapRepositoryProvider),
+  );
+}
+
+@Riverpod(keepAlive: true)
 CreateReportUsecase createReportUsecase(Ref ref) {
   return CreateReportUsecase(mapRepository: ref.read(mapRepositoryProvider));
 }

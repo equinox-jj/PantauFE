@@ -10,7 +10,6 @@ import '../../../../../core/router/app_routes.dart';
 import '../../../../../core/service/service.dart';
 import '../../../../../core/theme/theme.dart';
 import '../../../domain/entity/entity.dart';
-import '../report_detail/report_detail.dart';
 import 'listener/listener.dart';
 import 'provider/provider.dart';
 import 'widgets/widgets.dart';
@@ -168,7 +167,18 @@ class _MapPageState extends ConsumerState<MapPage> {
     final id = report.id;
     if (id == null) return;
 
-    ReportDetailSheet.show(context, reportId: id);
+    context.push(AppRoutes.reportDetailPath(id), extra: _distanceTo(report));
+  }
+
+  /// Distance from the last resolved device position. Null before the device
+  /// has located, which drops the line on the detail screen.
+  double? _distanceTo(NearbyReport report) {
+    final origin = ref.read(currentLocationProvider);
+    final latitude = report.latitude;
+    final longitude = report.longitude;
+    if (origin == null || latitude == null || longitude == null) return null;
+
+    return _distance.as(LengthUnit.Meter, origin, LatLng(latitude, longitude));
   }
 
   void _startReport() => context.push(AppRoutes.createReport);

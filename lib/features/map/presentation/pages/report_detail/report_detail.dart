@@ -1,3 +1,3 @@
 export 'provider/provider.dart';
-export 'report_detail_sheet.dart';
-export 'widgets/report_detail_widgets.dart';
+export 'report_detail_page.dart';
+export 'widgets/widgets.dart';
