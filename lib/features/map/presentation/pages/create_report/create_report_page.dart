@@ -13,7 +13,7 @@ import '../../../../../core/service/service.dart';
 import '../../../../../core/theme/theme.dart';
 import 'listener/listener.dart';
 import 'provider/provider.dart';
-import 'widgets/widgets.dart';
+import 'widgets/create_report_widgets.dart';
 
 /// Photo slot state: the picked file and the validation message for it.
 typedef _PhotoField = ({String? path, String? error});

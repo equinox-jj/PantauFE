@@ -5,11 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../../../../core/theme/theme.dart';
+import '../../../../../../core/utils/extensions/extensions.dart';
 import '../../../../domain/entity/entity.dart';
 import '../provider/provider.dart';
-import 'map_pin_marker.dart';
-import 'report_cluster_marker.dart';
-import 'report_marker.dart';
 
 /// Base tiles, clustered report markers, attribution.
 ///
@@ -114,7 +112,7 @@ class _SearchedPlaceLayer extends StatelessWidget {
           markers: [
             _placePin(
               point: LatLng(place.latitude, place.longitude),
-              child: MapPinMarker(label: 'Searched place: ${place.name}'),
+              child: _MapPinMarker(label: 'Searched place: ${place.name}'),
             ),
           ],
         );
@@ -139,7 +137,7 @@ class _CurrentLocationLayer extends StatelessWidget {
           markers: [
             _placePin(
               point: position,
-              child: const MapPinMarker(label: 'Your location'),
+              child: const _MapPinMarker(label: 'Your location'),
             ),
           ],
         );
@@ -148,13 +146,13 @@ class _CurrentLocationLayer extends StatelessWidget {
   }
 }
 
-/// A [MapPinMarker] anchored so its tip, not its centre, sits on the
+/// A [_MapPinMarker] anchored so its tip, not its centre, sits on the
 /// coordinate.
-Marker _placePin({required LatLng point, required MapPinMarker child}) {
+Marker _placePin({required LatLng point, required _MapPinMarker child}) {
   return Marker(
     point: point,
-    width: MapPinMarker.size,
-    height: MapPinMarker.size,
+    width: _MapPinMarker.size,
+    height: _MapPinMarker.size,
     alignment: Alignment.topCenter,
     child: child,
   );
@@ -173,9 +171,9 @@ class _ReportClusterLayer extends StatelessWidget {
         .map(
           (report) => Marker(
             point: LatLng(report.latitude!, report.longitude!),
-            width: ReportMarker.size,
-            height: ReportMarker.size,
-            child: ReportMarker(
+            width: _ReportMarker.size,
+            height: _ReportMarker.size,
+            child: _ReportMarker(
               report: report,
               onTap: () => onReportTap(report),
             ),
@@ -194,16 +192,220 @@ class _ReportClusterLayer extends StatelessWidget {
           options: MarkerClusterLayerOptions(
             maxClusterRadius: 48,
             size: const Size(
-              ReportClusterMarker.size,
-              ReportClusterMarker.size,
+              _ReportClusterMarker.size,
+              _ReportClusterMarker.size,
             ),
             padding: const EdgeInsets.all(50),
             markers: _markersFrom(reports),
             builder: (context, markers) =>
-                ReportClusterMarker(count: markers.length),
+                _ReportClusterMarker(count: markers.length),
           ),
         );
       },
+    );
+  }
+}
+
+/// Teardrop pin for the map's two singular places: where the user is and where
+/// they searched.
+///
+/// Not a circle — report markers are status-coloured circles, so shape alone
+/// tells a place apart from a report. The two pins share the accent colour and
+/// differ only by position and the semantics [label].
+class _MapPinMarker extends StatelessWidget {
+  const _MapPinMarker({required this.label});
+
+  /// Spoken description of what the pin marks.
+  final String label;
+
+  static const double size = 36;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: label,
+      child: const Icon(
+        Icons.place,
+        size: size,
+        color: AppColors.teal400,
+        shadows: AppShadows.floating,
+      ),
+    );
+  }
+}
+
+/// Status-coloured map pin for a single report. The icon repeats the status
+/// so the marker still reads without colour, and the semantics label names it.
+///
+/// A radar pulse rings out of the dot to draw the eye to reports without
+/// moving the dot itself — the marker's anchor point stays exactly on the
+/// report's coordinate.
+class _ReportMarker extends StatefulWidget {
+  const _ReportMarker({required this.report, required this.onTap});
+
+  /// Marker box. Wider than [dotSize] so the pulse has room to expand into.
+  static const double size = 52;
+
+  /// The tappable dot at the centre of the box.
+  static const double dotSize = 32;
+
+  final NearbyReport report;
+  final VoidCallback onTap;
+
+  @override
+  State<_ReportMarker> createState() => _ReportMarkerState();
+}
+
+class _ReportMarkerState extends State<_ReportMarker>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulse = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 2400),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _pulse.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final status = widget.report.status;
+    // Honour the platform's reduce-motion setting: a map full of pulsing
+    // markers is exactly what that setting exists to switch off.
+    final animate = !MediaQuery.disableAnimationsOf(context);
+
+    return Semantics(
+      button: true,
+      label: '${widget.report.category?.name ?? 'Report'}, ${status.label}',
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          if (animate)
+            RepaintBoundary(
+              child: AnimatedBuilder(
+                animation: _pulse,
+                builder: (context, _) => CustomPaint(
+                  size: const Size.square(_ReportMarker.size),
+                  painter: _RadarPulsePainter(
+                    progress: _pulse.value,
+                    color: status.color,
+                    minRadius: _ReportMarker.dotSize / 2,
+                  ),
+                ),
+              ),
+            ),
+          // Only the dot takes taps — the pulse would otherwise swallow taps
+          // meant for a neighbouring marker.
+          GestureDetector(
+            onTap: widget.onTap,
+            child: Container(
+              width: _ReportMarker.dotSize,
+              height: _ReportMarker.dotSize,
+              decoration: BoxDecoration(
+                color: status.color,
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.surfaceBase, width: 2),
+                boxShadow: AppShadows.floating,
+              ),
+              child: Icon(
+                status.icon,
+                size: AppIconSizes.sm,
+                color: status.inkColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Two rings, half a cycle apart, growing out of the dot and fading as they go.
+class _RadarPulsePainter extends CustomPainter {
+  const _RadarPulsePainter({
+    required this.progress,
+    required this.color,
+    required this.minRadius,
+  });
+
+  /// Cycle position, 0 to 1.
+  final double progress;
+  final Color color;
+
+  /// Where a ring starts — the dot's edge, so it never appears inside it.
+  final double minRadius;
+
+  static const int _ringCount = 2;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = size.center(Offset.zero);
+    final maxRadius = size.shortestSide / 2;
+
+    for (var i = 0; i < _ringCount; i++) {
+      final t = (progress + i / _ringCount) % 1;
+      // Ease out so the ring leaves the dot quickly, then settles as it fades.
+      final eased = Curves.easeOutSine.transform(t);
+      final radius = minRadius + (maxRadius - minRadius) * eased;
+      final fade = 1 - t;
+
+      canvas
+        ..drawCircle(
+          center,
+          radius,
+          Paint()..color = color.withValues(alpha: 0.12 * fade),
+        )
+        ..drawCircle(
+          center,
+          radius,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2
+            ..color = color.withValues(alpha: 0.45 * fade),
+        );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_RadarPulsePainter oldDelegate) {
+    return oldDelegate.progress != progress ||
+        oldDelegate.color != color ||
+        oldDelegate.minRadius != minRadius;
+  }
+}
+
+/// Bubble shown in place of overlapping markers, labelled with the count.
+class _ReportClusterMarker extends StatelessWidget {
+  const _ReportClusterMarker({required this.count});
+
+  static const double size = 44;
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: '$count reports',
+      child: Container(
+        width: size,
+        height: size,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: AppColors.accent,
+          shape: BoxShape.circle,
+          border: Border.all(color: AppColors.surfaceBase, width: 2),
+          boxShadow: AppShadows.accentGlow(),
+        ),
+        child: Text(
+          '$count',
+          style: AppTypography.subheading.copyWith(
+            fontSize: 14,
+            color: AppColors.onAccent,
+          ),
+        ),
+      ),
     );
   }
 }

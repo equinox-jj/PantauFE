@@ -8,7 +8,7 @@ import '../../../../../core/error/error.dart';
 import '../../../../../core/theme/theme.dart';
 import '../../../domain/entity/entity.dart';
 import 'provider/provider.dart';
-import 'widgets/widgets.dart';
+import 'widgets/report_detail_widgets.dart';
 
 /// Bottom sheet showing one report: photo, status, category, description,
 /// coordinates and timestamps. The chrome is built once; only the body swaps
