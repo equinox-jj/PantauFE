@@ -274,7 +274,7 @@ class _NearbyBody extends StatelessWidget {
           // A refetch keeps the previous cards; only a first load has nothing
           // to show and falls back to skeletons.
           AsyncValue(isLoading: true, value: null) => const _FeedSkeletonList(),
-          AsyncValue(value: final items?) when items.isEmpty =>
+          AsyncValue<List<FeedItem>>(value: final items?) when items.isEmpty =>
             _FeedStateSliver(
               child: AppEmptyState(
                 icon: Icons.subject_outlined,
@@ -290,7 +290,7 @@ class _NearbyBody extends StatelessWidget {
                 ),
               ),
             ),
-          AsyncValue(value: final items?) => _FeedList(
+          AsyncValue<List<FeedItem>>(value: final items?) => _FeedList(
             items: items,
             onReportTap: onReportTap,
           ),
@@ -329,7 +329,7 @@ class _MyReportsBody extends StatelessWidget {
             ),
           ),
           AsyncValue(isLoading: true, value: null) => const _FeedSkeletonList(),
-          AsyncValue(value: final items?) when items.isEmpty =>
+          AsyncValue<List<FeedItem>>(value: final items?) when items.isEmpty =>
             _FeedStateSliver(
               child: AppEmptyState(
                 icon: Icons.photo_camera_outlined,
@@ -344,7 +344,7 @@ class _MyReportsBody extends StatelessWidget {
                 ),
               ),
             ),
-          AsyncValue(value: final items?) => _FeedList(
+          AsyncValue<List<FeedItem>>(value: final items?) => _FeedList(
             items: items,
             onReportTap: onReportTap,
           ),
