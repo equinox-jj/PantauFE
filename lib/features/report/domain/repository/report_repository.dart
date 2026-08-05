@@ -11,4 +11,9 @@ abstract class ReportRepository with BaseRepository {
     required int radiusInMeters,
     int limit,
   });
+
+  Future<Either<Failure, List<FeedReport>>> getMyReports({
+    int limit,
+    int offset,
+  });
 }

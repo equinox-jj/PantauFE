@@ -27,4 +27,17 @@ class ReportRepositoryImpl extends ReportRepository {
 
     return result.toEntities();
   });
+
+  @override
+  Future<Either<Failure, List<FeedReport>>> getMyReports({
+    int limit = 50,
+    int offset = 0,
+  }) => safeCall(() async {
+    final result = await _reportRemoteDataSource.getMyReports(
+      limit: limit,
+      offset: offset,
+    );
+
+    return result.toEntities();
+  });
 }

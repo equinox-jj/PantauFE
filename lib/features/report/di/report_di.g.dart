@@ -150,3 +150,51 @@ final class GetFeedReportsUsecaseProvider
 
 String _$getFeedReportsUsecaseHash() =>
     r'24835f6e2dade484c6867b55d8fbe83ad4506b98';
+
+@ProviderFor(getMyReportsUsecase)
+final getMyReportsUsecaseProvider = GetMyReportsUsecaseProvider._();
+
+final class GetMyReportsUsecaseProvider
+    extends
+        $FunctionalProvider<
+          GetMyReportsUsecase,
+          GetMyReportsUsecase,
+          GetMyReportsUsecase
+        >
+    with $Provider<GetMyReportsUsecase> {
+  GetMyReportsUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'getMyReportsUsecaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$getMyReportsUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetMyReportsUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  GetMyReportsUsecase create(Ref ref) {
+    return getMyReportsUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetMyReportsUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetMyReportsUsecase>(value),
+    );
+  }
+}
+
+String _$getMyReportsUsecaseHash() =>
+    r'57cdfc6ee067f60a5625e53dfc2a8840321ef1ab';

@@ -28,3 +28,10 @@ GetFeedReportsUsecase getFeedReportsUsecase(Ref ref) {
     reportRepository: ref.read(reportRepositoryProvider),
   );
 }
+
+@Riverpod(keepAlive: true)
+GetMyReportsUsecase getMyReportsUsecase(Ref ref) {
+  return GetMyReportsUsecase(
+    reportRepository: ref.read(reportRepositoryProvider),
+  );
+}

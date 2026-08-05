@@ -19,7 +19,8 @@ class DashboardNavBar extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTabSelected;
 
-  /// Tabs showing an unread dot (e.g. a status change on one of my reports).
+  /// Tabs showing an unread dot (e.g. a status change on one of the caller's
+  /// own reports, which live in the feed's "My reports" segment).
   final Set<DashboardTab> badgedTabs;
 
   @override

@@ -24,6 +24,16 @@ abstract final class AppShadows {
     ),
   ];
 
+  /// 0 4 10 −4 · black .6 — the raised segment of a segmented control
+  static const List<BoxShadow> segment = [
+    BoxShadow(
+      color: Color(0x99000000), // black · .6
+      offset: Offset(0, 4),
+      blurRadius: 10,
+      spreadRadius: -4,
+    ),
+  ];
+
   /// 0 12 26 −10 · teal .65 — accent glow (primary buttons, FAB)
   static List<BoxShadow> accentGlow({Color accent = AppColors.accent}) {
     return [

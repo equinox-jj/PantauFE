@@ -8,6 +8,101 @@ import '../../../../../../core/utils/extensions/extensions.dart';
 import '../../../../../../core/utils/helpers/helpers.dart';
 import '../provider/provider.dart';
 
+/// Segmented control switching the feed between nearby reports and the
+/// caller's own.
+///
+/// Both segments stay visible and labelled — the inactive one is a lower
+/// contrast, never a hidden affordance.
+class FeedTabSelector extends StatelessWidget {
+  const FeedTabSelector({
+    super.key,
+    required this.currentTab,
+    required this.onTabSelected,
+  });
+
+  final FeedTab currentTab;
+  final ValueChanged<FeedTab> onTabSelected;
+
+  /// Track pad and segment radius are one step tighter than the tokens either
+  /// side of them, so both are spelled out here rather than rounded to a token.
+  static const double _trackPadding = 4;
+  static const double _segmentRadius = 10;
+  static const double _segmentHeight = 38;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(_trackPadding),
+      decoration: BoxDecoration(
+        color: AppColors.fillSubtle,
+        borderRadius: AppRadius.radiusMd,
+        border: Border.all(color: AppColors.borderHairline),
+      ),
+      child: Row(
+        children: [
+          for (final tab in FeedTab.values)
+            Expanded(
+              child: _FeedTabSegment(
+                tab: tab,
+                isActive: tab == currentTab,
+                onTap: () => onTabSelected(tab),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FeedTabSegment extends StatelessWidget {
+  const _FeedTabSegment({
+    required this.tab,
+    required this.isActive,
+    required this.onTap,
+  });
+
+  final FeedTab tab;
+  final bool isActive;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      selected: isActive,
+      label: tab.label,
+      child: GestureDetector(
+        onTap: onTap,
+        // The gaps between the two segments must take the tap too, otherwise
+        // the track has dead strips down its middle.
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          height: FeedTabSelector._segmentHeight,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: isActive ? AppColors.borderDefault : Colors.transparent,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(FeedTabSelector._segmentRadius),
+            ),
+            boxShadow: isActive ? AppShadows.segment : const [],
+          ),
+          child: Text(
+            tab.label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.label.copyWith(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: isActive ? AppColors.textPrimary : AppColors.textSecondary,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// One report in the feed: photo band with the status over it, then category,
 /// distance, description and age.
 ///
@@ -32,10 +127,11 @@ class FeedReportCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final report = item.report;
+    final title = _title;
 
     return Semantics(
       button: true,
-      label: '${report.status.label} · $_title',
+      label: '${report.status.label} · $title',
       child: DecoratedBox(
         decoration: const BoxDecoration(
           borderRadius: AppRadius.radiusXl,
@@ -80,7 +176,7 @@ class FeedReportCard extends StatelessWidget {
                       _CardMetaRow(item: item),
                       const Gap(AppSpacing.xs2),
                       Text(
-                        _title,
+                        title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: AppTypography.body.copyWith(
@@ -244,14 +340,24 @@ class _FeedPhoto extends StatelessWidget {
       return const _PhotoFallback(label: 'No photo attached');
     }
 
-    return Image.network(
-      url,
-      fit: BoxFit.cover,
-      loadingBuilder: (context, child, progress) => progress == null
-          ? child
-          : const ColoredBox(color: AppColors.surfaceFloat),
-      errorBuilder: (context, error, stackTrace) =>
-          const _PhotoFallback(label: 'Photo unavailable'),
+    // Reporter photos come straight off a phone camera, so decoding them at
+    // their native size would cost tens of megabytes per card and thrash the
+    // image cache on a list this long. Decode to the band's own pixel width.
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+
+        return Image.network(
+          url,
+          fit: BoxFit.cover,
+          cacheWidth: (constraints.maxWidth * devicePixelRatio).round(),
+          loadingBuilder: (context, child, progress) => progress == null
+              ? child
+              : const ColoredBox(color: AppColors.surfaceFloat),
+          errorBuilder: (context, error, stackTrace) =>
+              const _PhotoFallback(label: 'Photo unavailable'),
+        );
+      },
     );
   }
 }
@@ -278,46 +384,47 @@ class _PhotoFallback extends StatelessWidget {
 /// Placeholder cards for the first load.
 ///
 /// Shaped like the real card so the list does not reflow when the data lands.
+///
+/// Carries no [Skeletonizer] of its own — the list wraps the whole sliver in
+/// one, so the shimmer runs off a single ticker instead of one per card.
 class FeedSkeletonCard extends StatelessWidget {
   const FeedSkeletonCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Skeletonizer(
-      child: DecoratedBox(
-        decoration: const BoxDecoration(
-          color: AppColors.surfaceRaised,
-          borderRadius: AppRadius.radiusXl,
-          border: Border.fromBorderSide(
-            BorderSide(color: AppColors.borderHairline),
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        color: AppColors.surfaceRaised,
+        borderRadius: AppRadius.radiusXl,
+        border: Border.fromBorderSide(
+          BorderSide(color: AppColors.borderHairline),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const AspectRatio(
+            aspectRatio: FeedReportCard._photoAspectRatio,
+            child: Bone(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(AppRadius.xl),
+              ),
+            ),
           ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const AspectRatio(
-              aspectRatio: FeedReportCard._photoAspectRatio,
-              child: Bone(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(AppRadius.xl),
-                ),
-              ),
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Bone.text(words: 2),
+                const Gap(AppSpacing.xs2),
+                const Bone.multiText(lines: 2),
+                const Gap(AppSpacing.xs),
+                Bone.text(width: context.screenWidth * 0.2),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Bone.text(words: 2),
-                  const Gap(AppSpacing.xs2),
-                  const Bone.multiText(lines: 2),
-                  const Gap(AppSpacing.xs),
-                  Bone.text(width: context.screenWidth * 0.2),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

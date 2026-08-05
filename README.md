@@ -27,7 +27,7 @@ lib/
       presentation/
 ```
 
-Current features: `auth`, `category`, `dashboard`, `map`, `my_reports`, `notification`, `onboarding`, `profile`, `report`, `resolver`.
+Current features: `auth`, `category`, `dashboard`, `map`, `notification`, `onboarding`, `profile`, `report`, `resolver`.
 
 New features scaffold via Mason (`bricks/features`, see `mason.yaml`).
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../core/components/button/button.dart';
 import '../../../../../core/components/empty_state/empty_state.dart';
@@ -16,10 +17,12 @@ import 'listener/listener.dart';
 import 'provider/provider.dart';
 import 'widgets/feed_widgets.dart';
 
-/// Feed tab — the reports around the device as a photo-led list.
+/// Feed tab — reports as a photo-led list, in two segments: what is around the
+/// device, and what the caller reported themselves.
 ///
-/// The device position is the query, so locating is also the fetch trigger:
-/// there is no camera to pan and nothing to show without a fix.
+/// For the nearby segment the device position is the query, so locating is also
+/// the fetch trigger: there is no camera to pan and nothing to show without a
+/// fix. The "My reports" segment needs no position and loads on first open.
 class FeedPage extends ConsumerStatefulWidget {
   const FeedPage({super.key});
 
@@ -44,9 +47,18 @@ class _FeedPageState extends ConsumerState<FeedPage> {
         .load(latitude: result.latitude, longitude: result.longitude);
   }
 
-  /// Refetches around the position already used. Cheaper than re-locating,
-  /// which is what the location-error state's action is for.
-  Future<void> _refresh() => ref.read(feedReportsProvider.notifier).refresh();
+  void _selectTab(FeedTab tab) =>
+      ref.read(feedTabSelectionProvider.notifier).select(tab);
+
+  /// Refetches whichever segment is showing. For the nearby list this reuses
+  /// the position already queried with — cheaper than re-locating, which is
+  /// what the location-error state's action is for.
+  Future<void> _refresh() {
+    return switch (ref.read(feedTabSelectionProvider)) {
+      FeedTab.nearby => ref.read(feedReportsProvider.notifier).refresh(),
+      FeedTab.mine => ref.read(myReportsProvider.notifier).refresh(),
+    };
+  }
 
   void _locate() => ref.read(feedLocationProvider.notifier).locate();
 
@@ -77,7 +89,9 @@ class _FeedPageState extends ConsumerState<FeedPage> {
               // Every state must stay pullable, including the empty ones.
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
-                const SliverToBoxAdapter(child: _FeedHeader()),
+                SliverToBoxAdapter(
+                  child: _FeedHeader(onTabSelected: _selectTab),
+                ),
                 _FeedBody(
                   onReportTap: _openReport,
                   onRetry: _refresh,
@@ -94,9 +108,12 @@ class _FeedPageState extends ConsumerState<FeedPage> {
   }
 }
 
-/// Screen title and the line describing what the list covers.
+/// Screen title, the line describing what the list covers, and the segmented
+/// control that picks which list that is.
 class _FeedHeader extends StatelessWidget {
-  const _FeedHeader();
+  const _FeedHeader({required this.onTabSelected});
+
+  final ValueChanged<FeedTab> onTabSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -113,14 +130,23 @@ class _FeedHeader extends StatelessWidget {
           Text('Feed', style: AppTypography.title.copyWith(fontSize: 24)),
           const Gap(4),
           const _FeedSubtitle(),
+          const Gap(AppSpacing.md),
+          Consumer(
+            builder: (context, ref, _) {
+              return FeedTabSelector(
+                currentTab: ref.watch(feedTabSelectionProvider),
+                onTabSelected: onTabSelected,
+              );
+            },
+          ),
         ],
       ),
     );
   }
 }
 
-/// Report count and radius. Subscribes on its own so a fetch repaints this
-/// line alone, not the whole header.
+/// Report count, and what bounds it. Subscribes on its own so a fetch repaints
+/// this line alone, not the whole header.
 class _FeedSubtitle extends StatelessWidget {
   const _FeedSubtitle();
 
@@ -128,16 +154,30 @@ class _FeedSubtitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final items = ref.watch(
-          feedReportsProvider.select((state) => state.value),
-        );
-        final radius = formatDistance(kFeedRadiusInMeters.toDouble());
+        final tab = ref.watch(feedTabSelectionProvider);
+        final items = switch (tab) {
+          FeedTab.nearby => ref.watch(
+            feedReportsProvider.select((state) => state.value),
+          ),
+          FeedTab.mine => ref.watch(
+            myReportsProvider.select((state) => state.value),
+          ),
+        };
+        final fallback = switch (tab) {
+          FeedTab.nearby => 'Around you',
+          FeedTab.mine => 'Your reports',
+        };
+        final bound = switch (tab) {
+          FeedTab.nearby =>
+            '${formatDistance(kFeedRadiusInMeters.toDouble())} radius',
+          FeedTab.mine => 'newest first',
+        };
         final count = items == null
-            ? 'Around you'
+            ? fallback
             : '${items.length} ${items.length == 1 ? 'report' : 'reports'}';
 
         return Text(
-          '$count · $radius radius',
+          '$count · $bound',
           style: AppTypography.mono(fontSize: 11, color: AppColors.textMuted),
         );
       },
@@ -145,10 +185,50 @@ class _FeedSubtitle extends StatelessWidget {
   }
 }
 
-/// The list and every state that replaces it: location refused, fetch failed,
-/// first load, and nothing reported nearby.
+/// The active list and every state that replaces it: location refused, fetch
+/// failed, first load, and nothing to show.
 class _FeedBody extends StatelessWidget {
   const _FeedBody({
+    required this.onReportTap,
+    required this.onRetry,
+    required this.onLocate,
+    required this.onOpenSettings,
+    required this.onStartReport,
+  });
+
+  final ValueChanged<FeedReport> onReportTap;
+  final VoidCallback onRetry;
+  final VoidCallback onLocate;
+  final VoidCallback onOpenSettings;
+  final VoidCallback onStartReport;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, _) {
+        final tab = ref.watch(feedTabSelectionProvider);
+
+        return switch (tab) {
+          FeedTab.nearby => _NearbyBody(
+            onReportTap: onReportTap,
+            onRetry: onRetry,
+            onLocate: onLocate,
+            onOpenSettings: onOpenSettings,
+            onStartReport: onStartReport,
+          ),
+          FeedTab.mine => _MyReportsBody(
+            onReportTap: onReportTap,
+            onRetry: onRetry,
+            onStartReport: onStartReport,
+          ),
+        };
+      },
+    );
+  }
+}
+
+class _NearbyBody extends StatelessWidget {
+  const _NearbyBody({
     required this.onReportTap,
     required this.onRetry,
     required this.onLocate,
@@ -185,17 +265,10 @@ class _FeedBody extends StatelessWidget {
 
         return switch (reports) {
           AsyncError(error: final error) => _FeedStateSliver(
-            child: AppEmptyState(
-              icon: Icons.cloud_off,
+            child: _FeedErrorState(
               title: 'Could not load the feed',
-              message: error is Failure
-                  ? error.displayMessage
-                  : 'Check your connection and try again.',
-              action: AppButton(
-                text: 'Try again',
-                fullWidth: false,
-                onPressed: onRetry,
-              ),
+              error: error,
+              onRetry: onRetry,
             ),
           ),
           // A refetch keeps the previous cards; only a first load has nothing
@@ -210,6 +283,60 @@ class _FeedBody extends StatelessWidget {
                     'No reports within '
                     '${formatDistance(kFeedRadiusInMeters.toDouble())} of you '
                     'yet. Be the first to flag something.',
+                action: AppButton(
+                  text: 'Report an issue',
+                  fullWidth: false,
+                  onPressed: onStartReport,
+                ),
+              ),
+            ),
+          AsyncValue(value: final items?) => _FeedList(
+            items: items,
+            onReportTap: onReportTap,
+          ),
+          _ => const _FeedSkeletonList(),
+        };
+      },
+    );
+  }
+}
+
+/// The caller's own submissions with their current status. No location gate —
+/// this list is not anchored to where the device is.
+class _MyReportsBody extends StatelessWidget {
+  const _MyReportsBody({
+    required this.onReportTap,
+    required this.onRetry,
+    required this.onStartReport,
+  });
+
+  final ValueChanged<FeedReport> onReportTap;
+  final VoidCallback onRetry;
+  final VoidCallback onStartReport;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, _) {
+        final reports = ref.watch(myReportsProvider);
+
+        return switch (reports) {
+          AsyncError(error: final error) => _FeedStateSliver(
+            child: _FeedErrorState(
+              title: 'Could not load your reports',
+              error: error,
+              onRetry: onRetry,
+            ),
+          ),
+          AsyncValue(isLoading: true, value: null) => const _FeedSkeletonList(),
+          AsyncValue(value: final items?) when items.isEmpty =>
+            _FeedStateSliver(
+              child: AppEmptyState(
+                icon: Icons.photo_camera_outlined,
+                title: 'You have not reported anything',
+                message:
+                    'Every report you submit lands here, with its status from '
+                    'reported through to resolved.',
                 action: AppButton(
                   text: 'Report an issue',
                   fullWidth: false,
@@ -250,6 +377,10 @@ class _FeedList extends StatelessWidget {
           final item = items[index];
 
           return FeedReportCard(
+            // Keyed by report so a refetch that reorders the list does not
+            // leave a recycled card painting the previous report's photo
+            // until the new one decodes.
+            key: ValueKey<Object>(item.report.id ?? index),
             item: item,
             onTap: () => onReportTap(item.report),
           );
@@ -274,10 +405,15 @@ class _FeedSkeletonList extends StatelessWidget {
         AppSpacing.lg,
         AppSpacing.xl2,
       ),
-      sliver: SliverList.separated(
-        itemCount: _placeholderCount,
-        separatorBuilder: (context, index) => const Gap(AppSpacing.sm),
-        itemBuilder: (context, index) => const FeedSkeletonCard(),
+      // One Skeletonizer over the whole sliver, not one per card: the shimmer
+      // is a per-instance ticker, and three of them run out of phase for no
+      // visual gain.
+      sliver: SliverSkeletonizer(
+        child: SliverList.separated(
+          itemCount: _placeholderCount,
+          separatorBuilder: (context, index) => const Gap(AppSpacing.sm),
+          itemBuilder: (context, index) => const FeedSkeletonCard(),
+        ),
       ),
     );
   }
@@ -302,7 +438,36 @@ class _FeedStateSliver extends StatelessWidget {
   }
 }
 
-/// Explains why the feed has no position to query with, and offers the
+/// A failed fetch, worded per segment but recovering the same way.
+class _FeedErrorState extends StatelessWidget {
+  const _FeedErrorState({
+    required this.title,
+    required this.error,
+    required this.onRetry,
+  });
+
+  final String title;
+  final Object error;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppEmptyState(
+      icon: Icons.cloud_off,
+      title: title,
+      message: error is Failure
+          ? (error as Failure).displayMessage
+          : 'Check your connection and try again.',
+      action: AppButton(
+        text: 'Try again',
+        fullWidth: false,
+        onPressed: onRetry,
+      ),
+    );
+  }
+}
+
+/// Explains why the nearby list has no position to query with, and offers the
 /// recovery that matches the outcome.
 class _FeedLocationState extends StatelessWidget {
   const _FeedLocationState({

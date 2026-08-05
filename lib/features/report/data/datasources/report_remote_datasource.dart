@@ -11,6 +11,10 @@ abstract class ReportRemoteDataSource with BaseRemoteDataSource {
     required int radiusInMeters,
     int limit,
   });
+
+  /// The caller's own reports, newest first. Paged, so the rows arrive under
+  /// `data.items` rather than as `data` itself.
+  Future<MyReportsModel> getMyReports({int limit, int offset});
 }
 
 class ReportRemoteDataSourceImpl extends ReportRemoteDataSource {
@@ -37,4 +41,15 @@ class ReportRemoteDataSourceImpl extends ReportRemoteDataSource {
 
     return FeedReportsModel.fromJson(response.data);
   });
+
+  @override
+  Future<MyReportsModel> getMyReports({int limit = 50, int offset = 0}) =>
+      safeApiCall(() async {
+        final response = await _dioClient.get(
+          ReportEndpoint.myReports,
+          queryParameters: {'limit': limit, 'offset': offset},
+        );
+
+        return MyReportsModel.fromJson(response.data);
+      });
 }

@@ -15,7 +15,8 @@ abstract class FeedReportsModel with _$FeedReportsModel {
       _$FeedReportsModelFromJson(json);
 }
 
-/// One row of `GET /reports/nearby`.
+/// One report row, shared by `GET /reports/nearby` and `GET /reports/mine`.
+/// The latter carries a couple of fields more; the extras are ignored.
 ///
 /// `photo_url` and `description` are optional on purpose: the marker contract
 /// does not promise them, so a payload without them still parses and the card

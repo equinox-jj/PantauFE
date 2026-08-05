@@ -8,7 +8,6 @@ import '../../features/auth/presentation/pages/register/register.dart';
 import '../../features/dashboard/presentation/pages/dashboard/dashboard.dart';
 import '../../features/map/presentation/pages/create_report/create_report.dart';
 import '../../features/map/presentation/pages/map/map.dart';
-import '../../features/my_reports/presentation/pages/my_reports/my_reports.dart';
 import '../../features/onboarding/presentation/pages/onboarding/onboarding.dart';
 import '../../features/onboarding/presentation/pages/splash/splash.dart';
 import '../../features/profile/presentation/pages/profile/profile.dart';
@@ -62,14 +61,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: AppRoutes.feed,
                 builder: (context, state) => const FeedPage(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: AppRoutes.myReports,
-                builder: (context, state) => const MyReportsPage(),
               ),
             ],
           ),

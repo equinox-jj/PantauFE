@@ -12,7 +12,6 @@ abstract final class AppRoutes {
   // Dashboard shell — one branch (and one navigation stack) per tab.
   static const String map = '/map';
   static const String feed = '/feed';
-  static const String myReports = '/my-reports';
   static const String profile = '/profile';
 
   /// Entry point of the authenticated shell: the map tab.
@@ -26,7 +25,6 @@ abstract final class AppRoutes {
     createReport,
     map,
     feed,
-    myReports,
     profile,
   ];
 }
