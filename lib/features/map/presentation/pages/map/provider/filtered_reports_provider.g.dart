@@ -8,24 +8,22 @@ part of 'filtered_reports_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The reports actually drawn on the map: [visibleReportsProvider] narrowed by
-/// the selected category.
+/// The reports drawn on the map: [visibleReportsProvider] narrowed by the
+/// selected category.
 ///
-/// Filtering happens here, on the page already loaded, rather than as a query
-/// parameter on `GET /reports/nearby` — chip switching is synchronous and
-/// costs no refetch. The trade is that only the loaded page is filtered; see
-/// the design doc's "Known constraint" section.
+/// Filtered client-side rather than through `GET /reports/nearby`, so chip
+/// switching is synchronous and costs no refetch. The trade is that only the
+/// loaded page is filtered; see the design doc's "Known constraint".
 
 @ProviderFor(filteredReports)
 final filteredReportsProvider = FilteredReportsProvider._();
 
-/// The reports actually drawn on the map: [visibleReportsProvider] narrowed by
-/// the selected category.
+/// The reports drawn on the map: [visibleReportsProvider] narrowed by the
+/// selected category.
 ///
-/// Filtering happens here, on the page already loaded, rather than as a query
-/// parameter on `GET /reports/nearby` — chip switching is synchronous and
-/// costs no refetch. The trade is that only the loaded page is filtered; see
-/// the design doc's "Known constraint" section.
+/// Filtered client-side rather than through `GET /reports/nearby`, so chip
+/// switching is synchronous and costs no refetch. The trade is that only the
+/// loaded page is filtered; see the design doc's "Known constraint".
 
 final class FilteredReportsProvider
     extends
@@ -35,13 +33,12 @@ final class FilteredReportsProvider
           List<NearbyReport>
         >
     with $Provider<List<NearbyReport>> {
-  /// The reports actually drawn on the map: [visibleReportsProvider] narrowed by
-  /// the selected category.
+  /// The reports drawn on the map: [visibleReportsProvider] narrowed by the
+  /// selected category.
   ///
-  /// Filtering happens here, on the page already loaded, rather than as a query
-  /// parameter on `GET /reports/nearby` — chip switching is synchronous and
-  /// costs no refetch. The trade is that only the loaded page is filtered; see
-  /// the design doc's "Known constraint" section.
+  /// Filtered client-side rather than through `GET /reports/nearby`, so chip
+  /// switching is synchronous and costs no refetch. The trade is that only the
+  /// loaded page is filtered; see the design doc's "Known constraint".
   FilteredReportsProvider._()
     : super(
         from: null,

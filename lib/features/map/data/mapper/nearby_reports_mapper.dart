@@ -1,7 +1,7 @@
 import '../../../../core/utils/enums/enums.dart';
+import '../../../../core/utils/helpers/helpers.dart';
 import '../../domain/entity/entity.dart';
 import '../model/model.dart';
-import 'date_parser.dart';
 
 extension NearbyReportsModelMapper on NearbyReportsModel {
   List<NearbyReport> toEntities() =>
@@ -14,6 +14,7 @@ extension NearbyReportsDataModelMapper on NearbyReportsDataModel {
       id: id,
       category: category?.toEntity(),
       status: ReportStatus.fromSlug(status),
+      photoUrl: photoUrl,
       latitude: latitude,
       longitude: longitude,
       createdAt: parseDate(createdAt),

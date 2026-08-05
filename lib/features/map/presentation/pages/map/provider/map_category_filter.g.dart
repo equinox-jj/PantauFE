@@ -10,25 +10,22 @@ part of 'map_category_filter.dart';
 // ignore_for_file: type=lint, type=warning
 /// The category the map is filtered to, or `null` for "All" (FR-10).
 ///
-/// Deliberately holds an id rather than a `ReportCategory`: the taxonomy is
-/// fetched asynchronously and can be refetched, so a selection stored as an
-/// entity would go stale against a newer list.
+/// Holds an id rather than a `ReportCategory`: the taxonomy can be refetched,
+/// so a selection stored as an entity would go stale.
 
 @ProviderFor(MapCategoryFilter)
 final mapCategoryFilterProvider = MapCategoryFilterProvider._();
 
 /// The category the map is filtered to, or `null` for "All" (FR-10).
 ///
-/// Deliberately holds an id rather than a `ReportCategory`: the taxonomy is
-/// fetched asynchronously and can be refetched, so a selection stored as an
-/// entity would go stale against a newer list.
+/// Holds an id rather than a `ReportCategory`: the taxonomy can be refetched,
+/// so a selection stored as an entity would go stale.
 final class MapCategoryFilterProvider
     extends $NotifierProvider<MapCategoryFilter, int?> {
   /// The category the map is filtered to, or `null` for "All" (FR-10).
   ///
-  /// Deliberately holds an id rather than a `ReportCategory`: the taxonomy is
-  /// fetched asynchronously and can be refetched, so a selection stored as an
-  /// entity would go stale against a newer list.
+  /// Holds an id rather than a `ReportCategory`: the taxonomy can be refetched,
+  /// so a selection stored as an entity would go stale.
   MapCategoryFilterProvider._()
     : super(
         from: null,
@@ -60,9 +57,8 @@ String _$mapCategoryFilterHash() => r'c13a89493af05d2138a79307856d272707007213';
 
 /// The category the map is filtered to, or `null` for "All" (FR-10).
 ///
-/// Deliberately holds an id rather than a `ReportCategory`: the taxonomy is
-/// fetched asynchronously and can be refetched, so a selection stored as an
-/// entity would go stale against a newer list.
+/// Holds an id rather than a `ReportCategory`: the taxonomy can be refetched,
+/// so a selection stored as an entity would go stale.
 
 abstract class _$MapCategoryFilter extends $Notifier<int?> {
   int? build();

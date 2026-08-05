@@ -8,32 +8,23 @@ part of 'loaded_area_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Centre of the last nearby-reports fetch, kept for the ring the map draws
-/// around it.
+/// Centre of the last nearby-reports fetch, for the ring drawn around it.
 ///
-/// Deliberately not `CurrentLocation`: the fetch follows whatever the user
-/// last asked to look at — the device position at startup, a searched place,
-/// or the camera centre behind "Search this area" — and the ring has to mark
-/// the ground actually loaded, not where the user happens to be standing.
+/// Not `CurrentLocation`: the fetch follows whatever the user last asked to
+/// look at, and the ring must mark the ground actually loaded.
 
 @ProviderFor(LoadedArea)
 final loadedAreaProvider = LoadedAreaProvider._();
 
-/// Centre of the last nearby-reports fetch, kept for the ring the map draws
-/// around it.
+/// Centre of the last nearby-reports fetch, for the ring drawn around it.
 ///
-/// Deliberately not `CurrentLocation`: the fetch follows whatever the user
-/// last asked to look at — the device position at startup, a searched place,
-/// or the camera centre behind "Search this area" — and the ring has to mark
-/// the ground actually loaded, not where the user happens to be standing.
+/// Not `CurrentLocation`: the fetch follows whatever the user last asked to
+/// look at, and the ring must mark the ground actually loaded.
 final class LoadedAreaProvider extends $NotifierProvider<LoadedArea, LatLng?> {
-  /// Centre of the last nearby-reports fetch, kept for the ring the map draws
-  /// around it.
+  /// Centre of the last nearby-reports fetch, for the ring drawn around it.
   ///
-  /// Deliberately not `CurrentLocation`: the fetch follows whatever the user
-  /// last asked to look at — the device position at startup, a searched place,
-  /// or the camera centre behind "Search this area" — and the ring has to mark
-  /// the ground actually loaded, not where the user happens to be standing.
+  /// Not `CurrentLocation`: the fetch follows whatever the user last asked to
+  /// look at, and the ring must mark the ground actually loaded.
   LoadedAreaProvider._()
     : super(
         from: null,
@@ -63,13 +54,10 @@ final class LoadedAreaProvider extends $NotifierProvider<LoadedArea, LatLng?> {
 
 String _$loadedAreaHash() => r'91d09541e019b0bf78ae7494c2ccb9a0fadaf9bb';
 
-/// Centre of the last nearby-reports fetch, kept for the ring the map draws
-/// around it.
+/// Centre of the last nearby-reports fetch, for the ring drawn around it.
 ///
-/// Deliberately not `CurrentLocation`: the fetch follows whatever the user
-/// last asked to look at — the device position at startup, a searched place,
-/// or the camera centre behind "Search this area" — and the ring has to mark
-/// the ground actually loaded, not where the user happens to be standing.
+/// Not `CurrentLocation`: the fetch follows whatever the user last asked to
+/// look at, and the ring must mark the ground actually loaded.
 
 abstract class _$LoadedArea extends $Notifier<LatLng?> {
   LatLng? build();

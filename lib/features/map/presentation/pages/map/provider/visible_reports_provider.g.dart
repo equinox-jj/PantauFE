@@ -8,33 +8,30 @@ part of 'visible_reports_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The report list currently on screen: the last successfully loaded page of
-/// [nearbyReportsProvider], held across its loading and error states.
+/// The last successfully loaded page of [nearbyReportsProvider], held across
+/// its loading and error states.
 ///
-/// Markers would otherwise blink out on every pan-triggered refetch, and the
-/// empty/error overlays would flash over a map that still has pins on it.
-/// Listening (not watching) is what makes it a memo — the previous list
-/// survives until a newer one arrives.
+/// Markers would otherwise blink out on every pan refetch. Listening rather
+/// than watching is what memoises it: the previous list survives until a newer
+/// one arrives.
 
 @ProviderFor(VisibleReports)
 final visibleReportsProvider = VisibleReportsProvider._();
 
-/// The report list currently on screen: the last successfully loaded page of
-/// [nearbyReportsProvider], held across its loading and error states.
+/// The last successfully loaded page of [nearbyReportsProvider], held across
+/// its loading and error states.
 ///
-/// Markers would otherwise blink out on every pan-triggered refetch, and the
-/// empty/error overlays would flash over a map that still has pins on it.
-/// Listening (not watching) is what makes it a memo — the previous list
-/// survives until a newer one arrives.
+/// Markers would otherwise blink out on every pan refetch. Listening rather
+/// than watching is what memoises it: the previous list survives until a newer
+/// one arrives.
 final class VisibleReportsProvider
     extends $NotifierProvider<VisibleReports, List<NearbyReport>> {
-  /// The report list currently on screen: the last successfully loaded page of
-  /// [nearbyReportsProvider], held across its loading and error states.
+  /// The last successfully loaded page of [nearbyReportsProvider], held across
+  /// its loading and error states.
   ///
-  /// Markers would otherwise blink out on every pan-triggered refetch, and the
-  /// empty/error overlays would flash over a map that still has pins on it.
-  /// Listening (not watching) is what makes it a memo — the previous list
-  /// survives until a newer one arrives.
+  /// Markers would otherwise blink out on every pan refetch. Listening rather
+  /// than watching is what memoises it: the previous list survives until a newer
+  /// one arrives.
   VisibleReportsProvider._()
     : super(
         from: null,
@@ -64,13 +61,12 @@ final class VisibleReportsProvider
 
 String _$visibleReportsHash() => r'fdc65dc6cd31825bb5ef04141ce84db14ea2ff75';
 
-/// The report list currently on screen: the last successfully loaded page of
-/// [nearbyReportsProvider], held across its loading and error states.
+/// The last successfully loaded page of [nearbyReportsProvider], held across
+/// its loading and error states.
 ///
-/// Markers would otherwise blink out on every pan-triggered refetch, and the
-/// empty/error overlays would flash over a map that still has pins on it.
-/// Listening (not watching) is what makes it a memo — the previous list
-/// survives until a newer one arrives.
+/// Markers would otherwise blink out on every pan refetch. Listening rather
+/// than watching is what memoises it: the previous list survives until a newer
+/// one arrives.
 
 abstract class _$VisibleReports extends $Notifier<List<NearbyReport>> {
   List<NearbyReport> build();

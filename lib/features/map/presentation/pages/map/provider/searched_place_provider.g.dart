@@ -10,25 +10,22 @@ part of 'searched_place_provider.dart';
 // ignore_for_file: type=lint, type=warning
 /// The place the user jumped to, marked with a pin on the map.
 ///
-/// Separate from [PlaceSearch] because the two have different lifetimes: the
-/// result list disappears as soon as the panel closes, while the pin stays
-/// until the user clears the search field.
+/// Separate from [PlaceSearch] for lifetime: the result list dies with the
+/// panel, the pin stays until the search field is cleared.
 
 @ProviderFor(SearchedPlace)
 final searchedPlaceProvider = SearchedPlaceProvider._();
 
 /// The place the user jumped to, marked with a pin on the map.
 ///
-/// Separate from [PlaceSearch] because the two have different lifetimes: the
-/// result list disappears as soon as the panel closes, while the pin stays
-/// until the user clears the search field.
+/// Separate from [PlaceSearch] for lifetime: the result list dies with the
+/// panel, the pin stays until the search field is cleared.
 final class SearchedPlaceProvider
     extends $NotifierProvider<SearchedPlace, Place?> {
   /// The place the user jumped to, marked with a pin on the map.
   ///
-  /// Separate from [PlaceSearch] because the two have different lifetimes: the
-  /// result list disappears as soon as the panel closes, while the pin stays
-  /// until the user clears the search field.
+  /// Separate from [PlaceSearch] for lifetime: the result list dies with the
+  /// panel, the pin stays until the search field is cleared.
   SearchedPlaceProvider._()
     : super(
         from: null,
@@ -60,9 +57,8 @@ String _$searchedPlaceHash() => r'f66645f5883856a24e56eb050b64ce6eab32edba';
 
 /// The place the user jumped to, marked with a pin on the map.
 ///
-/// Separate from [PlaceSearch] because the two have different lifetimes: the
-/// result list disappears as soon as the panel closes, while the pin stays
-/// until the user clears the search field.
+/// Separate from [PlaceSearch] for lifetime: the result list dies with the
+/// panel, the pin stays until the search field is cleared.
 
 abstract class _$SearchedPlace extends $Notifier<Place?> {
   Place? build();

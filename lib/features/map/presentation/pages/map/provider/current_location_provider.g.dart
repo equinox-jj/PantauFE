@@ -8,30 +8,24 @@ part of 'current_location_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The last device position that resolved successfully, kept for the pin that
-/// marks it on the map.
+/// The last device position that resolved, for the pin marking it on the map.
 ///
-/// Separate from `MapLocation`: that one goes loading on every locate tap and
-/// carries the permission outcome, while the pin must stay put across a
-/// re-locate and appear only once a position has actually been obtained.
+/// Separate from `MapLocation`, which goes loading on every locate tap and
+/// carries the permission outcome; the pin must stay put across a re-locate.
 
 @ProviderFor(CurrentLocation)
 final currentLocationProvider = CurrentLocationProvider._();
 
-/// The last device position that resolved successfully, kept for the pin that
-/// marks it on the map.
+/// The last device position that resolved, for the pin marking it on the map.
 ///
-/// Separate from `MapLocation`: that one goes loading on every locate tap and
-/// carries the permission outcome, while the pin must stay put across a
-/// re-locate and appear only once a position has actually been obtained.
+/// Separate from `MapLocation`, which goes loading on every locate tap and
+/// carries the permission outcome; the pin must stay put across a re-locate.
 final class CurrentLocationProvider
     extends $NotifierProvider<CurrentLocation, LatLng?> {
-  /// The last device position that resolved successfully, kept for the pin that
-  /// marks it on the map.
+  /// The last device position that resolved, for the pin marking it on the map.
   ///
-  /// Separate from `MapLocation`: that one goes loading on every locate tap and
-  /// carries the permission outcome, while the pin must stay put across a
-  /// re-locate and appear only once a position has actually been obtained.
+  /// Separate from `MapLocation`, which goes loading on every locate tap and
+  /// carries the permission outcome; the pin must stay put across a re-locate.
   CurrentLocationProvider._()
     : super(
         from: null,
@@ -61,12 +55,10 @@ final class CurrentLocationProvider
 
 String _$currentLocationHash() => r'54e86c66f8ab4a4d3f969f80f98167d8d79c7349';
 
-/// The last device position that resolved successfully, kept for the pin that
-/// marks it on the map.
+/// The last device position that resolved, for the pin marking it on the map.
 ///
-/// Separate from `MapLocation`: that one goes loading on every locate tap and
-/// carries the permission outcome, while the pin must stay put across a
-/// re-locate and appear only once a position has actually been obtained.
+/// Separate from `MapLocation`, which goes loading on every locate tap and
+/// carries the permission outcome; the pin must stay put across a re-locate.
 
 abstract class _$CurrentLocation extends $Notifier<LatLng?> {
   LatLng? build();

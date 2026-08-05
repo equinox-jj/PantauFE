@@ -21,6 +21,7 @@ abstract class NearbyReportsDataModel with _$NearbyReportsDataModel {
     @JsonKey(name: "id") String? id,
     @JsonKey(name: "category") NearbyReportsCategoryModel? category,
     @JsonKey(name: "status") String? status,
+    @JsonKey(name: "photo_url") String? photoUrl,
     @JsonKey(name: "latitude") double? latitude,
     @JsonKey(name: "longitude") double? longitude,
     @JsonKey(name: "created_at") String? createdAt,

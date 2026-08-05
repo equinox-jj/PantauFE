@@ -1,0 +1,25 @@
+/// Compact distance label for cards and list rows: metres below a kilometre,
+/// kilometres above it (`40 m`, `1.2 km`, `12 km`).
+String formatDistance(double meters) {
+  if (meters < 1000) return '${meters.round()} m';
+
+  final kilometers = meters / 1000;
+
+  return '${kilometers.toStringAsFixed(kilometers < 10 ? 1 : 0)} km';
+}
+
+/// Compact age label used beside a report (`now`, `2h`, `3d`, `2w`, `5mo`).
+///
+/// [now] is injectable so the output is deterministic when tested.
+String formatShortAge(DateTime value, {DateTime? now}) {
+  final elapsed = (now ?? DateTime.now()).difference(value);
+  // A clock skew ahead of the device reads as "just now", never as a negative.
+  if (elapsed.inMinutes < 1) return 'now';
+  if (elapsed.inMinutes < 60) return '${elapsed.inMinutes}m';
+  if (elapsed.inHours < 24) return '${elapsed.inHours}h';
+  if (elapsed.inDays < 7) return '${elapsed.inDays}d';
+  if (elapsed.inDays < 30) return '${elapsed.inDays ~/ 7}w';
+  if (elapsed.inDays < 365) return '${elapsed.inDays ~/ 30}mo';
+
+  return '${elapsed.inDays ~/ 365}y';
+}

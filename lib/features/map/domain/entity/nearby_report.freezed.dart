@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NearbyReport {
 
- String? get id; ReportCategory? get category; ReportStatus get status; double? get latitude; double? get longitude; DateTime? get createdAt;
+ String? get id; ReportCategory? get category; ReportStatus get status; String? get photoUrl; double? get latitude; double? get longitude; DateTime? get createdAt;
 /// Create a copy of NearbyReport
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $NearbyReportCopyWith<NearbyReport> get copyWith => _$NearbyReportCopyWithImpl<N
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NearbyReport&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.status, status) || other.status == status)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NearbyReport&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.status, status) || other.status == status)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,category,status,latitude,longitude,createdAt);
+int get hashCode => Object.hash(runtimeType,id,category,status,photoUrl,latitude,longitude,createdAt);
 
 @override
 String toString() {
-  return 'NearbyReport(id: $id, category: $category, status: $status, latitude: $latitude, longitude: $longitude, createdAt: $createdAt)';
+  return 'NearbyReport(id: $id, category: $category, status: $status, photoUrl: $photoUrl, latitude: $latitude, longitude: $longitude, createdAt: $createdAt)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $NearbyReportCopyWith<$Res>  {
   factory $NearbyReportCopyWith(NearbyReport value, $Res Function(NearbyReport) _then) = _$NearbyReportCopyWithImpl;
 @useResult
 $Res call({
- String? id, ReportCategory? category, ReportStatus status, double? latitude, double? longitude, DateTime? createdAt
+ String? id, ReportCategory? category, ReportStatus status, String? photoUrl, double? latitude, double? longitude, DateTime? createdAt
 });
 
 
@@ -62,12 +62,13 @@ class _$NearbyReportCopyWithImpl<$Res>
 
 /// Create a copy of NearbyReport
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? category = freezed,Object? status = null,Object? latitude = freezed,Object? longitude = freezed,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? category = freezed,Object? status = null,Object? photoUrl = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? createdAt = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as ReportCategory?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as ReportStatus,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as ReportStatus,photoUrl: freezed == photoUrl ? _self.photoUrl : photoUrl // ignore: cast_nullable_to_non_nullable
+as String?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
@@ -167,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  ReportCategory? category,  ReportStatus status,  double? latitude,  double? longitude,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  ReportCategory? category,  ReportStatus status,  String? photoUrl,  double? latitude,  double? longitude,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NearbyReport() when $default != null:
-return $default(_that.id,_that.category,_that.status,_that.latitude,_that.longitude,_that.createdAt);case _:
+return $default(_that.id,_that.category,_that.status,_that.photoUrl,_that.latitude,_that.longitude,_that.createdAt);case _:
   return orElse();
 
 }
@@ -188,10 +189,10 @@ return $default(_that.id,_that.category,_that.status,_that.latitude,_that.longit
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  ReportCategory? category,  ReportStatus status,  double? latitude,  double? longitude,  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  ReportCategory? category,  ReportStatus status,  String? photoUrl,  double? latitude,  double? longitude,  DateTime? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _NearbyReport():
-return $default(_that.id,_that.category,_that.status,_that.latitude,_that.longitude,_that.createdAt);case _:
+return $default(_that.id,_that.category,_that.status,_that.photoUrl,_that.latitude,_that.longitude,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -208,10 +209,10 @@ return $default(_that.id,_that.category,_that.status,_that.latitude,_that.longit
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  ReportCategory? category,  ReportStatus status,  double? latitude,  double? longitude,  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  ReportCategory? category,  ReportStatus status,  String? photoUrl,  double? latitude,  double? longitude,  DateTime? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _NearbyReport() when $default != null:
-return $default(_that.id,_that.category,_that.status,_that.latitude,_that.longitude,_that.createdAt);case _:
+return $default(_that.id,_that.category,_that.status,_that.photoUrl,_that.latitude,_that.longitude,_that.createdAt);case _:
   return null;
 
 }
@@ -223,12 +224,13 @@ return $default(_that.id,_that.category,_that.status,_that.latitude,_that.longit
 
 
 class _NearbyReport implements NearbyReport {
-  const _NearbyReport({this.id, this.category, this.status = ReportStatus.unknown, this.latitude, this.longitude, this.createdAt});
+  const _NearbyReport({this.id, this.category, this.status = ReportStatus.unknown, this.photoUrl, this.latitude, this.longitude, this.createdAt});
   
 
 @override final  String? id;
 @override final  ReportCategory? category;
 @override@JsonKey() final  ReportStatus status;
+@override final  String? photoUrl;
 @override final  double? latitude;
 @override final  double? longitude;
 @override final  DateTime? createdAt;
@@ -243,16 +245,16 @@ _$NearbyReportCopyWith<_NearbyReport> get copyWith => __$NearbyReportCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NearbyReport&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.status, status) || other.status == status)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NearbyReport&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.status, status) || other.status == status)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,category,status,latitude,longitude,createdAt);
+int get hashCode => Object.hash(runtimeType,id,category,status,photoUrl,latitude,longitude,createdAt);
 
 @override
 String toString() {
-  return 'NearbyReport(id: $id, category: $category, status: $status, latitude: $latitude, longitude: $longitude, createdAt: $createdAt)';
+  return 'NearbyReport(id: $id, category: $category, status: $status, photoUrl: $photoUrl, latitude: $latitude, longitude: $longitude, createdAt: $createdAt)';
 }
 
 
@@ -263,7 +265,7 @@ abstract mixin class _$NearbyReportCopyWith<$Res> implements $NearbyReportCopyWi
   factory _$NearbyReportCopyWith(_NearbyReport value, $Res Function(_NearbyReport) _then) = __$NearbyReportCopyWithImpl;
 @override @useResult
 $Res call({
- String? id, ReportCategory? category, ReportStatus status, double? latitude, double? longitude, DateTime? createdAt
+ String? id, ReportCategory? category, ReportStatus status, String? photoUrl, double? latitude, double? longitude, DateTime? createdAt
 });
 
 
@@ -280,12 +282,13 @@ class __$NearbyReportCopyWithImpl<$Res>
 
 /// Create a copy of NearbyReport
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? category = freezed,Object? status = null,Object? latitude = freezed,Object? longitude = freezed,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? category = freezed,Object? status = null,Object? photoUrl = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? createdAt = freezed,}) {
   return _then(_NearbyReport(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as ReportCategory?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as ReportStatus,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as ReportStatus,photoUrl: freezed == photoUrl ? _self.photoUrl : photoUrl // ignore: cast_nullable_to_non_nullable
+as String?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,

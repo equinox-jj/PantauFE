@@ -1,8 +1,8 @@
 import '../../../../core/error/error.dart';
 import '../../../../core/utils/enums/enums.dart';
+import '../../../../core/utils/helpers/helpers.dart';
 import '../../domain/entity/entity.dart';
 import '../model/model.dart';
-import 'date_parser.dart';
 
 extension ReportDetailModelMapper on ReportDetailModel {
   ReportDetail toEntity() {

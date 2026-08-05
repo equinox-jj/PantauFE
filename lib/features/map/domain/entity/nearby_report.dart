@@ -13,6 +13,7 @@ abstract class NearbyReport with _$NearbyReport {
     String? id,
     ReportCategory? category,
     @Default(ReportStatus.unknown) ReportStatus status,
+    String? photoUrl,
     double? latitude,
     double? longitude,
     DateTime? createdAt,

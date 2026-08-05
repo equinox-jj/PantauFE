@@ -8,21 +8,18 @@ part of 'nearby_reports_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Nearby reports for the current map camera. Keeping the previous markers
-/// on screen while a pan refetch is in flight is not this notifier's job —
-/// `visibleReportsProvider` memoises the last loaded list for that.
+/// Nearby reports for the current map camera. Holding the previous markers
+/// during a pan refetch is `visibleReportsProvider`'s job, not this one's.
 
 @ProviderFor(NearbyReports)
 final nearbyReportsProvider = NearbyReportsProvider._();
 
-/// Nearby reports for the current map camera. Keeping the previous markers
-/// on screen while a pan refetch is in flight is not this notifier's job —
-/// `visibleReportsProvider` memoises the last loaded list for that.
+/// Nearby reports for the current map camera. Holding the previous markers
+/// during a pan refetch is `visibleReportsProvider`'s job, not this one's.
 final class NearbyReportsProvider
     extends $NotifierProvider<NearbyReports, AsyncValue<List<NearbyReport>>> {
-  /// Nearby reports for the current map camera. Keeping the previous markers
-  /// on screen while a pan refetch is in flight is not this notifier's job —
-  /// `visibleReportsProvider` memoises the last loaded list for that.
+  /// Nearby reports for the current map camera. Holding the previous markers
+  /// during a pan refetch is `visibleReportsProvider`'s job, not this one's.
   NearbyReportsProvider._()
     : super(
         from: null,
@@ -54,9 +51,8 @@ final class NearbyReportsProvider
 
 String _$nearbyReportsHash() => r'5798c0a28f4837784f296f6bb03ed418d73acb4d';
 
-/// Nearby reports for the current map camera. Keeping the previous markers
-/// on screen while a pan refetch is in flight is not this notifier's job —
-/// `visibleReportsProvider` memoises the last loaded list for that.
+/// Nearby reports for the current map camera. Holding the previous markers
+/// during a pan refetch is `visibleReportsProvider`'s job, not this one's.
 
 abstract class _$NearbyReports
     extends $Notifier<AsyncValue<List<NearbyReport>>> {
