@@ -43,11 +43,12 @@ class ReportCategorySelector extends StatelessWidget {
                     : error.toString(),
                 onRetry: () => ref.invalidate(reportCategoriesProvider),
               ),
-              AsyncValue(value: final categories?) => _CategoryChips(
-                categories: categories,
-                selectedId: selectedId,
-                onSelected: onSelected,
-              ),
+              AsyncValue<List<ReportCategory>>(value: final categories?) =>
+                _CategoryChips(
+                  categories: categories,
+                  selectedId: selectedId,
+                  onSelected: onSelected,
+                ),
             };
           },
         ),
