@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../../core/components/button/button.dart';
 import '../../../../../core/router/app_routes.dart';
 import '../../../../../core/service/service.dart';
 import '../../../../../core/theme/theme.dart';
@@ -339,7 +340,7 @@ class _LocateControl extends StatelessWidget {
           mapLocationProvider.select((state) => state.isLoading),
         );
 
-        return MapLocateButton(
+        return AppLocateButton(
           isLoading: isLocating,
           onPressed: () => ref.read(mapLocationProvider.notifier).locate(),
         );

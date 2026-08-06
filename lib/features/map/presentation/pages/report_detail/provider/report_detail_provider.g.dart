@@ -8,14 +8,14 @@ part of 'report_detail_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Loads one report by id. Throws the [Failure] so the sheet can render it
-/// through `AsyncValue.error`.
+/// Loads one report by id. Throws the [Failure] so [ReportDetailPage] can
+/// render it through `AsyncValue.error`.
 
 @ProviderFor(reportDetail)
 final reportDetailProvider = ReportDetailFamily._();
 
-/// Loads one report by id. Throws the [Failure] so the sheet can render it
-/// through `AsyncValue.error`.
+/// Loads one report by id. Throws the [Failure] so [ReportDetailPage] can
+/// render it through `AsyncValue.error`.
 
 final class ReportDetailProvider
     extends
@@ -25,8 +25,8 @@ final class ReportDetailProvider
           FutureOr<ReportDetail>
         >
     with $FutureModifier<ReportDetail>, $FutureProvider<ReportDetail> {
-  /// Loads one report by id. Throws the [Failure] so the sheet can render it
-  /// through `AsyncValue.error`.
+  /// Loads one report by id. Throws the [Failure] so [ReportDetailPage] can
+  /// render it through `AsyncValue.error`.
   ReportDetailProvider._({
     required ReportDetailFamily super.from,
     required String super.argument,
@@ -73,8 +73,8 @@ final class ReportDetailProvider
 
 String _$reportDetailHash() => r'55284922f0436bdb470cfc8db0946485928294a5';
 
-/// Loads one report by id. Throws the [Failure] so the sheet can render it
-/// through `AsyncValue.error`.
+/// Loads one report by id. Throws the [Failure] so [ReportDetailPage] can
+/// render it through `AsyncValue.error`.
 
 final class ReportDetailFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<ReportDetail>, String> {
@@ -87,8 +87,8 @@ final class ReportDetailFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// Loads one report by id. Throws the [Failure] so the sheet can render it
-  /// through `AsyncValue.error`.
+  /// Loads one report by id. Throws the [Failure] so [ReportDetailPage] can
+  /// render it through `AsyncValue.error`.
 
   ReportDetailProvider call(String reportId) =>
       ReportDetailProvider._(argument: reportId, from: this);

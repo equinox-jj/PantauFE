@@ -9,10 +9,18 @@ sealed class LocationResult {
 
 /// A fix was obtained.
 class LocationSuccess extends LocationResult {
-  const LocationSuccess({required this.latitude, required this.longitude});
+  const LocationSuccess({
+    required this.latitude,
+    required this.longitude,
+    required this.accuracyInMeters,
+  });
 
   final double latitude;
   final double longitude;
+
+  /// Radius of the 68% confidence circle reported by the platform. Shown next
+  /// to a pin the user has not moved yet; meaningless once they drag it.
+  final double accuracyInMeters;
 }
 
 /// Device location services (GPS) are switched off.
@@ -88,6 +96,7 @@ class GeolocatorLocationService implements LocationService {
       return LocationSuccess(
         latitude: position.latitude,
         longitude: position.longitude,
+        accuracyInMeters: position.accuracy,
       );
     } catch (e) {
       return LocationFailed(debugDetail: e.toString());

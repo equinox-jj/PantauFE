@@ -428,3 +428,51 @@ final class SearchPlacesUsecaseProvider
 
 String _$searchPlacesUsecaseHash() =>
     r'5cede8743bea51a507e24b20d6b6d5cd739cc8ae';
+
+@ProviderFor(reverseGeocodeUsecase)
+final reverseGeocodeUsecaseProvider = ReverseGeocodeUsecaseProvider._();
+
+final class ReverseGeocodeUsecaseProvider
+    extends
+        $FunctionalProvider<
+          ReverseGeocodeUsecase,
+          ReverseGeocodeUsecase,
+          ReverseGeocodeUsecase
+        >
+    with $Provider<ReverseGeocodeUsecase> {
+  ReverseGeocodeUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'reverseGeocodeUsecaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$reverseGeocodeUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<ReverseGeocodeUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  ReverseGeocodeUsecase create(Ref ref) {
+    return reverseGeocodeUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ReverseGeocodeUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ReverseGeocodeUsecase>(value),
+    );
+  }
+}
+
+String _$reverseGeocodeUsecaseHash() =>
+    r'8a0e52623059f3a4d72a991f9245f0af4b3b190f';

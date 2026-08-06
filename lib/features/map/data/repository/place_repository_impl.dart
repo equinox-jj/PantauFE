@@ -26,6 +26,19 @@ class PlaceRepositoryImpl extends PlaceRepository {
     return result.toEntities();
   });
 
+  @override
+  Future<Either<Failure, Place?>> reverseGeocode({
+    required double latitude,
+    required double longitude,
+  }) => safeCall(() async {
+    final result = await _mapRemoteDataSource.reverseGeocode(
+      latitude: latitude,
+      longitude: longitude,
+    );
+
+    return result?.toEntity();
+  });
+
   /// Nominatim expects `minLon,minLat,maxLon,maxLat` — longitude first, which
   /// is the reverse of how the rest of the app orders coordinates.
   String _formatViewBox(PlaceViewBox viewBox) {

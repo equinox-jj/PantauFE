@@ -7,6 +7,7 @@ import '../../features/auth/presentation/pages/login/login.dart';
 import '../../features/auth/presentation/pages/register/register.dart';
 import '../../features/dashboard/presentation/pages/dashboard/dashboard.dart';
 import '../../features/map/presentation/pages/create_report/create_report.dart';
+import '../../features/map/presentation/pages/location_picker/location_picker.dart';
 import '../../features/map/presentation/pages/map/map.dart';
 import '../../features/map/presentation/pages/report_detail/report_detail.dart';
 import '../../features/onboarding/presentation/pages/onboarding/onboarding.dart';
@@ -44,6 +45,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.createReport,
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const CreateReportPage(),
+        routes: [
+          GoRoute(
+            path: AppRoutes.locationPickerSegment,
+            parentNavigatorKey: _rootNavigatorKey,
+            // `extra` carries the pin already chosen, so reopening the picker
+            // resumes where the form left off; a cold deep link has none and
+            // the page locates the device instead.
+            builder: (context, state) => LocationPickerPage(
+              initialLocation: state.extra is PickedLocation
+                  ? state.extra as PickedLocation?
+                  : null,
+            ),
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoutes.reportDetail,

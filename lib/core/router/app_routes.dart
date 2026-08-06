@@ -9,6 +9,11 @@ abstract final class AppRoutes {
   /// Full-screen compose flow, pushed over the dashboard shell.
   static const String createReport = '/create-report';
 
+  /// Full-screen pin placement, pushed over the compose flow. Segment only —
+  /// it is declared as a child of [createReport].
+  static const String locationPickerSegment = 'location';
+  static const String locationPicker = '$createReport/$locationPickerSegment';
+
   /// Full-screen report detail, pushed over the dashboard shell.
   static const String reportDetail = '/reports/:id';
 
@@ -29,6 +34,7 @@ abstract final class AppRoutes {
     login,
     register,
     createReport,
+    locationPicker,
     reportDetail,
     map,
     feed,

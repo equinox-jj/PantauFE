@@ -1,17 +1,17 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:latlong2/latlong.dart';
 
 import '../../../../../../core/error/error.dart';
 import '../../../../../../core/theme/theme.dart';
+import '../../../../../../core/utils/helpers/helpers.dart';
 import '../../../../domain/entity/entity.dart';
 import '../../../provider/provider.dart';
+import '../../location_picker/location_picker.dart';
+import '../../location_picker/provider/provider.dart';
 
 /// Camera-or-gallery chooser shown before picking a photo.
 class PhotoSourceSheet extends StatelessWidget {
@@ -177,106 +177,136 @@ class _CategoriesError extends StatelessWidget {
   }
 }
 
-/// Mini-map whose fixed centre pin marks where the report will be filed; the
-/// user pans the map under the pin.
+/// Where the report will be filed, as a compact card: the pin is placed on the
+/// full-screen picker, never here.
 ///
-/// [center] and [isLocating] are listenables, not plain values: panning emits
-/// a new centre every frame, and rebuilding [FlutterMap] that often would
-/// thrash the tile layer. Only the readout and locate button listen.
-class ReportLocationPicker extends StatelessWidget {
-  const ReportLocationPicker({
+/// Shows the device lookup while it runs, an empty prompt when there is no pin
+/// yet, and the resolved address once there is one.
+class ReportLocationSummary extends StatelessWidget {
+  const ReportLocationSummary({
     super.key,
-    required this.controller,
-    required this.initialCenter,
-    required this.center,
-    required this.onMoved,
-    required this.onUseMyLocation,
+    required this.location,
     required this.isLocating,
+    required this.onEdit,
+    this.errorText,
   });
 
-  final MapController controller;
+  final PickedLocation? location;
+  final bool isLocating;
 
-  /// Camera the map opens on; later movement goes through [controller].
-  final LatLng initialCenter;
+  /// Opens the full-screen picker.
+  final VoidCallback onEdit;
 
-  final ValueListenable<LatLng> center;
-  final ValueChanged<LatLng> onMoved;
-  final VoidCallback onUseMyLocation;
-  final ValueListenable<bool> isLocating;
-
-  /// Local: the spacing scale has no token sized for a map viewport.
-  static const double _mapHeight = 200;
-
-  /// Lifts the pin so its tip, not its bounding-box centre, lands on the map
-  /// centre. 0.6 of [AppIconSizes.xl] (32px).
-  static const double _pinTipOffset = 19.2;
+  /// Set after a failed validation pass.
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
+    final location = this.location;
+    final errorText = this.errorText;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ClipRRect(
-          borderRadius: AppRadius.radiusXl,
-          child: SizedBox(
-            height: _mapHeight,
-            child: Stack(
-              alignment: Alignment.center,
+        Text('Location', style: AppTypography.label),
+        const Gap(AppSpacing.xs2),
+        InkWell(
+          onTap: onEdit,
+          borderRadius: AppRadius.radiusLg,
+          child: Container(
+            padding: const EdgeInsets.all(AppSpacing.xs),
+            decoration: BoxDecoration(
+              color: AppColors.fillSubtle,
+              borderRadius: AppRadius.radiusLg,
+              border: Border.all(
+                color: errorText == null
+                    ? AppColors.borderHairline
+                    : AppColors.statusRejected,
+              ),
+            ),
+            child: Row(
               children: [
-                FlutterMap(
-                  mapController: controller,
-                  options: MapOptions(
-                    initialCenter: initialCenter,
-                    initialZoom: 16,
-                    onPositionChanged: (position, hasGesture) {
-                      if (hasGesture) onMoved(position.center);
-                    },
-                    interactionOptions: const InteractionOptions(
-                      flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
-                    ),
-                  ),
-                  children: [
-                    TileLayer(
-                      urlTemplate:
-                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      userAgentPackageName: 'com.pantau.app',
-                    ),
-                  ],
+                const Icon(
+                  Icons.location_on_outlined,
+                  size: AppIconSizes.md,
+                  color: AppColors.accent,
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: _pinTipOffset),
-                  child: Icon(
-                    Icons.place,
-                    size: AppIconSizes.xl,
+                const Gap(AppSpacing.xs2),
+                Expanded(
+                  child: switch ((isLocating, location)) {
+                    (true, _) => Text(
+                      'Finding your location…',
+                      style: AppTypography.body,
+                    ),
+                    (false, null) => Text(
+                      'Set the report location',
+                      style: AppTypography.body,
+                    ),
+                    (false, final picked?) => _LocationLines(location: picked),
+                  },
+                ),
+                const Gap(AppSpacing.xs2),
+                Text(
+                  location == null ? 'Set pin' : 'Edit pin',
+                  style: AppTypography.label.copyWith(
                     color: AppColors.accent,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
             ),
           ),
         ),
-        const Gap(AppSpacing.xs2),
-        Row(
-          children: [
-            Expanded(
-              child: ValueListenableBuilder<LatLng>(
-                valueListenable: center,
-                builder: (context, value, _) => Text(
-                  '${value.latitude.toStringAsFixed(5)}, '
-                  '${value.longitude.toStringAsFixed(5)}',
-                  style: AppTypography.mono(color: AppColors.textPrimary),
-                ),
-              ),
+        if (errorText != null) ...[
+          const Gap(AppSpacing.xs2),
+          Text(
+            errorText,
+            style: AppTypography.label.copyWith(
+              color: AppColors.statusRejected,
             ),
-            ValueListenableBuilder<bool>(
-              valueListenable: isLocating,
-              builder: (context, locating, _) => TextButton.icon(
-                onPressed: locating ? null : onUseMyLocation,
-                icon: const Icon(Icons.my_location, size: AppIconSizes.md),
-                label: const Text('Use my location'),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+/// Address line over the coordinate line, matching the picker's readout.
+class _LocationLines extends StatelessWidget {
+  const _LocationLines({required this.location});
+
+  final PickedLocation location;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Consumer(
+          builder: (context, ref, _) {
+            final address = ref.watch(
+              pinAddressProvider(
+                latitude: roundedCoordinate(location.latitude),
+                longitude: roundedCoordinate(location.longitude),
               ),
-            ),
-          ],
+            );
+
+            return Text(
+              switch (address) {
+                AsyncLoading() => 'Naming this spot…',
+                AsyncError() => 'Address unavailable',
+                AsyncValue<Place?>(value: final place) =>
+                  place?.name ?? 'Unnamed location',
+              },
+              style: AppTypography.body.copyWith(color: AppColors.textPrimary),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            );
+          },
+        ),
+        Text(
+          formatCoordinates(location.latitude, location.longitude),
+          style: AppTypography.mono(color: AppColors.textMuted),
         ),
       ],
     );

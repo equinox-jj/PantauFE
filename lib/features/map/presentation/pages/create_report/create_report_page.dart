@@ -1,16 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:latlong2/latlong.dart';
 
 import '../../../../../core/components/button/button.dart';
 import '../../../../../core/components/textfield/textfield.dart';
 import '../../../../../core/di/core_di.dart';
+import '../../../../../core/router/app_routes.dart';
 import '../../../../../core/service/service.dart';
 import '../../../../../core/theme/theme.dart';
+import '../location_picker/location_picker.dart';
 import 'listener/listener.dart';
 import 'provider/provider.dart';
 import 'widgets/create_report_widgets.dart';
@@ -21,7 +22,13 @@ typedef _PhotoField = ({String? path, String? error});
 /// Category slot state: the chosen id and the validation message for it.
 typedef _CategoryField = ({int? id, String? error});
 
+/// Location slot state: the placed pin and the validation message for it.
+typedef _LocationField = ({PickedLocation? value, String? error});
+
 /// Compose flow: photo, pin, category, description, submit.
+///
+/// The pin is placed on the full-screen [LocationPickerPage] and handed back
+/// here; this page only shows the summary of it.
 ///
 /// Form state is local to the page (matching login/register); the notifier
 /// owns only the submit sequence. Each field is a [ValueNotifier] rather than
@@ -34,33 +41,31 @@ class CreateReportPage extends ConsumerStatefulWidget {
 }
 
 class _CreateReportPageState extends ConsumerState<CreateReportPage> {
-  /// Jakarta — fallback pin when the device position is unavailable.
-  static const _fallbackCenter = LatLng(-6.2088, 106.8456);
   static const _maxDescriptionLength = 500;
 
   final _formKey = GlobalKey<FormState>();
   final _descriptionController = TextEditingController();
-  final MapController _mapController = MapController();
   final ImagePicker _imagePicker = ImagePicker();
 
   final _photo = ValueNotifier<_PhotoField>((path: null, error: null));
   final _category = ValueNotifier<_CategoryField>((id: null, error: null));
-  final _pin = ValueNotifier<LatLng>(_fallbackCenter);
+  final _location = ValueNotifier<_LocationField>((value: null, error: null));
   final _isLocating = ValueNotifier<bool>(false);
 
   @override
   void initState() {
     super.initState();
+    // Pre-fills the pin so the common case — reporting what is in front of you
+    // — needs no trip to the picker at all.
     WidgetsBinding.instance.addPostFrameCallback((_) => _useMyLocation());
   }
 
   @override
   void dispose() {
     _descriptionController.dispose();
-    _mapController.dispose();
     _photo.dispose();
     _category.dispose();
-    _pin.dispose();
+    _location.dispose();
     _isLocating.dispose();
     super.dispose();
   }
@@ -74,21 +79,42 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
 
     _isLocating.value = false;
 
-    if (result case LocationSuccess(:final latitude, :final longitude)) {
-      final center = LatLng(latitude, longitude);
-      _pin.value = center;
-      _mapController.move(center, 16);
+    if (result case LocationSuccess(
+      :final latitude,
+      :final longitude,
+      :final accuracyInMeters,
+    )) {
+      _location.value = (
+        value: PickedLocation(
+          latitude: latitude,
+          longitude: longitude,
+          accuracyInMeters: accuracyInMeters,
+        ),
+        error: null,
+      );
 
       return;
     }
 
+    // No fix: the picker is the way out, so say so rather than filing the
+    // report against a fallback the user never saw.
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text(
-          'Could not read your location. Drag the map to place the pin.',
-        ),
+        content: Text('Could not read your location. Set the pin manually.'),
       ),
     );
+  }
+
+  /// Opens the full-screen picker on the current pin and keeps whatever comes
+  /// back.
+  Future<void> _editLocation() async {
+    final picked = await context.push<PickedLocation>(
+      AppRoutes.locationPicker,
+      extra: _location.value.value,
+    );
+    if (picked == null) return;
+
+    _location.value = (value: picked, error: null);
   }
 
   Future<void> _pickPhoto() async {
@@ -111,6 +137,7 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
   Future<void> _submit() async {
     final photoPath = _photo.value.path;
     final categoryId = _category.value.id;
+    final location = _location.value.value;
 
     _photo.value = (
       path: photoPath,
@@ -120,9 +147,18 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
       id: categoryId,
       error: categoryId == null ? 'Pick a category' : null,
     );
+    _location.value = (
+      value: location,
+      error: location == null ? 'Set where the issue is' : null,
+    );
 
     final isFormValid = _formKey.currentState?.validate() ?? false;
-    if (!isFormValid || photoPath == null || categoryId == null) return;
+    if (!isFormValid ||
+        photoPath == null ||
+        categoryId == null ||
+        location == null) {
+      return;
+    }
 
     await ref
         .read(createReportProvider.notifier)
@@ -130,8 +166,8 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
           photoPath: photoPath,
           categoryId: categoryId,
           description: _descriptionController.text.trim(),
-          latitude: _pin.value.latitude,
-          longitude: _pin.value.longitude,
+          latitude: location.latitude,
+          longitude: location.longitude,
         );
   }
 
@@ -161,13 +197,10 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
                 children: [
                   _PhotoSection(field: _photo, onPick: _pickPhoto),
                   const Gap(AppSpacing.lg),
-                  ReportLocationPicker(
-                    controller: _mapController,
-                    initialCenter: _fallbackCenter,
-                    center: _pin,
+                  _LocationSection(
+                    field: _location,
                     isLocating: _isLocating,
-                    onMoved: (center) => _pin.value = center,
-                    onUseMyLocation: _useMyLocation,
+                    onEdit: _editLocation,
                   ),
                   const Gap(AppSpacing.lg),
                   _CategorySection(field: _category),
@@ -212,6 +245,36 @@ class _PhotoSection extends StatelessWidget {
             errorText: photo.error,
           );
         },
+      ),
+    );
+  }
+}
+
+/// Location row: rebuilds on a new pin, the device lookup finishing, or a
+/// validation message.
+class _LocationSection extends StatelessWidget {
+  const _LocationSection({
+    required this.field,
+    required this.isLocating,
+    required this.onEdit,
+  });
+
+  final ValueListenable<_LocationField> field;
+  final ValueListenable<bool> isLocating;
+  final Future<void> Function() onEdit;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<_LocationField>(
+      valueListenable: field,
+      builder: (context, location, _) => ValueListenableBuilder<bool>(
+        valueListenable: isLocating,
+        builder: (context, locating, _) => ReportLocationSummary(
+          location: location.value,
+          isLocating: locating,
+          errorText: location.error,
+          onEdit: onEdit,
+        ),
       ),
     );
   }

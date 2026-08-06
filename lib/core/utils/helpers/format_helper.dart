@@ -31,3 +31,12 @@ String formatRelativeAge(DateTime value, {DateTime? now}) {
 
   return age == 'now' ? 'just now' : '$age ago';
 }
+
+/// Coordinate pair as shown next to a pin (`-6.20880, 106.84560`). Five
+/// decimals is roughly metre precision — enough to identify a spot, short
+/// enough to fit one line.
+String formatCoordinates(double latitude, double longitude) =>
+    '${latitude.toStringAsFixed(5)}, ${longitude.toStringAsFixed(5)}';
+
+/// Accuracy radius of a device fix (`±8 m`).
+String formatAccuracy(double meters) => '±${meters.round()} m';

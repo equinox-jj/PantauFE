@@ -11,4 +11,11 @@ abstract class PlaceRepository with BaseRepository {
     PlaceViewBox? viewBox,
     int limit,
   });
+
+  /// Reverse-geocodes a coordinate. A `null` right side means the point has no
+  /// addressable feature — not a failure.
+  Future<Either<Failure, Place?>> reverseGeocode({
+    required double latitude,
+    required double longitude,
+  });
 }

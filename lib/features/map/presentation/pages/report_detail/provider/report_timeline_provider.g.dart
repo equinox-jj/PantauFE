@@ -73,7 +73,7 @@ final class ReportTimelineProvider
   }
 }
 
-String _$reportTimelineHash() => r'70462b01c866df8985307cb7659819248f9f1e13';
+String _$reportTimelineHash() => r'713065aec7b581000138bf304cf7af0f580bceeb';
 
 /// Merges the report's history with the canonical ladder. Lives here rather
 /// than in the card so the widget stays free of derivation logic.

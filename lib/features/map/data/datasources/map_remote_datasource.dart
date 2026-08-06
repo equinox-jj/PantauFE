@@ -34,12 +34,29 @@ abstract class MapRemoteDataSource with BaseRemoteDataSource {
     String? viewBox,
     int limit,
   });
+
+  /// Reverse-geocodes a coordinate through OpenStreetMap Nominatim. Returns
+  /// null when the point has no addressable feature (open sea, unmapped area).
+  Future<PlaceModel?> reverseGeocode({
+    required double latitude,
+    required double longitude,
+  });
 }
 
 class MapRemoteDataSourceImpl extends MapRemoteDataSource {
   MapRemoteDataSourceImpl({required this._dioClient});
 
   final DioClient _dioClient;
+
+  static const _nominatimBaseUrl = 'https://nominatim.openstreetmap.org';
+
+  /// Options shared by every Nominatim call: the usage policy rejects requests
+  /// without a User-Agent, and the Pantau token must never leave for a third
+  /// party.
+  static final _nominatimOptions = Options(
+    headers: const {'User-Agent': 'Pantau/1.0 (com.pantau.app)'},
+    extra: const {ApiEndpoints.kNoAuth: true},
+  );
 
   @override
   Future<NearbyReportsModel> getNearbyReports({
@@ -141,14 +158,8 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
   }) => safeApiCall(() async {
     final response = await _dioClient.get<List<dynamic>>(
       // Absolute URL, so Dio ignores the Pantau base URL for this call only.
-      'https://nominatim.openstreetmap.org/search',
-      options: Options(
-        // Required by the Nominatim usage policy; requests without one are
-        // rejected.
-        headers: const {'User-Agent': 'Pantau/1.0 (com.pantau.app)'},
-        // Keeps AuthInterceptor from sending the Pantau token to a third party.
-        extra: const {ApiEndpoints.kNoAuth: true},
-      ),
+      '$_nominatimBaseUrl/search',
+      options: _nominatimOptions,
       queryParameters: {
         'q': query,
         'format': 'jsonv2',
@@ -168,5 +179,33 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
         .whereType<Map<String, dynamic>>()
         .map(PlaceModel.fromJson)
         .toList(growable: false);
+  });
+
+  @override
+  Future<PlaceModel?> reverseGeocode({
+    required double latitude,
+    required double longitude,
+  }) => safeApiCall(() async {
+    final response = await _dioClient.get<Map<String, dynamic>>(
+      '$_nominatimBaseUrl/reverse',
+      options: _nominatimOptions,
+      queryParameters: {
+        'lat': latitude,
+        'lon': longitude,
+        'format': 'jsonv2',
+        'addressdetails': 1,
+        'accept-language': 'id',
+        // Street-level detail: the pin marks a spot on a road, not a region.
+        'zoom': 18,
+      },
+    );
+
+    final data = response.data;
+    // Nominatim answers 200 with `{"error": "Unable to geocode"}` for a point
+    // it cannot name, so a missing coordinate — not the status code — is what
+    // marks "no address here".
+    if (data == null || data['lat'] == null || data['lon'] == null) return null;
+
+    return PlaceModel.fromJson(data);
   });
 }

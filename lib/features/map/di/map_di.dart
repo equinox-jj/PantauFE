@@ -66,3 +66,10 @@ SearchPlacesUsecase searchPlacesUsecase(Ref ref) {
     placeRepository: ref.read(placeRepositoryProvider),
   );
 }
+
+@Riverpod(keepAlive: true)
+ReverseGeocodeUsecase reverseGeocodeUsecase(Ref ref) {
+  return ReverseGeocodeUsecase(
+    placeRepository: ref.read(placeRepositoryProvider),
+  );
+}
