@@ -259,6 +259,15 @@ class _NearbyBody extends StatelessWidget {
           );
         }
 
+        // Still waiting on the fix itself — distinct from the skeletons below,
+        // which stand for a report fetch that has not started yet.
+        final isLocating = ref.watch(
+          feedLocationProvider.select((state) => state.isLoading),
+        );
+        if (locationResult == null && isLocating) {
+          return const _FeedStateSliver(child: _FeedLocatingState());
+        }
+
         final reports = ref.watch(feedReportsProvider);
 
         return switch (reports) {
@@ -520,6 +529,38 @@ class _FeedLocationState extends StatelessWidget {
         text: actionText,
         fullWidth: false,
         onPressed: onAction,
+      ),
+    );
+  }
+}
+
+/// Waiting on the device fix itself, not a report fetch — a spinner rather
+/// than skeleton cards, so it never reads as content already on its way.
+class _FeedLocatingState extends StatelessWidget {
+  const _FeedLocatingState();
+
+  static const _spinnerSize = 34.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(
+            width: _spinnerSize,
+            height: _spinnerSize,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: AppColors.accent,
+            ),
+          ),
+          const Gap(AppSpacing.md),
+          Text(
+            'Locating your position…',
+            style: AppTypography.mono(color: AppColors.textMuted),
+          ),
+        ],
       ),
     );
   }

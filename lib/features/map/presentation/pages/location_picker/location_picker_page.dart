@@ -7,11 +7,13 @@ import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../../../core/components/button/button.dart';
-import '../../../../../core/di/core_di.dart';
 import '../../../../../core/service/service.dart';
 import '../../../../../core/theme/theme.dart';
 import '../../../../../core/utils/helpers/helpers.dart';
+import 'listener/listener.dart';
 import 'picked_location.dart';
+import 'provider/provider.dart';
+import 'widgets/location_picker_permission_overlay.dart';
 import 'widgets/location_picker_widgets.dart';
 
 /// Full-screen pin placement for the compose flow.
@@ -53,7 +55,6 @@ class _LocationPickerPageState extends ConsumerState<LocationPickerPage> {
   late final ValueNotifier<PickedLocation?> _settledPin;
 
   final ValueNotifier<bool> _isMoving = ValueNotifier(false);
-  final ValueNotifier<bool> _isLocating = ValueNotifier(false);
 
   Timer? _settleTimer;
 
@@ -78,47 +79,28 @@ class _LocationPickerPageState extends ConsumerState<LocationPickerPage> {
     _pin.dispose();
     _settledPin.dispose();
     _isMoving.dispose();
-    _isLocating.dispose();
     super.dispose();
   }
 
+  void _locate() => ref.read(locationPickerLocationProvider.notifier).locate();
+
   /// Moves the pin to the device position, dropping any accuracy claim if the
-  /// fix fails.
-  Future<void> _locate() async {
-    _isLocating.value = true;
+  /// fix failed — a failure is left to [LocationPickerListener] and
+  /// [LocationPickerPermissionOverlay] to explain.
+  void _handleLocated(LocationResult result) {
+    if (result is! LocationSuccess) return;
 
-    final result = await ref.read(locationServiceProvider).getCurrentLocation();
-
-    if (!mounted) return;
-    _isLocating.value = false;
-
-    if (result case LocationSuccess(
-      :final latitude,
-      :final longitude,
-      :final accuracyInMeters,
-    )) {
-      final located = PickedLocation(
-        latitude: latitude,
-        longitude: longitude,
-        accuracyInMeters: accuracyInMeters,
-      );
-
-      _settleTimer?.cancel();
-      _isMoving.value = false;
-      _pin.value = located;
-      _settledPin.value = located;
-      _mapController.move(located.latLng, LocationPickerMap.initialZoom);
-
-      return;
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Could not read your location. Drag the map to place the pin.',
-        ),
-      ),
+    final located = PickedLocation(
+      latitude: result.latitude,
+      longitude: result.longitude,
+      accuracyInMeters: result.accuracyInMeters,
     );
+
+    _settleTimer?.cancel();
+    _isMoving.value = false;
+    _pin.value = located;
+    _settledPin.value = located;
+    _mapController.move(located.latLng, LocationPickerMap.initialZoom);
   }
 
   /// Tracks the camera and restarts the settle debounce.
@@ -167,55 +149,75 @@ class _LocationPickerPageState extends ConsumerState<LocationPickerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.surfaceSunken,
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: LocationPickerMap(
-              controller: _mapController,
-              initialCenter: _pin.value.latLng,
-              onPositionChanged: _handlePositionChanged,
+      body: LocationPickerListener(
+        onLocated: _handleLocated,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: LocationPickerMap(
+                controller: _mapController,
+                initialCenter: _pin.value.latLng,
+                onPositionChanged: _handlePositionChanged,
+              ),
             ),
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: LocationPickerHeader(
-              isMoving: _isMoving,
-              onBack: () => context.pop(),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: LocationPickerHeader(
+                isMoving: _isMoving,
+                onBack: () => context.pop(),
+              ),
             ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: AppSpacing.md,
-                    bottom: AppSpacing.xs,
-                  ),
-                  child: ValueListenableBuilder<bool>(
-                    valueListenable: _isLocating,
-                    builder: (context, isLocating, _) => AppLocateButton(
-                      isLoading: isLocating,
-                      onPressed: _locate,
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: AppSpacing.md,
+                      bottom: AppSpacing.xs,
                     ),
+                    child: _LocateControl(onPressed: _locate),
                   ),
-                ),
-                LocationPickerCard(
-                  pin: _pin,
-                  settledPin: _settledPin,
-                  onConfirm: () => context.pop(_pin.value),
-                ),
-              ],
+                  LocationPickerCard(
+                    pin: _pin,
+                    settledPin: _settledPin,
+                    onConfirm: () => context.pop(_pin.value),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+            // Last layer: without a position "locate me" is useless, so the
+            // permission cover hides the controls along with the map.
+            const LocationPickerPermissionOverlay(),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+/// Locate-me button, spinning only while a location request is in flight.
+class _LocateControl extends StatelessWidget {
+  const _LocateControl({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, _) {
+        final isLocating = ref.watch(
+          locationPickerLocationProvider.select((state) => state.isLoading),
+        );
+
+        return AppLocateButton(isLoading: isLocating, onPressed: onPressed);
+      },
     );
   }
 }

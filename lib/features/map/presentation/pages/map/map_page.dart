@@ -260,7 +260,7 @@ class _BottomStack extends StatelessWidget {
           ),
           // Doubles as bottom-edge clearance while the sheet is collapsed.
           const Gap(AppSpacing.md),
-          MapStatusSheet(onRetry: onRetry),
+          MapStatusSheet(onRetry: onRetry, onStartReport: onStartReport),
         ],
       ),
     );

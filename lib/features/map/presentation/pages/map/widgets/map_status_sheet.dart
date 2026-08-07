@@ -22,9 +22,17 @@ typedef _SheetStatus = ({
 /// sheet alone. Sizing is left to the sheet: as the last child of `MapPage`'s
 /// bottom column, growing it lifts the locate button and report FAB.
 class MapStatusSheet extends StatelessWidget {
-  const MapStatusSheet({super.key, required this.onRetry});
+  const MapStatusSheet({
+    super.key,
+    required this.onRetry,
+    required this.onStartReport,
+  });
 
   final VoidCallback onRetry;
+
+  /// Empty states always offer an action — this is the "be the first" one
+  /// once a load has cleanly returned nothing.
+  final VoidCallback onStartReport;
 
   /// The status worth showing, or null when markers are on screen or a load is
   /// still in flight.
@@ -74,7 +82,11 @@ class MapStatusSheet extends StatelessWidget {
         message:
             'Nothing reported here yet. Move the map and search there, '
             'or be the first.',
-        action: null,
+        action: AppButton(
+          text: 'Report an issue',
+          fullWidth: false,
+          onPressed: onStartReport,
+        ),
       );
     }
 
