@@ -14,6 +14,8 @@ import '../../features/onboarding/presentation/pages/onboarding/onboarding.dart'
 import '../../features/onboarding/presentation/pages/splash/splash.dart';
 import '../../features/profile/presentation/pages/profile/profile.dart';
 import '../../features/report/presentation/pages/feed/feed.dart';
+import '../../features/resolver/presentation/pages/queue/queue.dart';
+import '../../features/resolver/presentation/pages/shell/shell.dart';
 import '../di/core_di.dart';
 import 'app_routes.dart';
 
@@ -96,6 +98,28 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: AppRoutes.profile,
+                builder: (context, state) => const ProfilePage(),
+              ),
+            ],
+          ),
+        ],
+      ),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) =>
+            ResolverShellPage(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.queue,
+                builder: (context, state) => const QueuePage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.resolverProfile,
                 builder: (context, state) => const ProfilePage(),
               ),
             ],

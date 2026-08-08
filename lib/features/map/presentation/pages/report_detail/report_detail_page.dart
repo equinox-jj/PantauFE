@@ -13,6 +13,7 @@ import '../../../../../core/theme/theme.dart';
 import '../../../../../core/utils/enums/enums.dart';
 import '../../../../../core/utils/helpers/helpers.dart';
 import '../../../domain/entity/entity.dart';
+import 'listener/listener.dart';
 import 'provider/provider.dart';
 import 'widgets/widgets.dart';
 
@@ -36,33 +37,36 @@ class ReportDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.surfaceSunken,
-      body: Consumer(
-        builder: (context, ref, _) {
-          final state = ref.watch(reportDetailProvider(reportId));
+      body: ReportStatusListener(
+        reportId: reportId,
+        child: Consumer(
+          builder: (context, ref, _) {
+            final state = ref.watch(reportDetailProvider(reportId));
 
-          return switch (state) {
-            AsyncError<ReportDetail>(error: final error) => _DetailError(
-              message: error is Failure
-                  ? error.displayMessage
-                  : error.toString(),
-              onRetry: () {
-                ref.invalidate(reportDetailProvider(reportId));
-                ref.invalidate(reportHistoryProvider(reportId));
-              },
-            ),
-            // A refetch keeps the previously loaded report on screen; only
-            // the first load has nothing to show yet and falls back to the
-            // skeleton.
-            AsyncValue<ReportDetail>(isLoading: true, value: null) =>
-              const _DetailSkeleton(),
-            AsyncValue<ReportDetail>(value: final detail?) => _DetailContent(
-              reportId: reportId,
-              detail: detail,
-              distanceInMeters: distanceInMeters,
-            ),
-            _ => const _DetailSkeleton(),
-          };
-        },
+            return switch (state) {
+              AsyncError<ReportDetail>(error: final error) => _DetailError(
+                message: error is Failure
+                    ? error.displayMessage
+                    : error.toString(),
+                onRetry: () {
+                  ref.invalidate(reportDetailProvider(reportId));
+                  ref.invalidate(reportHistoryProvider(reportId));
+                },
+              ),
+              // A refetch keeps the previously loaded report on screen; only
+              // the first load has nothing to show yet and falls back to the
+              // skeleton.
+              AsyncValue<ReportDetail>(isLoading: true, value: null) =>
+                const _DetailSkeleton(),
+              AsyncValue<ReportDetail>(value: final detail?) => _DetailContent(
+                reportId: reportId,
+                detail: detail,
+                distanceInMeters: distanceInMeters,
+              ),
+              _ => const _DetailSkeleton(),
+            };
+          },
+        ),
       ),
     );
   }
@@ -169,6 +173,11 @@ class _DetailContent extends StatelessWidget {
                 ReportStatusTimeline(
                   reportId: reportId,
                   updatedAt: detail.updatedAt,
+                ),
+                const Gap(AppSpacing.lg),
+                ReportStatusActionPanel(
+                  reportId: reportId,
+                  status: detail.status,
                 ),
                 const Gap(AppSpacing.lg),
                 ReportDetailRow(

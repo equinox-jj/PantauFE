@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -40,6 +41,10 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   final MapController _mapController = MapController();
 
+  /// Cancels in-flight tile requests on fast pan/zoom instead of letting them
+  /// queue up and 404 against OSM's rate-limited tile server.
+  final _tileProvider = CancellableNetworkTileProvider();
+
   /// Centre the visible reports were loaded around. Null until the first load.
   LatLng? _loadedCenter;
 
@@ -59,6 +64,7 @@ class _MapPageState extends ConsumerState<MapPage> {
   void dispose() {
     _canSearchArea.dispose();
     _mapController.dispose();
+    _tileProvider.dispose();
     super.dispose();
   }
 
@@ -197,6 +203,7 @@ class _MapPageState extends ConsumerState<MapPage> {
               initialZoom: _initialZoom,
               onMapEvent: _handleMapEvent,
               onReportTap: _openReport,
+              tileProvider: _tileProvider,
             ),
             // Below the top bar in paint order: their offset assumes the
             // collapsed bar, so an open results panel must cover them.

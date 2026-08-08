@@ -21,6 +21,7 @@ class MapCanvas extends StatelessWidget {
     required this.initialZoom,
     required this.onMapEvent,
     required this.onReportTap,
+    required this.tileProvider,
   });
 
   final MapController controller;
@@ -28,6 +29,7 @@ class MapCanvas extends StatelessWidget {
   final double initialZoom;
   final void Function(MapEvent event) onMapEvent;
   final ValueChanged<NearbyReport> onReportTap;
+  final TileProvider tileProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +49,7 @@ class MapCanvas extends StatelessWidget {
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.pantau.app',
+          tileProvider: tileProvider,
         ),
         // Below the markers: the ring is context, not a target, so its tint
         // never covers a report pin.

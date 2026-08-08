@@ -21,6 +21,7 @@ class LocationPickerMap extends StatelessWidget {
     required this.controller,
     required this.initialCenter,
     required this.onPositionChanged,
+    required this.tileProvider,
   });
 
   final MapController controller;
@@ -30,6 +31,8 @@ class LocationPickerMap extends StatelessWidget {
 
   /// Fires on every camera change, gesture-driven or not.
   final void Function(MapCamera camera, bool hasGesture) onPositionChanged;
+
+  final TileProvider tileProvider;
 
   static const double initialZoom = 17;
 
@@ -57,6 +60,7 @@ class LocationPickerMap extends StatelessWidget {
             TileLayer(
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.pantau.app',
+              tileProvider: tileProvider,
             ),
           ],
         ),

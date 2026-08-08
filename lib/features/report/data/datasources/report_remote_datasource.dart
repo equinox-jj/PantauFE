@@ -1,7 +1,6 @@
 import '../../../../core/base/base.dart';
 import '../../../../core/network/network.dart';
 import '../model/model.dart';
-import 'endpoint/report_endpoint.dart';
 
 abstract class ReportRemoteDataSource with BaseRemoteDataSource {
   /// Reports within [radiusInMeters] of the point, nearest first.
@@ -30,10 +29,10 @@ class ReportRemoteDataSourceImpl extends ReportRemoteDataSource {
     int limit = 50,
   }) => safeApiCall(() async {
     final response = await _dioClient.get(
-      ReportEndpoint.nearbyReports,
+      ApiEndpoints.nearbyReports,
       queryParameters: {
-        'lat': latitude,
-        'lng': longitude,
+        'latitude': latitude,
+        'longitude': longitude,
         'radius_meter': radiusInMeters,
         'limit': limit,
       },
@@ -46,7 +45,7 @@ class ReportRemoteDataSourceImpl extends ReportRemoteDataSource {
   Future<MyReportsModel> getMyReports({int limit = 50, int offset = 0}) =>
       safeApiCall(() async {
         final response = await _dioClient.get(
-          ReportEndpoint.myReports,
+          ApiEndpoints.myReports,
           queryParameters: {'limit': limit, 'offset': offset},
         );
 

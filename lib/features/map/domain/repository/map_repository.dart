@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/base/base.dart';
 import '../../../../core/error/error.dart';
+import '../../../../core/utils/enums/enums.dart';
 import '../entity/entity.dart';
 
 abstract class MapRepository with BaseRepository {
@@ -25,5 +26,13 @@ abstract class MapRepository with BaseRepository {
     required String photoPath,
     required double latitude,
     required double longitude,
+  });
+
+  /// Advances a report's status. Resolver-only server-side — a non-resolver
+  /// token gets a 403, surfaced as a [Failure] like any other call.
+  Future<Either<Failure, ReportDetail>> updateReportStatus({
+    required String id,
+    required ReportStatus toStatus,
+    String? note,
   });
 }

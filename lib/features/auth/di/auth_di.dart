@@ -58,6 +58,13 @@ GetCurrentUserUsecase getCurrentUserUsecase(Ref ref) {
   return GetCurrentUserUsecase(authRepository: authRepository);
 }
 
+@Riverpod(keepAlive: true)
+GetCachedRoleUsecase getCachedRoleUsecase(Ref ref) {
+  final authRepository = ref.read(authRepositoryProvider);
+
+  return GetCachedRoleUsecase(authRepository: authRepository);
+}
+
 /// The cached identity of the signed-in user. Throws the [Failure] rather
 /// than folding it to `null`, so it surfaces through `AsyncError` the same
 /// way every other screen in this app reads a failed call.

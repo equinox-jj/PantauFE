@@ -28,6 +28,14 @@ abstract final class AppRoutes {
   /// Entry point of the authenticated shell: the map tab.
   static const String dashboard = map;
 
+  // Resolver dashboard shell — one branch per tab, mirrors the citizen shell
+  // above but for the resolver role.
+  static const String queue = '/queue';
+  static const String resolverProfile = '/resolver/profile';
+
+  /// Entry point of the resolver shell: the queue tab.
+  static const String resolverDashboard = queue;
+
   static const List<String> all = [
     splash,
     onboarding,
@@ -39,5 +47,7 @@ abstract final class AppRoutes {
     map,
     feed,
     profile,
+    queue,
+    resolverProfile,
   ];
 }

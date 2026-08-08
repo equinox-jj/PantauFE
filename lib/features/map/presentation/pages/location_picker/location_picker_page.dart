@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
@@ -47,6 +48,10 @@ class _LocationPickerPageState extends ConsumerState<LocationPickerPage> {
 
   final MapController _mapController = MapController();
 
+  /// Cancels in-flight tile requests on fast pan/zoom instead of letting them
+  /// queue up and 404 against OSM's rate-limited tile server.
+  final _tileProvider = CancellableNetworkTileProvider();
+
   /// Live camera centre, repainting only the readout — [FlutterMap] must not
   /// rebuild while it is being panned.
   late final ValueNotifier<PickedLocation> _pin;
@@ -76,6 +81,7 @@ class _LocationPickerPageState extends ConsumerState<LocationPickerPage> {
   void dispose() {
     _settleTimer?.cancel();
     _mapController.dispose();
+    _tileProvider.dispose();
     _pin.dispose();
     _settledPin.dispose();
     _isMoving.dispose();
@@ -158,6 +164,7 @@ class _LocationPickerPageState extends ConsumerState<LocationPickerPage> {
                 controller: _mapController,
                 initialCenter: _pin.value.latLng,
                 onPositionChanged: _handlePositionChanged,
+                tileProvider: _tileProvider,
               ),
             ),
             Positioned(

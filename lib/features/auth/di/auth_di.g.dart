@@ -270,6 +270,54 @@ final class GetCurrentUserUsecaseProvider
 String _$getCurrentUserUsecaseHash() =>
     r'c22f820f5c872a838b14353a8b1e3ab4fea3ff3e';
 
+@ProviderFor(getCachedRoleUsecase)
+final getCachedRoleUsecaseProvider = GetCachedRoleUsecaseProvider._();
+
+final class GetCachedRoleUsecaseProvider
+    extends
+        $FunctionalProvider<
+          GetCachedRoleUsecase,
+          GetCachedRoleUsecase,
+          GetCachedRoleUsecase
+        >
+    with $Provider<GetCachedRoleUsecase> {
+  GetCachedRoleUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'getCachedRoleUsecaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$getCachedRoleUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetCachedRoleUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  GetCachedRoleUsecase create(Ref ref) {
+    return getCachedRoleUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetCachedRoleUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetCachedRoleUsecase>(value),
+    );
+  }
+}
+
+String _$getCachedRoleUsecaseHash() =>
+    r'6d66f9f8aeba2c4fd0221eedb3b37ae30646bc79';
+
 /// The cached identity of the signed-in user. Throws the [Failure] rather
 /// than folding it to `null`, so it surfaces through `AsyncError` the same
 /// way every other screen in this app reads a failed call.

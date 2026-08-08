@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/error/error.dart';
 import '../../../../core/local_storage/local_storage.dart';
+import '../../../../core/utils/enums/enums.dart';
 import '../../domain/entity/entity.dart';
 import '../../domain/repository/auth_repository.dart';
 import '../datasources/datasources.dart';
@@ -106,6 +107,13 @@ class AuthRepositoryImpl extends AuthRepository {
       reportsCount: profile.reportsCount,
       resolvedCount: profile.resolvedCount,
     );
+  });
+
+  @override
+  Future<Either<Failure, UserRole>> getCachedRole() => safeCall(() async {
+    final json = await _userProfileStorage.read();
+
+    return UserRole.fromSlug(json?['role'] as String?);
   });
 
   Future<void> _persistToken(String? token) async {

@@ -4,7 +4,6 @@ import 'package:path/path.dart' as p;
 import '../../../../core/base/base.dart';
 import '../../../../core/network/network.dart';
 import '../model/model.dart';
-import 'endpoint/map_endpoint.dart';
 
 abstract class MapRemoteDataSource with BaseRemoteDataSource {
   Future<NearbyReportsModel> getNearbyReports({
@@ -16,6 +15,14 @@ abstract class MapRemoteDataSource with BaseRemoteDataSource {
   Future<ReportCategoriesModel> getReportCategories();
   Future<ReportDetailModel> getReportDetail(String id);
   Future<StatusHistoryModel> getReportHistory(String id);
+
+  /// Advances a report's status. `toStatus` is the wire value (matches
+  /// [ReportStatus.slug] — resolver-only server-side).
+  Future<ReportDetailModel> updateReportStatus({
+    required String id,
+    required String toStatus,
+    String? note,
+  });
 
   /// Creates a report. The photo at [photoPath] is uploaded in the same
   /// multipart request — the API has no separate upload endpoint.
@@ -66,10 +73,10 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
     int limit = 10,
   }) => safeApiCall(() async {
     final response = await _dioClient.get(
-      MapEndpoint.nearbyReports,
+      ApiEndpoints.nearbyReports,
       queryParameters: {
-        'lat': latitude,
-        'lng': longitude,
+        'latitude': latitude,
+        'longitude': longitude,
         'radius_meter': radiusInMeters,
         'limit': limit,
       },
@@ -80,14 +87,14 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
 
   @override
   Future<ReportCategoriesModel> getReportCategories() => safeApiCall(() async {
-    final response = await _dioClient.get(MapEndpoint.reportCategories);
+    final response = await _dioClient.get(ApiEndpoints.reportCategories);
 
     return ReportCategoriesModel.fromJson(response.data);
   });
 
   @override
   Future<ReportDetailModel> getReportDetail(String id) => safeApiCall(() async {
-    final response = await _dioClient.get(MapEndpoint.reportDetail(id));
+    final response = await _dioClient.get(ApiEndpoints.reportDetail(id));
 
     return ReportDetailModel.fromJson(response.data);
   });
@@ -95,7 +102,7 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
   @override
   Future<StatusHistoryModel> getReportHistory(String id) =>
       safeApiCall(() async {
-        final response = await _dioClient.get(MapEndpoint.reportHistory(id));
+        final response = await _dioClient.get(ApiEndpoints.reportHistory(id));
         final data = response.data;
 
         // docs/Pantau_openapi.yaml types this response as a bare array, while
@@ -112,6 +119,23 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
 
         return StatusHistoryModel.fromJson(data);
       });
+
+  @override
+  Future<ReportDetailModel> updateReportStatus({
+    required String id,
+    required String toStatus,
+    String? note,
+  }) => safeApiCall(() async {
+    final response = await _dioClient.patch(
+      ApiEndpoints.reportStatus(id),
+      data: {
+        'toStatus': toStatus,
+        if (note != null && note.isNotEmpty) 'note': note,
+      },
+    );
+
+    return ReportDetailModel.fromJson(response.data);
+  });
 
   @override
   Future<CreateReportModel> createReport({
@@ -135,7 +159,7 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
     });
 
     final response = await _dioClient.post(
-      MapEndpoint.reports,
+      ApiEndpoints.reports,
       data: formData,
       // Dio applies sendTimeout to the whole request body, so the global 10s
       // default is too tight for a photo on a weak uplink. Request-scoped, so

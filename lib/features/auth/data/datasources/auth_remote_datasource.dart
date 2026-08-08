@@ -40,7 +40,7 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
   }) => safeApiCall(() async {
     final response = await _dioClient.post(
       ApiEndpoints.register,
-      data: {'email': email, 'password': password, 'displayName': displayName},
+      data: {'email': email, 'password': password, 'display_name': displayName},
       options: Options(extra: {ApiEndpoints.kNoAuth: true}),
     );
 

@@ -3,6 +3,7 @@ import 'package:pantau/features/auth/domain/entity/entity.dart';
 
 import '../../../../core/base/base.dart';
 import '../../../../core/error/error.dart';
+import '../../../../core/utils/enums/enums.dart';
 
 abstract class AuthRepository with BaseRepository {
   Future<Either<Failure, Register>> register({
@@ -19,4 +20,8 @@ abstract class AuthRepository with BaseRepository {
   Future<Either<Failure, void>> logout();
 
   Future<Either<Failure, CurrentUser?>> getCurrentUser();
+
+  /// Role of the cached profile, read from local storage only — no network
+  /// call. `UserRole.unknown` if nothing is cached.
+  Future<Either<Failure, UserRole>> getCachedRole();
 }

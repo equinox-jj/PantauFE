@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/error/error.dart';
+import '../../../../core/utils/enums/enums.dart';
 import '../../domain/entity/entity.dart';
 import '../../domain/repository/repository.dart';
 import '../datasources/datasources.dart';
@@ -67,6 +68,21 @@ class MapRepositoryImpl extends MapRepository {
       photoPath: photoPath,
       latitude: latitude,
       longitude: longitude,
+    );
+
+    return result.toEntity();
+  });
+
+  @override
+  Future<Either<Failure, ReportDetail>> updateReportStatus({
+    required String id,
+    required ReportStatus toStatus,
+    String? note,
+  }) => safeCall(() async {
+    final result = await _mapRemoteDataSource.updateReportStatus(
+      id: id,
+      toStatus: toStatus.slug,
+      note: note,
     );
 
     return result.toEntity();

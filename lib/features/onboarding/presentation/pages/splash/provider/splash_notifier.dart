@@ -3,6 +3,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../../../core/base/base.dart';
 import '../../../../../../core/di/core_di.dart';
 import '../../../../../../core/router/app_routes.dart';
+import '../../../../../../core/utils/enums/enums.dart';
+import '../../../../../auth/di/di.dart';
 import '../../../../di/di.dart';
 
 part 'splash_notifier.g.dart';
@@ -26,8 +28,17 @@ class Splash extends _$Splash {
     await delay;
 
     // A stored token means the session survived the restart — skip login and
-    // onboarding, which an authenticated user has already passed.
-    if (token != null && token.isNotEmpty) return AppRoutes.dashboard;
+    // onboarding, which an authenticated user has already passed. Which
+    // shell it lands in depends on the cached role.
+    if (token != null && token.isNotEmpty) {
+      final roleUsecase = ref.read(getCachedRoleUsecaseProvider);
+      final roleResult = await roleUsecase(const NoParams());
+      final role = roleResult.fold((_) => UserRole.unknown, (role) => role);
+
+      return role == UserRole.resolver
+          ? AppRoutes.resolverDashboard
+          : AppRoutes.dashboard;
+    }
 
     return result.fold(
       (_) => AppRoutes.onboarding,

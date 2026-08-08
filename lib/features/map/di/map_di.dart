@@ -61,6 +61,13 @@ CreateReportUsecase createReportUsecase(Ref ref) {
 }
 
 @Riverpod(keepAlive: true)
+UpdateReportStatusUsecase updateReportStatusUsecase(Ref ref) {
+  return UpdateReportStatusUsecase(
+    mapRepository: ref.read(mapRepositoryProvider),
+  );
+}
+
+@Riverpod(keepAlive: true)
 SearchPlacesUsecase searchPlacesUsecase(Ref ref) {
   return SearchPlacesUsecase(
     placeRepository: ref.read(placeRepositoryProvider),

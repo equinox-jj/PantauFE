@@ -381,6 +381,54 @@ final class CreateReportUsecaseProvider
 String _$createReportUsecaseHash() =>
     r'4ff4cad9acea345caa2ce02a25ac145ce14cde2c';
 
+@ProviderFor(updateReportStatusUsecase)
+final updateReportStatusUsecaseProvider = UpdateReportStatusUsecaseProvider._();
+
+final class UpdateReportStatusUsecaseProvider
+    extends
+        $FunctionalProvider<
+          UpdateReportStatusUsecase,
+          UpdateReportStatusUsecase,
+          UpdateReportStatusUsecase
+        >
+    with $Provider<UpdateReportStatusUsecase> {
+  UpdateReportStatusUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'updateReportStatusUsecaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$updateReportStatusUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<UpdateReportStatusUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  UpdateReportStatusUsecase create(Ref ref) {
+    return updateReportStatusUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(UpdateReportStatusUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<UpdateReportStatusUsecase>(value),
+    );
+  }
+}
+
+String _$updateReportStatusUsecaseHash() =>
+    r'd4f47f4978ac4d755d7befc82467fdc673f6fdd9';
+
 @ProviderFor(searchPlacesUsecase)
 final searchPlacesUsecaseProvider = SearchPlacesUsecaseProvider._();
 
