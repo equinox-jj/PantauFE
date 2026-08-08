@@ -11,6 +11,8 @@ abstract class AuthRemoteDataSource with BaseRemoteDataSource {
     required String displayName,
   });
   Future<LoginModel> login({required String email, required String password});
+
+  Future<UserProfileModel> getMe();
 }
 
 class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
@@ -43,5 +45,12 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
     );
 
     return RegisterModel.fromJson(response.data);
+  });
+
+  @override
+  Future<UserProfileModel> getMe() => safeApiCall(() async {
+    final response = await _dioClient.get(ApiEndpoints.me);
+
+    return UserProfileModel.fromJson(response.data);
   });
 }

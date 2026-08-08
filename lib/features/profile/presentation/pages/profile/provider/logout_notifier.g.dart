@@ -46,7 +46,7 @@ final class LogoutProvider extends $NotifierProvider<Logout, AsyncValue<bool>> {
   }
 }
 
-String _$logoutHash() => r'0084027b830a31933b8c1affff41adb056e4e9ac';
+String _$logoutHash() => r'7b9c3a9256a3cdc6160b1b15c07ae77a760ca009';
 
 /// Clears the stored session. `AsyncData(true)` means the sign-out landed and
 /// the listener may navigate away.

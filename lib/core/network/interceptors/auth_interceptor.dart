@@ -1,16 +1,21 @@
 import 'package:dio/dio.dart';
 
-import '../../local_storage/token_storage.dart';
+import '../../local_storage/local_storage.dart';
 import '../api_endpoints.dart';
 import '../../router/session_manager.dart';
 
 /// Attaches the `x-api-key` header to every request and a
 /// `Authorization: Bearer` header unless the request is flagged `noAuth`.
 class AuthInterceptor extends Interceptor {
-  AuthInterceptor(this._tokenStorage, this._sessionManager);
+  AuthInterceptor(
+    this._tokenStorage,
+    this._sessionManager,
+    this._userProfileStorage,
+  );
 
   final TokenStorage _tokenStorage;
   final SessionManager _sessionManager;
+  final UserProfileStorage _userProfileStorage;
 
   @override
   Future<void> onRequest(
@@ -39,6 +44,7 @@ class AuthInterceptor extends Interceptor {
     // means wrong credentials.
     if (!noAuth && err.response?.statusCode == 401) {
       await _tokenStorage.clear();
+      await _userProfileStorage.clear();
       _sessionManager.notifyExpired();
     }
 

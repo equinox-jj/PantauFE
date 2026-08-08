@@ -26,8 +26,9 @@ DioClient dioClient(Ref ref) {
 AuthInterceptor authInterceptor(Ref ref) {
   final tokenStorage = ref.watch(tokenStorageProvider);
   final sessionManager = ref.watch(sessionManagerProvider);
+  final userProfileStorage = ref.watch(userProfileStorageProvider);
 
-  return AuthInterceptor(tokenStorage, sessionManager);
+  return AuthInterceptor(tokenStorage, sessionManager, userProfileStorage);
 }
 
 @Riverpod(keepAlive: true)
@@ -35,6 +36,13 @@ TokenStorage tokenStorage(Ref ref) {
   final secureStorage = ref.watch(secureStorageProvider);
 
   return SecureTokenStorageImpl(secureStorage);
+}
+
+@Riverpod(keepAlive: true)
+UserProfileStorage userProfileStorage(Ref ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
+
+  return LocalUserProfileStorage(prefs);
 }
 
 @Riverpod(keepAlive: true)

@@ -29,9 +29,9 @@ class MyReports extends _$MyReports {
   /// tap and the rebuild that subscribes to it, taking the in-flight load with
   /// it and leaving the tab on skeletons for good.
   ///
-  /// Kept alive for the same reason it is loaded here: only the "My reports"
-  /// body watches this, so without it every switch back to the nearby tab
-  /// disposes the list and makes returning cost a fresh round trip. The nearby
+  /// Kept alive for the same reason it is loaded here: switching tabs (or
+  /// screens — the profile stats row watches this too) would otherwise
+  /// dispose the list and make returning cost a fresh round trip. The nearby
   /// list survives switches already, held by the feed listener.
   @override
   AsyncValue<List<FeedItem>> build() {

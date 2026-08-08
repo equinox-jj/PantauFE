@@ -131,7 +131,7 @@ final class AuthInterceptorProvider
   }
 }
 
-String _$authInterceptorHash() => r'c2f6a9bb15ae4d2b7133411d330e50249ddc57b9';
+String _$authInterceptorHash() => r'39cac1714f7c4cfbde74178e698c311c1d6c21c9';
 
 @ProviderFor(tokenStorage)
 final tokenStorageProvider = TokenStorageProvider._();
@@ -173,6 +173,54 @@ final class TokenStorageProvider
 }
 
 String _$tokenStorageHash() => r'45d3799bb401ed863aa8b105756895b8f27ce551';
+
+@ProviderFor(userProfileStorage)
+final userProfileStorageProvider = UserProfileStorageProvider._();
+
+final class UserProfileStorageProvider
+    extends
+        $FunctionalProvider<
+          UserProfileStorage,
+          UserProfileStorage,
+          UserProfileStorage
+        >
+    with $Provider<UserProfileStorage> {
+  UserProfileStorageProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userProfileStorageProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$userProfileStorageHash();
+
+  @$internal
+  @override
+  $ProviderElement<UserProfileStorage> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  UserProfileStorage create(Ref ref) {
+    return userProfileStorage(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(UserProfileStorage value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<UserProfileStorage>(value),
+    );
+  }
+}
+
+String _$userProfileStorageHash() =>
+    r'ce07dc926d06c86f4182ba65043cdda7a82b509d';
 
 @ProviderFor(secureStorage)
 final secureStorageProvider = SecureStorageProvider._();

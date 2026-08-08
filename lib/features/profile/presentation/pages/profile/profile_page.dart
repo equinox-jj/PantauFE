@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 
 import '../../../../../core/components/button/button.dart';
-import '../../../../../core/components/empty_state/empty_state.dart';
 import '../../../../../core/theme/theme.dart';
+import '../../../../auth/di/di.dart';
+import '../../../../report/presentation/pages/feed/provider/provider.dart';
+import '../../widgets/profile_widgets.dart';
 import 'listener/listener.dart';
 import 'provider/provider.dart';
 
-/// Profile tab — account, notification and app settings.
-///
-/// Placeholder until the profile slice lands; sign-out is already wired.
+/// Profile tab — identity, report stats, help and sign-out.
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
@@ -19,26 +20,36 @@ class ProfilePage extends ConsumerWidget {
       appBar: AppBar(title: const Text('Profile')),
       body: LogoutListener(
         child: SafeArea(
-          child: Column(
-            children: [
-              const Expanded(
-                child: AppEmptyState(
-                  icon: Icons.person_outline,
-                  title: 'Profile coming soon',
-                  message:
-                      'Your account details and app settings will live here.',
-                ),
+          child: RefreshIndicator(
+            onRefresh: () => Future.wait([
+              ref.read(myReportsProvider.notifier).refresh(),
+              ref.refresh(currentUserProvider.future),
+            ]),
+            backgroundColor: AppColors.surfaceRaised,
+            color: AppColors.accent,
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.sm,
+                AppSpacing.lg,
+                AppSpacing.xl2,
               ),
-              Padding(
-                padding: const EdgeInsets.all(AppSpacing.xl),
-                child: AppButton(
+              children: [
+                const ProfileIdentityCard(),
+                const Gap(AppSpacing.md),
+                const ProfileStatsRow(),
+                const Gap(AppSpacing.md),
+                const ProfileHelpCard(),
+                const Gap(AppSpacing.xl),
+                AppButton(
                   text: 'Sign out',
                   variant: AppButtonVariant.secondary,
                   leading: const Icon(Icons.logout),
                   onPressed: () => _confirmSignOut(context, ref),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

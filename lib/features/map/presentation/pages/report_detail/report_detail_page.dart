@@ -81,6 +81,11 @@ class _DetailContent extends StatelessWidget {
 
   static final _dateFormat = DateFormat('d MMM yyyy · HH:mm');
 
+  Future<void> _refresh(WidgetRef ref) => Future.wait([
+    ref.refresh(reportDetailProvider(reportId).future),
+    ref.refresh(reportHistoryProvider(reportId).future),
+  ]);
+
   String get _coordinates {
     final latitude = detail.latitude;
     final longitude = detail.longitude;
@@ -110,72 +115,81 @@ class _DetailContent extends StatelessWidget {
     final description = detail.description;
     final createdAt = detail.createdAt;
 
-    return CustomScrollView(
-      slivers: [
-        ReportDetailHero(
-          photoUrl: detail.photoUrl,
-          status: detail.status,
-          reportId: reportId,
-          onShare: _share,
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.lg,
-            AppSpacing.md,
-            AppSpacing.lg,
-            AppSpacing.xl2,
+    return Consumer(
+      builder: (context, ref, child) => RefreshIndicator(
+        onRefresh: () => _refresh(ref),
+        backgroundColor: AppColors.surfaceRaised,
+        color: AppColors.accent,
+        child: child!,
+      ),
+      child: CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [
+          ReportDetailHero(
+            photoUrl: detail.photoUrl,
+            status: detail.status,
+            reportId: reportId,
+            onShare: _share,
           ),
-          sliver: SliverList.list(
-            children: [
-              if (distance != null)
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.md,
+              AppSpacing.lg,
+              AppSpacing.xl2,
+            ),
+            sliver: SliverList.list(
+              children: [
+                if (distance != null)
+                  Text(
+                    formatDistance(distance),
+                    style: AppTypography.mono(color: AppColors.textMuted),
+                  ),
+                if (distance != null) const Gap(AppSpacing.xs2),
                 Text(
-                  formatDistance(distance),
-                  style: AppTypography.mono(color: AppColors.textMuted),
+                  detail.category?.name ?? 'Uncategorised',
+                  style: AppTypography.title,
                 ),
-              if (distance != null) const Gap(AppSpacing.xs2),
-              Text(
-                detail.category?.name ?? 'Uncategorised',
-                style: AppTypography.title,
-              ),
-              if (description != null && description.isNotEmpty) ...[
+                if (description != null && description.isNotEmpty) ...[
+                  const Gap(AppSpacing.xs2),
+                  Text(description, style: AppTypography.bodyLarge),
+                ],
                 const Gap(AppSpacing.xs2),
-                Text(description, style: AppTypography.bodyLarge),
-              ],
-              const Gap(AppSpacing.xs2),
-              Text(
-                // The API never exposes reporter identity, so this is literal.
-                createdAt == null
-                    ? 'anonymous'
-                    : 'reported ${formatRelativeAge(createdAt.toLocal())} · anonymous',
-                style: AppTypography.mono(
-                  fontSize: AppTypography.metaMonoSize,
-                  color: AppColors.textMuted,
+                Text(
+                  // The API never exposes reporter identity, so this is literal.
+                  createdAt == null
+                      ? 'anonymous'
+                      : 'reported ${formatRelativeAge(createdAt.toLocal())} · anonymous',
+                  style: AppTypography.mono(
+                    fontSize: AppTypography.metaMonoSize,
+                    color: AppColors.textMuted,
+                  ),
                 ),
-              ),
-              const Gap(AppSpacing.lg),
-              ReportStatusTimeline(
-                reportId: reportId,
-                updatedAt: detail.updatedAt,
-              ),
-              const Gap(AppSpacing.lg),
-              ReportDetailRow(
-                icon: Icons.place_outlined,
-                label: 'Coordinates',
-                value: _coordinates,
-                isMono: true,
-              ),
-              const Gap(AppSpacing.md),
-              ReportDetailRow(
-                icon: Icons.update,
-                label: 'Last updated',
-                value: detail.updatedAt == null
-                    ? '—'
-                    : _dateFormat.format(detail.updatedAt!.toLocal()),
-              ),
-            ],
+                const Gap(AppSpacing.lg),
+                ReportStatusTimeline(
+                  reportId: reportId,
+                  updatedAt: detail.updatedAt,
+                ),
+                const Gap(AppSpacing.lg),
+                ReportDetailRow(
+                  icon: Icons.place_outlined,
+                  label: 'Coordinates',
+                  value: _coordinates,
+                  isMono: true,
+                ),
+                const Gap(AppSpacing.md),
+                ReportDetailRow(
+                  icon: Icons.update,
+                  label: 'Last updated',
+                  value: detail.updatedAt == null
+                      ? '—'
+                      : _dateFormat.format(detail.updatedAt!.toLocal()),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

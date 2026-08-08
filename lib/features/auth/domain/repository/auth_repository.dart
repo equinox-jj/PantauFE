@@ -17,4 +17,6 @@ abstract class AuthRepository with BaseRepository {
 
   /// Drops the stored session. Local-only — the API has no logout endpoint.
   Future<Either<Failure, void>> logout();
+
+  Future<Either<Failure, CurrentUser?>> getCurrentUser();
 }

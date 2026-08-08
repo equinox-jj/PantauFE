@@ -96,7 +96,7 @@ final class AuthRepositoryProvider
   }
 }
 
-String _$authRepositoryHash() => r'04909707ab714b1cdd468e82d27c03fbe3d6c9d9';
+String _$authRepositoryHash() => r'7eaba8d197640058b8e5414d9301ba31a5807b68';
 
 @ProviderFor(loginUsecase)
 final loginUsecaseProvider = LoginUsecaseProvider._();
@@ -221,3 +221,101 @@ final class RegisterUsecaseProvider
 }
 
 String _$registerUsecaseHash() => r'f6d2f7e2cb633d1332fa8dc1f559adc0c943abe0';
+
+@ProviderFor(getCurrentUserUsecase)
+final getCurrentUserUsecaseProvider = GetCurrentUserUsecaseProvider._();
+
+final class GetCurrentUserUsecaseProvider
+    extends
+        $FunctionalProvider<
+          GetCurrentUserUsecase,
+          GetCurrentUserUsecase,
+          GetCurrentUserUsecase
+        >
+    with $Provider<GetCurrentUserUsecase> {
+  GetCurrentUserUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'getCurrentUserUsecaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$getCurrentUserUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetCurrentUserUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  GetCurrentUserUsecase create(Ref ref) {
+    return getCurrentUserUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetCurrentUserUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetCurrentUserUsecase>(value),
+    );
+  }
+}
+
+String _$getCurrentUserUsecaseHash() =>
+    r'c22f820f5c872a838b14353a8b1e3ab4fea3ff3e';
+
+/// The cached identity of the signed-in user. Throws the [Failure] rather
+/// than folding it to `null`, so it surfaces through `AsyncError` the same
+/// way every other screen in this app reads a failed call.
+
+@ProviderFor(currentUser)
+final currentUserProvider = CurrentUserProvider._();
+
+/// The cached identity of the signed-in user. Throws the [Failure] rather
+/// than folding it to `null`, so it surfaces through `AsyncError` the same
+/// way every other screen in this app reads a failed call.
+
+final class CurrentUserProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<CurrentUser?>,
+          CurrentUser?,
+          FutureOr<CurrentUser?>
+        >
+    with $FutureModifier<CurrentUser?>, $FutureProvider<CurrentUser?> {
+  /// The cached identity of the signed-in user. Throws the [Failure] rather
+  /// than folding it to `null`, so it surfaces through `AsyncError` the same
+  /// way every other screen in this app reads a failed call.
+  CurrentUserProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'currentUserProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$currentUserHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<CurrentUser?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<CurrentUser?> create(Ref ref) {
+    return currentUser(ref);
+  }
+}
+
+String _$currentUserHash() => r'032e65acf013c0cf70e01bfc4c99ce732702372e';
