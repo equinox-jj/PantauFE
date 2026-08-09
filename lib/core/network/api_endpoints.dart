@@ -1,9 +1,20 @@
+import 'package:flutter/foundation.dart';
+
 class ApiEndpoints {
   const ApiEndpoints._();
 
   static const String kNoAuth = 'noAuth';
   static const String kRetried = 'retried';
-  static const String baseUrl = 'http://127.0.0.1:8080/api/v1';
+
+  /// Android emulator's loopback alias differs from the host's;
+  /// every other target (iOS sim, desktop, web) reaches it via 127.0.0.1.
+  static String get baseUrl {
+    final host = !kIsWeb && defaultTargetPlatform == TargetPlatform.android
+        ? '10.0.2.2'
+        : '127.0.0.1';
+    return 'http://$host:8080/api/v1';
+  }
+
   static const String login = '/auth/login';
   static const String register = '/auth/register';
   static const String me = '/users/me';
