@@ -81,7 +81,7 @@ class MapRepositoryImpl extends MapRepository {
   }) => safeCall(() async {
     final result = await _mapRemoteDataSource.updateReportStatus(
       id: id,
-      toStatus: toStatus.slug,
+      toStatus: toStatus.toStatusValue,
       note: note,
     );
 

@@ -201,7 +201,7 @@ class _LocationPickerPageState extends ConsumerState<LocationPickerPage> {
             ),
             // Last layer: without a position "locate me" is useless, so the
             // permission cover hides the controls along with the map.
-            const LocationPickerPermissionOverlay(),
+            const Positioned.fill(child: LocationPickerPermissionOverlay()),
           ],
         ),
       ),

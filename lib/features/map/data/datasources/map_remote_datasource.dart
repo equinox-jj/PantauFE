@@ -129,7 +129,7 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
     final response = await _dioClient.patch(
       ApiEndpoints.reportStatus(id),
       data: {
-        'toStatus': toStatus,
+        'to_status': toStatus,
         if (note != null && note.isNotEmpty) 'note': note,
       },
     );

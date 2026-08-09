@@ -19,6 +19,11 @@ enum ReportStatus {
   /// Always rendered next to the status colour.
   final String label;
 
+  /// Wire value for the `to_status` field on the status-update PATCH — the
+  /// API expects this one upper case (`ACKNOWLEDGED`), unlike every other
+  /// place [slug] is used.
+  String get toStatusValue => slug.toUpperCase();
+
   /// Parses a wire value, falling back to [ReportStatus.unknown].
   static ReportStatus fromSlug(String? slug) {
     if (slug == null) return ReportStatus.unknown;
