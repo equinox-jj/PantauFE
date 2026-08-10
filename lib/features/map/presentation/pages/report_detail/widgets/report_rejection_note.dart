@@ -29,7 +29,11 @@ class ReportRejectionNote extends StatelessWidget {
 
     return Consumer(
       builder: (context, ref, _) {
-        final steps = ref.watch(reportTimelineProvider(reportId)).value;
+        final steps = ref.watch(
+          reportDetailProvider(
+            reportId,
+          ).select((state) => state.timeline.value),
+        );
         // The rejected entry is always the last step — rejected leaves the
         // ladder, so no future steps are appended after it.
         final note = (steps != null && steps.isNotEmpty)

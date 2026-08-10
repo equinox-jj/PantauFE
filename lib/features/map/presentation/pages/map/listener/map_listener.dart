@@ -20,7 +20,10 @@ class MapListener extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(nearbyReportsProvider, (previous, next) {
+    ref.listen(mapProvider.select((state) => state.nearbyReports), (
+      previous,
+      next,
+    ) {
       if (next case AsyncError(error: final error)) {
         final message = error is Failure
             ? error.displayMessage
@@ -37,7 +40,10 @@ class MapListener extends ConsumerWidget {
       }
     });
 
-    ref.listen(mapLocationProvider, (previous, next) {
+    ref.listen(mapProvider.select((state) => state.mapLocation), (
+      previous,
+      next,
+    ) {
       if (next case AsyncData(value: final result?)) {
         onLocated(result);
 
@@ -89,7 +95,7 @@ class MapListener extends ConsumerWidget {
           TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
-              ref.read(mapLocationProvider.notifier).openSettings();
+              ref.read(mapProvider.notifier).openSettings();
             },
             child: const Text('Open settings'),
           ),

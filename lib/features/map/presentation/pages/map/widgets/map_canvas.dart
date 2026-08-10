@@ -79,7 +79,9 @@ class _LoadedAreaLayer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final center = ref.watch(loadedAreaProvider);
+        final center = ref.watch(
+          mapProvider.select((state) => state.loadedArea),
+        );
         if (center == null) return const SizedBox.shrink();
 
         return CircleLayer(
@@ -108,7 +110,9 @@ class _SearchedPlaceLayer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final place = ref.watch(searchedPlaceProvider);
+        final place = ref.watch(
+          mapProvider.select((state) => state.searchedPlace),
+        );
         if (place == null) return const SizedBox.shrink();
 
         return MarkerLayer(
@@ -133,7 +137,9 @@ class _CurrentLocationLayer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final position = ref.watch(currentLocationProvider);
+        final position = ref.watch(
+          mapProvider.select((state) => state.currentLocation),
+        );
         if (position == null) return const SizedBox.shrink();
 
         return MarkerLayer(
@@ -189,7 +195,9 @@ class _ReportClusterLayer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final reports = ref.watch(filteredReportsProvider);
+        final reports = ref.watch(
+          mapProvider.select((state) => state.filteredReports),
+        );
 
         return MarkerClusterLayerWidget(
           options: MarkerClusterLayerOptions(

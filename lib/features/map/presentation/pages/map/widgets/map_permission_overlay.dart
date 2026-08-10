@@ -33,7 +33,7 @@ class MapPermissionOverlay extends StatelessWidget {
             'Pantau shows reports around you and pins new ones where you '
             'are. Enable location access to continue.',
         actionText: 'Open settings',
-        onAction: () => ref.read(mapLocationProvider.notifier).openSettings(),
+        onAction: () => ref.read(mapProvider.notifier).openSettings(),
       ),
       LocationPermissionDenied() => (
         title: 'Location permission needed',
@@ -41,7 +41,7 @@ class MapPermissionOverlay extends StatelessWidget {
             'Pantau needs your location to show reports around you and pin '
             'new ones where you are.',
         actionText: 'Try again',
-        onAction: () => ref.read(mapLocationProvider.notifier).locate(),
+        onAction: () => ref.read(mapProvider.notifier).locate(),
       ),
       LocationServiceDisabled() => (
         title: 'Location services are off',
@@ -49,7 +49,7 @@ class MapPermissionOverlay extends StatelessWidget {
             'Turn on location services in your device settings to see '
             'reports around you.',
         actionText: 'Try again',
-        onAction: () => ref.read(mapLocationProvider.notifier).locate(),
+        onAction: () => ref.read(mapProvider.notifier).locate(),
       ),
       LocationSuccess() || LocationFailed() || null => null,
     };
@@ -60,7 +60,7 @@ class MapPermissionOverlay extends StatelessWidget {
     return Consumer(
       builder: (context, ref, _) {
         final locationResult = ref.watch(
-          mapLocationProvider.select((state) => state.value),
+          mapProvider.select((state) => state.mapLocation.value),
         );
         final overlay = _overlayFor(ref, locationResult);
         if (overlay == null) return const SizedBox.shrink();

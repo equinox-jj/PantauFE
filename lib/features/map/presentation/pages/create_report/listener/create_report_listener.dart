@@ -19,7 +19,7 @@ class CreateReportListener extends ConsumerWidget {
     ref.listen(createReportProvider, (previous, next) {
       switch (next) {
         case AsyncData(value: final report?):
-          ref.read(nearbyReportsProvider.notifier).refresh();
+          ref.read(mapProvider.notifier).refreshNearby();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: AppColors.statusResolved,

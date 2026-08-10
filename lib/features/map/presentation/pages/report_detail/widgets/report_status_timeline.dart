@@ -48,20 +48,21 @@ class ReportStatusTimeline extends StatelessWidget {
           const Gap(AppSpacing.md),
           Consumer(
             builder: (context, ref, _) {
-              final state = ref.watch(reportTimelineProvider(reportId));
+              final state = ref.watch(
+                reportDetailProvider(
+                  reportId,
+                ).select((state) => state.timeline),
+              );
 
               return switch (state) {
                 AsyncError<List<TimelineStep>>(error: final error) =>
                   _TimelineError(
                     error: error,
                     // The history is the only call this card makes; the
-                    // timeline itself recomputes off the back of it. Both are
-                    // invalidated because a cached error would otherwise be
-                    // replayed instead of refetched.
-                    onRetry: () {
-                      ref.invalidate(reportHistoryProvider(reportId));
-                      ref.invalidate(reportTimelineProvider(reportId));
-                    },
+                    // timeline recomputes off the back of it.
+                    onRetry: () => ref
+                        .read(reportDetailProvider(reportId).notifier)
+                        .reloadHistory(),
                   ),
                 // A refetch keeps the previously loaded steps on screen;
                 // only the first load has nothing to show yet and falls

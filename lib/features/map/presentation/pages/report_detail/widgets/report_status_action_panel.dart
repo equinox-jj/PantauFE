@@ -51,7 +51,13 @@ class ReportStatusActionPanel extends StatelessWidget {
 
     return Consumer(
       builder: (context, ref, _) {
-        final isResolver = ref.watch(isResolverProvider).value ?? false;
+        final isResolver =
+            ref.watch(
+              reportDetailProvider(
+                reportId,
+              ).select((state) => state.isResolver.value),
+            ) ??
+            false;
         if (!isResolver) return const SizedBox.shrink();
 
         return Container(
@@ -133,32 +139,35 @@ class _StatusUpdateSheetState extends ConsumerState<_StatusUpdateSheet> {
 
     final note = _noteController.text.trim();
     ref
-        .read(updateStatusProvider.notifier)
-        .submit(
-          reportId: widget.reportId,
-          toStatus: selected,
-          note: note.isEmpty ? null : note,
-        );
+        .read(reportDetailProvider(widget.reportId).notifier)
+        .submitStatus(toStatus: selected, note: note.isEmpty ? null : note);
   }
 
   @override
   Widget build(BuildContext context) {
     // Closes the sheet on the transition into a successful submission. Does
     // not fire on first build even if a previous submission already left
-    // `updateStatusProvider` holding data — `ref.listen` only calls back on
-    // a *change*, and this notifier is autodispose, so a fresh sheet always
+    // `updateStatus` holding data — `ref.listen` only calls back on a
+    // *change*, and this notifier is autodispose, so a fresh sheet always
     // starts from whatever state a still-mounted page left behind, which is
     // only ever non-null right after this exact callback already popped it.
-    ref.listen(updateStatusProvider, (previous, next) {
-      if (next case AsyncData(value: final report?)) {
-        if (report.id != null && Navigator.of(context).canPop()) {
-          Navigator.of(context).pop();
+    ref.listen(
+      reportDetailProvider(
+        widget.reportId,
+      ).select((state) => state.updateStatus),
+      (previous, next) {
+        if (next case AsyncData(value: final report?)) {
+          if (report.id != null && Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          }
         }
-      }
-    });
+      },
+    );
 
     final isSubmitting = ref.watch(
-      updateStatusProvider.select((state) => state.isLoading),
+      reportDetailProvider(
+        widget.reportId,
+      ).select((state) => state.updateStatus.isLoading),
     );
 
     return Padding(

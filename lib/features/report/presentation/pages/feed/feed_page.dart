@@ -33,7 +33,7 @@ class _FeedPageState extends ConsumerState<FeedPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(feedLocationProvider.notifier).locate();
+      ref.read(feedProvider.notifier).locate();
     });
   }
 
@@ -41,27 +41,26 @@ class _FeedPageState extends ConsumerState<FeedPage> {
     if (result is! LocationSuccess) return;
 
     ref
-        .read(feedReportsProvider.notifier)
+        .read(feedProvider.notifier)
         .load(latitude: result.latitude, longitude: result.longitude);
   }
 
   void _selectTab(FeedTab tab) =>
-      ref.read(feedTabSelectionProvider.notifier).select(tab);
+      ref.read(feedProvider.notifier).selectTab(tab);
 
   /// Refetches whichever segment is showing. For the nearby list this reuses
   /// the position already queried with — cheaper than re-locating, which is
   /// what the location-error state's action is for.
   Future<void> _refresh() {
-    return switch (ref.read(feedTabSelectionProvider)) {
-      FeedTab.nearby => ref.read(feedReportsProvider.notifier).refresh(),
+    return switch (ref.read(feedProvider).tab) {
+      FeedTab.nearby => ref.read(feedProvider.notifier).refresh(),
       FeedTab.mine => ref.read(myReportsProvider.notifier).refresh(),
     };
   }
 
-  void _locate() => ref.read(feedLocationProvider.notifier).locate();
+  void _locate() => ref.read(feedProvider.notifier).locate();
 
-  void _openSettings() =>
-      ref.read(feedLocationProvider.notifier).openSettings();
+  void _openSettings() => ref.read(feedProvider.notifier).openSettings();
 
   void _openReport(FeedItem item) {
     final id = item.report.id;
@@ -132,7 +131,9 @@ class _FeedHeader extends StatelessWidget {
           Consumer(
             builder: (context, ref, _) {
               return FeedTabSelector(
-                currentTab: ref.watch(feedTabSelectionProvider),
+                currentTab: ref.watch(
+                  feedProvider.select((state) => state.tab),
+                ),
                 onTabSelected: onTabSelected,
               );
             },
@@ -152,10 +153,10 @@ class _FeedSubtitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final tab = ref.watch(feedTabSelectionProvider);
+        final tab = ref.watch(feedProvider.select((state) => state.tab));
         final items = switch (tab) {
           FeedTab.nearby => ref.watch(
-            feedReportsProvider.select((state) => state.value),
+            feedProvider.select((state) => state.nearbyReports.value),
           ),
           FeedTab.mine => ref.watch(
             myReportsProvider.select((state) => state.value),
@@ -204,7 +205,7 @@ class _FeedBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, _) {
-        final tab = ref.watch(feedTabSelectionProvider);
+        final tab = ref.watch(feedProvider.select((state) => state.tab));
 
         return switch (tab) {
           FeedTab.nearby => _NearbyBody(
@@ -247,7 +248,7 @@ class _NearbyBody extends StatelessWidget {
         // Location first: without a fix there is no query, so its outcome
         // outranks whatever the reports state still holds.
         final locationResult = ref.watch(
-          feedLocationProvider.select((state) => state.value),
+          feedProvider.select((state) => state.location.value),
         );
         if (locationResult != null && locationResult is! LocationSuccess) {
           return _FeedStateSliver(
@@ -262,13 +263,15 @@ class _NearbyBody extends StatelessWidget {
         // Still waiting on the fix itself — distinct from the skeletons below,
         // which stand for a report fetch that has not started yet.
         final isLocating = ref.watch(
-          feedLocationProvider.select((state) => state.isLoading),
+          feedProvider.select((state) => state.location.isLoading),
         );
         if (locationResult == null && isLocating) {
           return const _FeedStateSliver(child: _FeedLocatingState());
         }
 
-        final reports = ref.watch(feedReportsProvider);
+        final reports = ref.watch(
+          feedProvider.select((state) => state.nearbyReports),
+        );
 
         return switch (reports) {
           AsyncError(error: final error) => _FeedStateSliver(

@@ -44,21 +44,21 @@ class _QueuePageState extends ConsumerState<QueuePage> {
   void _handleLocated(LocationResult result) {
     if (result is! LocationSuccess) return;
 
-    final tab = ref.read(queueTabSelectionProvider);
+    final tab = ref.read(queueProvider).tab;
     ref
-        .read(queueReportsProvider.notifier)
+        .read(queueProvider.notifier)
         .load(tab: tab, latitude: result.latitude, longitude: result.longitude);
   }
 
   void _selectTab(QueueTab tab) {
-    ref.read(queueTabSelectionProvider.notifier).select(tab);
+    ref.read(queueProvider.notifier).selectTab(tab);
 
     final locationResult = ref.read(
       resolverLocationProvider.select((state) => state.value),
     );
     if (locationResult is LocationSuccess) {
       ref
-          .read(queueReportsProvider.notifier)
+          .read(queueProvider.notifier)
           .load(
             tab: tab,
             latitude: locationResult.latitude,
@@ -67,7 +67,7 @@ class _QueuePageState extends ConsumerState<QueuePage> {
     }
   }
 
-  Future<void> _refresh() => ref.read(queueReportsProvider.notifier).refresh();
+  Future<void> _refresh() => ref.read(queueProvider.notifier).refresh();
 
   void _locate() => ref.read(resolverLocationProvider.notifier).locate();
 
@@ -88,13 +88,13 @@ class _QueuePageState extends ConsumerState<QueuePage> {
     );
     if (!mounted) return;
 
-    ref.read(queueReportsProvider.notifier).refresh();
+    ref.read(queueProvider.notifier).refresh();
   }
 
   bool _handleScroll(ScrollNotification notification) {
     final metrics = notification.metrics;
     if (metrics.maxScrollExtent - metrics.pixels <= _kLoadMoreThreshold) {
-      ref.read(queueReportsProvider.notifier).loadMore();
+      ref.read(queueProvider.notifier).loadMore();
     }
 
     return false;
@@ -164,9 +164,11 @@ class _QueueHeader extends StatelessWidget {
           Consumer(
             builder: (context, ref, _) {
               return QueueTabSelector(
-                currentTab: ref.watch(queueTabSelectionProvider),
+                currentTab: ref.watch(
+                  queueProvider.select((state) => state.tab),
+                ),
                 counts: ref.watch(
-                  queueReportsProvider.select((state) => state.value?.counts),
+                  queueProvider.select((state) => state.queue.value?.counts),
                 ),
                 onTabSelected: onTabSelected,
               );
@@ -217,7 +219,7 @@ class _QueueBody extends StatelessWidget {
           return const _QueueStateSliver(child: _QueueLocatingState());
         }
 
-        final queue = ref.watch(queueReportsProvider);
+        final queue = ref.watch(queueProvider.select((state) => state.queue));
 
         return switch (queue) {
           AsyncError(error: final error) => _QueueStateSliver(
@@ -289,7 +291,7 @@ class _QueueLoadMoreRow extends StatelessWidget {
     return Consumer(
       builder: (context, ref, _) {
         final queueState = ref.watch(
-          queueReportsProvider.select((state) => state.value),
+          queueProvider.select((state) => state.queue.value),
         );
 
         if (queueState != null && queueState.isLoadingMore) {
@@ -311,8 +313,7 @@ class _QueueLoadMoreRow extends StatelessWidget {
         if (queueState != null && queueState.loadMoreFailed) {
           return Center(
             child: TextButton(
-              onPressed: () =>
-                  ref.read(queueReportsProvider.notifier).loadMore(),
+              onPressed: () => ref.read(queueProvider.notifier).loadMore(),
               child: const Text("Couldn't load more — retry"),
             ),
           );

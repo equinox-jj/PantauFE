@@ -147,8 +147,8 @@ class _ReportClusterLayer extends StatelessWidget {
     return Consumer(
       builder: (context, ref, _) {
         final reports = ref.watch(
-          resolverMapReportsProvider.select(
-            (state) => state.value?.items ?? const <QueueReport>[],
+          resolverMapProvider.select(
+            (state) => state.reports.value?.items ?? const <QueueReport>[],
           ),
         );
 

@@ -22,30 +22,32 @@ class ReportStatusListener extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(updateStatusProvider, (previous, next) {
-      switch (next) {
-        case AsyncData(value: final report?):
-          ref.invalidate(reportDetailProvider(reportId));
-          ref.invalidate(reportHistoryProvider(reportId));
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: AppColors.statusResolved,
-              content: Text('Status updated to ${report.status.label}.'),
-            ),
-          );
-        case AsyncError(error: final error):
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: AppColors.statusRejected,
-              content: Text(
-                error is Failure ? error.displayMessage : error.toString(),
+    ref.listen(
+      reportDetailProvider(reportId).select((state) => state.updateStatus),
+      (previous, next) {
+        switch (next) {
+          case AsyncData(value: final report?):
+            ref.read(reportDetailProvider(reportId).notifier).refresh();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: AppColors.statusResolved,
+                content: Text('Status updated to ${report.status.label}.'),
               ),
-            ),
-          );
-        case _:
-          break;
-      }
-    });
+            );
+          case AsyncError(error: final error):
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: AppColors.statusRejected,
+                content: Text(
+                  error is Failure ? error.displayMessage : error.toString(),
+                ),
+              ),
+            );
+          case _:
+            break;
+        }
+      },
+    );
 
     return child;
   }

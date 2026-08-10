@@ -43,7 +43,9 @@ class ResolverMapPreviewCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final report = ref.watch(selectedQueueReportProvider);
+    final report = ref.watch(
+      resolverMapProvider.select((state) => state.selectedReport),
+    );
     if (report == null) return const SizedBox.shrink();
 
     final status = report.status;

@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../di/di.dart';
 import '../../../../domain/entity/entity.dart';
 import '../../../../domain/usecase/usecase.dart';
-import 'feed_reports_notifier.dart';
+import 'feed_notifier.dart';
 
 part 'my_reports_notifier.g.dart';
 

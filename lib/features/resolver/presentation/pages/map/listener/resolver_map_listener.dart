@@ -11,7 +11,7 @@ import '../provider/provider.dart';
 /// when a fetch fails, and the settings dialog for a permanent denial. Same
 /// shape as `QueueListener`, kept as a separate copy rather than a shared
 /// widget because the two diverge on their second `ref.listen` target
-/// (`resolverMapReportsProvider` here, `queueReportsProvider` there).
+/// (`resolverMapProvider` here, `queueProvider` there).
 class ResolverMapListener extends ConsumerWidget {
   const ResolverMapListener({
     super.key,
@@ -24,7 +24,10 @@ class ResolverMapListener extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(resolverMapReportsProvider, (previous, next) {
+    ref.listen(resolverMapProvider.select((state) => state.reports), (
+      previous,
+      next,
+    ) {
       if (next case AsyncError(error: final error)) {
         final message = error is Failure
             ? error.displayMessage

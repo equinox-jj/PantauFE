@@ -12,7 +12,10 @@ class OnboardingListener extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(onboardingCompletionProvider, (previous, next) {
+    ref.listen(onboardingProvider.select((state) => state.completion), (
+      previous,
+      next,
+    ) {
       if (next case AsyncData(value: true)) {
         context.go(AppRoutes.login);
       }

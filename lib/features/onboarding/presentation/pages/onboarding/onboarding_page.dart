@@ -24,7 +24,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   }
 
   void _goToIndex(int index) {
-    ref.read(onboardingIndexProvider.notifier).goTo(index);
+    ref.read(onboardingProvider.notifier).goTo(index);
 
     _pageController.animateToPage(
       index,
@@ -45,9 +45,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () => ref
-                        .read(onboardingCompletionProvider.notifier)
-                        .complete(),
+                    onPressed: () =>
+                        ref.read(onboardingProvider.notifier).complete(),
                     child: const Text('Skip'),
                   ),
                 ),
@@ -56,14 +55,16 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                     controller: _pageController,
                     itemCount: kOnboardingSlides.length,
                     onPageChanged: (i) =>
-                        ref.read(onboardingIndexProvider.notifier).goTo(i),
+                        ref.read(onboardingProvider.notifier).goTo(i),
                     itemBuilder: (context, i) =>
                         OnboardingSlideView(data: kOnboardingSlides[i]),
                   ),
                 ),
                 Consumer(
                   builder: (context, ref, child) {
-                    final index = ref.watch(onboardingIndexProvider);
+                    final index = ref.watch(
+                      onboardingProvider.select((state) => state.index),
+                    );
 
                     return OnboardingDotIndicator(
                       count: kOnboardingSlides.length,
@@ -75,7 +76,9 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 const Gap(AppSpacing.lg),
                 Consumer(
                   builder: (context, ref, child) {
-                    final index = ref.watch(onboardingIndexProvider);
+                    final index = ref.watch(
+                      onboardingProvider.select((state) => state.index),
+                    );
                     final isLastSlide = index == kOnboardingSlides.length - 1;
 
                     return OnboardingNavControls(
@@ -84,9 +87,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                       onPrev: () => _goToIndex(index - 1),
                       onNext: () {
                         if (isLastSlide) {
-                          ref
-                              .read(onboardingCompletionProvider.notifier)
-                              .complete();
+                          ref.read(onboardingProvider.notifier).complete();
                         } else {
                           _goToIndex(index + 1);
                         }

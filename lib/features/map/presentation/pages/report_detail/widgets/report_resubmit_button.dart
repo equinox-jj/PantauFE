@@ -15,8 +15,13 @@ import '../provider/provider.dart';
 /// queue and already has [ReportStatusActionPanel] for their own actions —
 /// resubmitting someone else's report is not something they can do.
 class ReportResubmitButton extends StatelessWidget {
-  const ReportResubmitButton({super.key, required this.detail});
+  const ReportResubmitButton({
+    super.key,
+    required this.reportId,
+    required this.detail,
+  });
 
+  final String reportId;
   final ReportDetail detail;
 
   @override
@@ -25,7 +30,13 @@ class ReportResubmitButton extends StatelessWidget {
 
     return Consumer(
       builder: (context, ref, _) {
-        final isResolver = ref.watch(isResolverProvider).value ?? false;
+        final isResolver =
+            ref.watch(
+              reportDetailProvider(
+                reportId,
+              ).select((state) => state.isResolver.value),
+            ) ??
+            false;
         if (isResolver) return const SizedBox.shrink();
 
         return AppButton(

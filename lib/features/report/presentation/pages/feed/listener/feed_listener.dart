@@ -22,7 +22,10 @@ class FeedListener extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(feedReportsProvider, (previous, next) {
+    ref.listen(feedProvider.select((state) => state.nearbyReports), (
+      previous,
+      next,
+    ) {
       if (next case AsyncError(error: final error)) {
         final message = error is Failure
             ? error.displayMessage
@@ -39,7 +42,10 @@ class FeedListener extends ConsumerWidget {
       }
     });
 
-    ref.listen(feedLocationProvider, (previous, next) {
+    ref.listen(feedProvider.select((state) => state.location), (
+      previous,
+      next,
+    ) {
       if (next case AsyncData(value: final result?)) {
         onLocated(result);
 
@@ -69,7 +75,7 @@ class FeedListener extends ConsumerWidget {
           TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
-              ref.read(feedLocationProvider.notifier).openSettings();
+              ref.read(feedProvider.notifier).openSettings();
             },
             child: const Text('Open settings'),
           ),

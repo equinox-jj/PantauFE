@@ -24,7 +24,7 @@ class QueueListener extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(queueReportsProvider, (previous, next) {
+    ref.listen(queueProvider.select((state) => state.queue), (previous, next) {
       if (next case AsyncError(error: final error)) {
         final message = error is Failure
             ? error.displayMessage

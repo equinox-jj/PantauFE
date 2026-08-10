@@ -37,10 +37,14 @@ class MapStatusSheet extends StatelessWidget {
   /// The status worth showing, or null when markers are on screen or a load is
   /// still in flight.
   _SheetStatus? _statusFor(WidgetRef ref) {
-    final reports = ref.watch(filteredReportsProvider);
+    final reports = ref.watch(
+      mapProvider.select((state) => state.filteredReports),
+    );
     if (reports.isNotEmpty) return null;
 
-    final reportsState = ref.watch(nearbyReportsProvider);
+    final reportsState = ref.watch(
+      mapProvider.select((state) => state.nearbyReports),
+    );
 
     if (reportsState.hasError) {
       return (
@@ -57,7 +61,9 @@ class MapStatusSheet extends StatelessWidget {
 
     // A filter that matched nothing is not an empty area: other categories may
     // still have markers here.
-    final hasUnfilteredReports = ref.watch(visibleReportsProvider).isNotEmpty;
+    final hasUnfilteredReports = ref.watch(
+      mapProvider.select((state) => state.visibleReports.isNotEmpty),
+    );
 
     if (hasUnfilteredReports) {
       return (
@@ -70,7 +76,7 @@ class MapStatusSheet extends StatelessWidget {
           text: 'Show all',
           fullWidth: false,
           variant: AppButtonVariant.secondary,
-          onPressed: () => ref.read(mapCategoryFilterProvider.notifier).clear(),
+          onPressed: () => ref.read(mapProvider.notifier).clearCategory(),
         ),
       );
     }

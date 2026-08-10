@@ -55,7 +55,7 @@ class _ResolverMapPageState extends ConsumerState<ResolverMapPage> {
     if (result is! LocationSuccess) return;
 
     final center = LatLng(result.latitude, result.longitude);
-    final tab = ref.read(resolverMapTabSelectionProvider);
+    final tab = ref.read(resolverMapProvider).tab;
     final hadCenter = _center != null;
 
     setState(() => _center = center);
@@ -67,7 +67,7 @@ class _ResolverMapPageState extends ConsumerState<ResolverMapPage> {
     }
 
     await ref
-        .read(resolverMapReportsProvider.notifier)
+        .read(resolverMapProvider.notifier)
         .load(tab: tab, latitude: center.latitude, longitude: center.longitude);
     if (!mounted) return;
 
@@ -75,15 +75,18 @@ class _ResolverMapPageState extends ConsumerState<ResolverMapPage> {
   }
 
   Future<void> _selectTab(QueueTab tab) async {
-    ref.read(resolverMapTabSelectionProvider.notifier).select(tab);
-    ref.read(selectedQueueReportProvider.notifier).clear();
+    final notifier = ref.read(resolverMapProvider.notifier);
+    notifier.selectTab(tab);
+    notifier.clearSelectedReport();
 
     final center = _center;
     if (center == null) return;
 
-    await ref
-        .read(resolverMapReportsProvider.notifier)
-        .load(tab: tab, latitude: center.latitude, longitude: center.longitude);
+    await notifier.load(
+      tab: tab,
+      latitude: center.latitude,
+      longitude: center.longitude,
+    );
     if (!mounted) return;
 
     _fitToReports(center);
@@ -96,7 +99,8 @@ class _ResolverMapPageState extends ConsumerState<ResolverMapPage> {
   /// camera to the loaded points each time keeps a tab switch from silently
   /// hiding its own markers.
   void _fitToReports(LatLng center) {
-    final items = ref.read(resolverMapReportsProvider).value?.items ?? const [];
+    final items =
+        ref.read(resolverMapProvider).reports.value?.items ?? const [];
     final points = [
       center,
       for (final r in items)
@@ -124,13 +128,12 @@ class _ResolverMapPageState extends ConsumerState<ResolverMapPage> {
       ref.read(resolverLocationProvider.notifier).openSettings();
 
   void _selectReport(QueueReport report) =>
-      ref.read(selectedQueueReportProvider.notifier).select(report);
+      ref.read(resolverMapProvider.notifier).selectReport(report);
 
   /// Pushes the shared detail screen and refreshes on return — mirrors
   /// `QueuePage._openReport`. The preview card would otherwise keep showing
   /// the status the report had when the marker was tapped, since
-  /// `selectedQueueReportProvider` holds its own copy rather than deriving
-  /// from the list.
+  /// `selectedReport` holds its own copy rather than deriving from the list.
   Future<void> _openDetail(QueueReport report) async {
     final id = report.id;
     if (id == null) return;
@@ -144,13 +147,16 @@ class _ResolverMapPageState extends ConsumerState<ResolverMapPage> {
     final center = _center;
     if (center == null) return;
 
-    final tab = ref.read(resolverMapTabSelectionProvider);
-    await ref
-        .read(resolverMapReportsProvider.notifier)
-        .load(tab: tab, latitude: center.latitude, longitude: center.longitude);
+    final notifier = ref.read(resolverMapProvider.notifier);
+    final tab = ref.read(resolverMapProvider).tab;
+    await notifier.load(
+      tab: tab,
+      latitude: center.latitude,
+      longitude: center.longitude,
+    );
     if (!mounted) return;
 
-    final items = ref.read(resolverMapReportsProvider).value?.items;
+    final items = ref.read(resolverMapProvider).reports.value?.items;
     QueueReport? updated;
     if (items != null) {
       for (final item in items) {
@@ -161,11 +167,10 @@ class _ResolverMapPageState extends ConsumerState<ResolverMapPage> {
       }
     }
 
-    final selectedNotifier = ref.read(selectedQueueReportProvider.notifier);
     if (updated != null) {
-      selectedNotifier.select(updated);
+      notifier.selectReport(updated);
     } else {
-      selectedNotifier.clear();
+      notifier.clearSelectedReport();
     }
   }
 
@@ -265,10 +270,12 @@ class _MapHeader extends StatelessWidget {
           child: Consumer(
             builder: (context, ref, _) {
               return QueueTabSelector(
-                currentTab: ref.watch(resolverMapTabSelectionProvider),
+                currentTab: ref.watch(
+                  resolverMapProvider.select((state) => state.tab),
+                ),
                 counts: ref.watch(
-                  resolverMapReportsProvider.select(
-                    (state) => state.value?.counts,
+                  resolverMapProvider.select(
+                    (state) => state.reports.value?.counts,
                   ),
                 ),
                 onTabSelected: onTabSelected,

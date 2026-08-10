@@ -41,17 +41,17 @@ class ReportDetailPage extends StatelessWidget {
         reportId: reportId,
         child: Consumer(
           builder: (context, ref, _) {
-            final state = ref.watch(reportDetailProvider(reportId));
+            final state = ref.watch(
+              reportDetailProvider(reportId).select((state) => state.detail),
+            );
 
             return switch (state) {
               AsyncError<ReportDetail>(error: final error) => _DetailError(
                 message: error is Failure
                     ? error.displayMessage
                     : error.toString(),
-                onRetry: () {
-                  ref.invalidate(reportDetailProvider(reportId));
-                  ref.invalidate(reportHistoryProvider(reportId));
-                },
+                onRetry: () =>
+                    ref.read(reportDetailProvider(reportId).notifier).refresh(),
               ),
               // A refetch keeps the previously loaded report on screen; only
               // the first load has nothing to show yet and falls back to the
@@ -85,10 +85,8 @@ class _DetailContent extends StatelessWidget {
 
   static final _dateFormat = DateFormat('d MMM yyyy · HH:mm');
 
-  Future<void> _refresh(WidgetRef ref) => Future.wait([
-    ref.refresh(reportDetailProvider(reportId).future),
-    ref.refresh(reportHistoryProvider(reportId).future),
-  ]);
+  Future<void> _refresh(WidgetRef ref) =>
+      ref.read(reportDetailProvider(reportId).notifier).refresh();
 
   String get _coordinates {
     final latitude = detail.latitude;
@@ -180,7 +178,7 @@ class _DetailContent extends StatelessWidget {
                   reportId: reportId,
                   status: detail.status,
                 ),
-                ReportResubmitButton(detail: detail),
+                ReportResubmitButton(reportId: reportId, detail: detail),
                 const Gap(AppSpacing.lg),
                 ReportDetailRow(
                   icon: Icons.place_outlined,

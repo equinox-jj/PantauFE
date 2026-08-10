@@ -107,7 +107,9 @@ class _SearchResultsOrFilters extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        final state = ref.watch(placeSearchProvider);
+        final state = ref.watch(
+          mapProvider.select((state) => state.placeSearch),
+        );
         // Null means the panel is closed; loading, failed, and empty searches
         // all still have something to show.
         if (state == null) return child!;
@@ -117,7 +119,7 @@ class _SearchResultsOrFilters extends StatelessWidget {
           child: MapSearchResults(
             state: state,
             onSelected: onPlaceSelected,
-            onRetry: () => ref.read(placeSearchProvider.notifier).retry(),
+            onRetry: () => ref.read(mapProvider.notifier).retrySearch(),
           ),
         );
       },
@@ -155,20 +157,22 @@ class _FilterChipRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       child: Consumer(
         builder: (context, ref, _) {
-          final selectedId = ref.watch(mapCategoryFilterProvider);
-          final notifier = ref.read(mapCategoryFilterProvider.notifier);
+          final selectedId = ref.watch(
+            mapProvider.select((state) => state.categoryFilter),
+          );
+          final notifier = ref.read(mapProvider.notifier);
 
           return Row(
             children: [
               _FilterChip(
                 label: 'All',
                 isSelected: selectedId == null,
-                onTap: notifier.clear,
+                onTap: notifier.clearCategory,
               ),
               const SizedBox(width: AppSpacing.xs2),
               _CategoryChips(
                 selectedId: selectedId,
-                onSelected: notifier.select,
+                onSelected: notifier.selectCategory,
               ),
             ],
           );

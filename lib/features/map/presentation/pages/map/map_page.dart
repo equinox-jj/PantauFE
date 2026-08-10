@@ -56,7 +56,7 @@ class _MapPageState extends ConsumerState<MapPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(mapLocationProvider.notifier).locate();
+      ref.read(mapProvider.notifier).locate();
     });
   }
 
@@ -104,16 +104,15 @@ class _MapPageState extends ConsumerState<MapPage> {
   void _loadReportsAround(LatLng center) {
     _loadedCenter = center;
     _canSearchArea.value = false;
+    final notifier = ref.read(mapProvider.notifier);
     // Moves the ring with the fetch, so it never marks unloaded ground.
-    ref.read(loadedAreaProvider.notifier).update(center);
+    notifier.updateLoadedArea(center);
 
-    ref
-        .read(nearbyReportsProvider.notifier)
-        .load(
-          latitude: center.latitude,
-          longitude: center.longitude,
-          radiusInMeters: kNearbyRadiusInMeters,
-        );
+    notifier.loadNearby(
+      latitude: center.latitude,
+      longitude: center.longitude,
+      radiusInMeters: kNearbyRadiusInMeters,
+    );
   }
 
   void _handleLocated(LocationResult result) {
@@ -126,7 +125,7 @@ class _MapPageState extends ConsumerState<MapPage> {
     }
 
     final center = LatLng(result.latitude, result.longitude);
-    ref.read(currentLocationProvider.notifier).update(center);
+    ref.read(mapProvider.notifier).updateCurrentLocation(center);
     _mapController.move(center, _initialZoom);
     _loadReportsAround(center);
   }
@@ -137,8 +136,8 @@ class _MapPageState extends ConsumerState<MapPage> {
     final bounds = _mapController.camera.visibleBounds;
 
     ref
-        .read(placeSearchProvider.notifier)
-        .search(
+        .read(mapProvider.notifier)
+        .searchPlaces(
           query,
           viewBox: PlaceViewBox(
             minLatitude: bounds.south,
@@ -151,8 +150,9 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   /// Clears both the results panel and the pin.
   void _clearSearch() {
-    ref.read(placeSearchProvider.notifier).clear();
-    ref.read(searchedPlaceProvider.notifier).clear();
+    final notifier = ref.read(mapProvider.notifier);
+    notifier.clearSearch();
+    notifier.clearSearchedPlace();
   }
 
   /// Moves the camera to [place], marks it, and loads the reports around it.
@@ -160,9 +160,10 @@ class _MapPageState extends ConsumerState<MapPage> {
     FocusScope.of(context).unfocus();
 
     final center = LatLng(place.latitude, place.longitude);
-    ref.read(searchedPlaceProvider.notifier).select(place);
+    final notifier = ref.read(mapProvider.notifier);
+    notifier.selectPlace(place);
     // Close the panel but keep the pin — the field still shows the query.
-    ref.read(placeSearchProvider.notifier).clear();
+    notifier.clearSearch();
 
     _mapController.move(center, _initialZoom);
     _loadReportsAround(center);
@@ -180,7 +181,7 @@ class _MapPageState extends ConsumerState<MapPage> {
   /// Distance from the last resolved device position. Null before the device
   /// has located, which drops the line on the detail screen.
   double? _distanceTo(NearbyReport report) {
-    final origin = ref.read(currentLocationProvider);
+    final origin = ref.read(mapProvider).currentLocation;
     final latitude = report.latitude;
     final longitude = report.longitude;
     if (origin == null || latitude == null || longitude == null) return null;
@@ -318,7 +319,7 @@ class _ReportsLoadingIndicator extends StatelessWidget {
     return Consumer(
       builder: (context, ref, child) {
         final isLoading = ref.watch(
-          nearbyReportsProvider.select((state) => state.isLoading),
+          mapProvider.select((state) => state.nearbyReports.isLoading),
         );
         if (!isLoading) return const SizedBox.shrink();
 
@@ -344,12 +345,12 @@ class _LocateControl extends StatelessWidget {
     return Consumer(
       builder: (context, ref, _) {
         final isLocating = ref.watch(
-          mapLocationProvider.select((state) => state.isLoading),
+          mapProvider.select((state) => state.mapLocation.isLoading),
         );
 
         return AppLocateButton(
           isLoading: isLocating,
-          onPressed: () => ref.read(mapLocationProvider.notifier).locate(),
+          onPressed: () => ref.read(mapProvider.notifier).locate(),
         );
       },
     );
