@@ -169,10 +169,33 @@ Marker _placePin({required LatLng point, required _MapPinMarker child}) {
 
 /// Marker layer for the current camera's reports. Reads the memoised,
 /// category-filtered list so markers stay put across a pan refetch.
-class _ReportClusterLayer extends StatelessWidget {
+///
+/// Owns a single pulse [AnimationController] shared by every [_ReportMarker]
+/// — a dense cluster of reports used to spawn one ticker per pin, which
+/// scaled the per-frame rebuild/tick cost with the report count. One ticker
+/// driving every marker keeps that cost flat regardless of how many reports
+/// are on screen.
+class _ReportClusterLayer extends StatefulWidget {
   const _ReportClusterLayer({required this.onReportTap});
 
   final ValueChanged<NearbyReport> onReportTap;
+
+  @override
+  State<_ReportClusterLayer> createState() => _ReportClusterLayerState();
+}
+
+class _ReportClusterLayerState extends State<_ReportClusterLayer>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulse = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 2400),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _pulse.dispose();
+    super.dispose();
+  }
 
   List<Marker> _markersFrom(List<NearbyReport> reports) {
     return reports
@@ -184,7 +207,8 @@ class _ReportClusterLayer extends StatelessWidget {
             height: _ReportMarker.size,
             child: _ReportMarker(
               report: report,
-              onTap: () => onReportTap(report),
+              pulse: _pulse,
+              onTap: () => widget.onReportTap(report),
             ),
           ),
         )
@@ -251,8 +275,12 @@ class _MapPinMarker extends StatelessWidget {
 /// A radar pulse rings out of the dot to draw the eye to reports without
 /// moving the dot itself — the marker's anchor point stays exactly on the
 /// report's coordinate.
-class _ReportMarker extends StatefulWidget {
-  const _ReportMarker({required this.report, required this.onTap});
+class _ReportMarker extends StatelessWidget {
+  const _ReportMarker({
+    required this.report,
+    required this.pulse,
+    required this.onTap,
+  });
 
   /// Marker box. Wider than [dotSize] so the pulse has room to expand into.
   static const double size = 52;
@@ -261,46 +289,34 @@ class _ReportMarker extends StatefulWidget {
   static const double dotSize = 32;
 
   final NearbyReport report;
+
+  /// Shared pulse ticker owned by [_ReportClusterLayer] — one ticker drives
+  /// every marker on screen instead of each pin running its own.
+  final Animation<double> pulse;
+
   final VoidCallback onTap;
 
   @override
-  State<_ReportMarker> createState() => _ReportMarkerState();
-}
-
-class _ReportMarkerState extends State<_ReportMarker>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _pulse = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 2400),
-  )..repeat();
-
-  @override
-  void dispose() {
-    _pulse.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final status = widget.report.status;
+    final status = report.status;
     // Honour the platform's reduce-motion setting: a map full of pulsing
     // markers is exactly what that setting exists to switch off.
     final animate = !MediaQuery.disableAnimationsOf(context);
 
     return Semantics(
       button: true,
-      label: '${widget.report.category?.name ?? 'Report'}, ${status.label}',
+      label: '${report.category?.name ?? 'Report'}, ${status.label}',
       child: Stack(
         alignment: Alignment.center,
         children: [
           if (animate)
             RepaintBoundary(
               child: AnimatedBuilder(
-                animation: _pulse,
+                animation: pulse,
                 builder: (context, _) => CustomPaint(
                   size: const Size.square(_ReportMarker.size),
                   painter: _RadarPulsePainter(
-                    progress: _pulse.value,
+                    progress: pulse.value,
                     color: status.color,
                     minRadius: _ReportMarker.dotSize / 2,
                   ),
@@ -310,7 +326,7 @@ class _ReportMarkerState extends State<_ReportMarker>
           // Only the dot takes taps — the pulse would otherwise swallow taps
           // meant for a neighbouring marker.
           GestureDetector(
-            onTap: widget.onTap,
+            onTap: onTap,
             child: Container(
               width: _ReportMarker.dotSize,
               height: _ReportMarker.dotSize,

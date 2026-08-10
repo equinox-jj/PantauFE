@@ -6,7 +6,8 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/theme/theme.dart';
 import '../../../auth/di/di.dart';
-import '../../../auth/domain/entity/entity.dart';
+
+typedef _Identity = ({String? name, String? email, DateTime? createdAt});
 
 /// Avatar, name, email and join date of the signed-in user.
 class ProfileIdentityCard extends ConsumerWidget {
@@ -14,20 +15,34 @@ class ProfileIdentityCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUser = ref.watch(currentUserProvider);
+    // Selected down to the fields this card actually renders: a
+    // reportsCount/resolvedCount change (read by ProfileStatsRow off the
+    // same provider) no longer rebuilds this card too.
+    final identity = ref.watch(
+      currentUserProvider.select(
+        (async) => async.whenData(
+          (user) => (
+            name: user?.displayName ?? user?.username,
+            email: user?.email,
+            createdAt: user?.createdAt,
+          ),
+        ),
+      ),
+    );
 
-    return switch (currentUser) {
+    return switch (identity) {
       AsyncError() => _ProfileIdentityError(
         onRetry: () => ref.invalidate(currentUserProvider),
       ),
-      AsyncData(value: final user) => _ProfileIdentityContent(
-        user: user ?? const CurrentUser(),
+      AsyncData(value: final identity) => _ProfileIdentityContent(
+        identity: identity,
       ),
       _ => const Skeletonizer(
         child: _ProfileIdentityContent(
-          user: CurrentUser(
-            username: 'Loading name',
+          identity: (
+            name: 'Loading name',
             email: 'loading@email.com',
+            createdAt: null,
           ),
         ),
       ),
@@ -36,13 +51,13 @@ class ProfileIdentityCard extends ConsumerWidget {
 }
 
 class _ProfileIdentityContent extends StatelessWidget {
-  const _ProfileIdentityContent({required this.user});
+  const _ProfileIdentityContent({required this.identity});
 
-  final CurrentUser user;
+  final _Identity identity;
 
   static const _avatarSize = 56.0;
 
-  String? get _name => user.displayName ?? user.username;
+  String? get _name => identity.name;
 
   String get _initials {
     final name = _name?.trim();
@@ -57,8 +72,8 @@ class _ProfileIdentityContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final joined = user.createdAt != null
-        ? 'Joined ${DateFormat('MMM yyyy').format(user.createdAt!)}'
+    final joined = identity.createdAt != null
+        ? 'Joined ${DateFormat('MMM yyyy').format(identity.createdAt!)}'
         : null;
 
     return DecoratedBox(
@@ -82,15 +97,15 @@ class _ProfileIdentityContent extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    _name ?? user.email ?? 'Citizen',
+                    _name ?? identity.email ?? 'Citizen',
                     style: AppTypography.subheading,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  if (user.email != null) ...[
+                  if (identity.email != null) ...[
                     const Gap(2),
                     Text(
-                      user.email!,
+                      identity.email!,
                       style: AppTypography.body.copyWith(fontSize: 12.5),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

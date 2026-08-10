@@ -14,15 +14,27 @@ class ProfileStatsRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUser = ref.watch(currentUserProvider);
+    // Selected down to the two counts this row renders: a name/email/avatar
+    // change (read by ProfileIdentityCard off the same provider) no longer
+    // rebuilds this row too.
+    final counts = ref.watch(
+      currentUserProvider.select(
+        (async) => async.whenData(
+          (user) => (
+            total: user?.reportsCount ?? 0,
+            resolved: user?.resolvedCount ?? 0,
+          ),
+        ),
+      ),
+    );
 
-    return switch (currentUser) {
+    return switch (counts) {
       AsyncError() => _StatsError(
         onRetry: () => ref.invalidate(currentUserProvider),
       ),
-      AsyncData(value: final user) => _StatsTiles(
-        total: user?.reportsCount ?? 0,
-        resolved: user?.resolvedCount ?? 0,
+      AsyncData(value: final counts) => _StatsTiles(
+        total: counts.total,
+        resolved: counts.resolved,
       ),
       _ => const Skeletonizer(child: _StatsTiles(total: 0, resolved: 0)),
     };
