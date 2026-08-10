@@ -12,6 +12,7 @@ import '../../../../../core/service/service.dart';
 import '../../../../../core/theme/theme.dart';
 import '../../../../../core/utils/enums/enums.dart';
 import '../../../domain/entity/resolver_entity.dart';
+import '../../provider/provider.dart';
 import 'listener/listener.dart';
 import 'provider/provider.dart';
 import 'widgets/queue_widgets.dart';
@@ -36,7 +37,7 @@ class _QueuePageState extends ConsumerState<QueuePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(queueLocationProvider.notifier).locate();
+      ref.read(resolverLocationProvider.notifier).locate();
     });
   }
 
@@ -53,7 +54,7 @@ class _QueuePageState extends ConsumerState<QueuePage> {
     ref.read(queueTabSelectionProvider.notifier).select(tab);
 
     final locationResult = ref.read(
-      queueLocationProvider.select((state) => state.value),
+      resolverLocationProvider.select((state) => state.value),
     );
     if (locationResult is LocationSuccess) {
       ref
@@ -68,10 +69,10 @@ class _QueuePageState extends ConsumerState<QueuePage> {
 
   Future<void> _refresh() => ref.read(queueReportsProvider.notifier).refresh();
 
-  void _locate() => ref.read(queueLocationProvider.notifier).locate();
+  void _locate() => ref.read(resolverLocationProvider.notifier).locate();
 
   void _openSettings() =>
-      ref.read(queueLocationProvider.notifier).openSettings();
+      ref.read(resolverLocationProvider.notifier).openSettings();
 
   /// Pushes the shared detail screen and refreshes on return — unconditional
   /// (rather than threading a "did anything change" flag back through the
@@ -197,7 +198,7 @@ class _QueueBody extends StatelessWidget {
         // Location first: without a fix there is no query, so its outcome
         // outranks whatever the queue state still holds.
         final locationResult = ref.watch(
-          queueLocationProvider.select((state) => state.value),
+          resolverLocationProvider.select((state) => state.value),
         );
         if (locationResult != null && locationResult is! LocationSuccess) {
           return _QueueStateSliver(
@@ -210,7 +211,7 @@ class _QueueBody extends StatelessWidget {
         }
 
         final isLocating = ref.watch(
-          queueLocationProvider.select((state) => state.isLoading),
+          resolverLocationProvider.select((state) => state.isLoading),
         );
         if (locationResult == null && isLocating) {
           return const _QueueStateSliver(child: _QueueLocatingState());

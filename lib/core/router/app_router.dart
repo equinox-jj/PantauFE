@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/pages/login/login.dart';
 import '../../features/auth/presentation/pages/register/register.dart';
 import '../../features/dashboard/presentation/pages/dashboard/dashboard.dart';
+import '../../features/map/domain/entity/entity.dart';
 import '../../features/map/presentation/pages/create_report/create_report.dart';
 import '../../features/map/presentation/pages/location_picker/location_picker.dart';
 import '../../features/map/presentation/pages/map/map.dart';
@@ -14,6 +15,7 @@ import '../../features/onboarding/presentation/pages/onboarding/onboarding.dart'
 import '../../features/onboarding/presentation/pages/splash/splash.dart';
 import '../../features/profile/presentation/pages/profile/profile.dart';
 import '../../features/report/presentation/pages/feed/feed.dart';
+import '../../features/resolver/presentation/pages/map/map.dart';
 import '../../features/resolver/presentation/pages/queue/queue.dart';
 import '../../features/resolver/presentation/pages/shell/shell.dart';
 import '../di/core_di.dart';
@@ -46,7 +48,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.createReport,
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => const CreateReportPage(),
+        // A rejected report's "Edit & resubmit" hands its own detail over as
+        // `extra` to pre-fill the form; a fresh report from the map/feed has
+        // none.
+        builder: (context, state) => CreateReportPage(
+          initialReport: state.extra is ReportDetail
+              ? state.extra as ReportDetail?
+              : null,
+        ),
         routes: [
           GoRoute(
             path: AppRoutes.locationPickerSegment,
@@ -113,6 +122,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: AppRoutes.queue,
                 builder: (context, state) => const QueuePage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.resolverMap,
+                builder: (context, state) => const ResolverMapPage(),
               ),
             ],
           ),

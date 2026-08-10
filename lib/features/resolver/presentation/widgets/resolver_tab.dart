@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// The two resolver tabs of the resolver shell, in bar order.
+/// The three resolver tabs of the resolver shell, in bar order.
 ///
 /// Index order must match the branch order of the resolver
 /// `StatefulShellRoute` in `app_router.dart`.
@@ -10,6 +10,7 @@ enum ResolverTab {
     icon: Icons.assignment_outlined,
     activeIcon: Icons.assignment,
   ),
+  map(label: 'Map', icon: Icons.map_outlined, activeIcon: Icons.map),
   profile(
     label: 'Profile',
     icon: Icons.person_outline,

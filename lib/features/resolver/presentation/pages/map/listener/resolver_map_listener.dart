@@ -7,24 +7,24 @@ import '../../../../../../core/theme/theme.dart';
 import '../../../provider/provider.dart';
 import '../provider/provider.dart';
 
-/// Side effects of the queue tab: the location-to-fetch handoff, a snackbar
-/// when a fetch fails, and the settings dialog for a permanent denial.
-class QueueListener extends ConsumerWidget {
-  const QueueListener({
+/// Side effects of the map tab: the location-to-fetch handoff, a snackbar
+/// when a fetch fails, and the settings dialog for a permanent denial. Same
+/// shape as `QueueListener`, kept as a separate copy rather than a shared
+/// widget because the two diverge on their second `ref.listen` target
+/// (`resolverMapReportsProvider` here, `queueReportsProvider` there).
+class ResolverMapListener extends ConsumerWidget {
+  const ResolverMapListener({
     super.key,
     required this.onLocated,
     required this.child,
   });
 
-  /// Called with every settled [LocationResult]; the page turns a success
-  /// into a fetch.
   final ValueChanged<LocationResult> onLocated;
-
   final Widget child;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen(queueReportsProvider, (previous, next) {
+    ref.listen(resolverMapReportsProvider, (previous, next) {
       if (next case AsyncError(error: final error)) {
         final message = error is Failure
             ? error.displayMessage
@@ -60,7 +60,7 @@ class QueueListener extends ConsumerWidget {
       builder: (dialogContext) => AlertDialog(
         title: const Text('Location permission needed'),
         content: const Text(
-          'The queue shows what needs attention around you. Enable location '
+          'The map shows what needs attention around you. Enable location '
           'access in Settings to see it.',
         ),
         actions: [

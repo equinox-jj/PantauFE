@@ -283,7 +283,7 @@ class _TimelineNode extends StatelessWidget {
       ),
       child: switch (state) {
         TimelineStepState.done => Icon(
-          Icons.check,
+          status == ReportStatus.rejected ? Icons.close : Icons.check,
           size: AppIconSizes.sm,
           color: status.inkColor,
         ),

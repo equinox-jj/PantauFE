@@ -321,6 +321,7 @@ class ReportPhotoPicker extends StatelessWidget {
     required this.photoPath,
     required this.onPick,
     this.errorText,
+    this.initialPhotoUrl,
   });
 
   final String? photoPath;
@@ -331,6 +332,11 @@ class ReportPhotoPicker extends StatelessWidget {
 
   /// Set after a failed validation pass.
   final String? errorText;
+
+  /// The photo of the report being resubmitted. Reference only — a report can
+  /// only ever be filed with a fresh local file, so this never satisfies the
+  /// photo requirement on its own; picking a new one still replaces it.
+  final String? initialPhotoUrl;
 
   /// Local: no token in the scale covers a disabled-affordance dim.
   static const double _disabledOpacity = 0.5;
@@ -351,9 +357,11 @@ class ReportPhotoPicker extends StatelessWidget {
               borderRadius: AppRadius.radiusXl,
               child: AspectRatio(
                 aspectRatio: 4 / 3,
-                child: path == null
-                    ? const _EmptyPhotoSlot()
-                    : Image.file(File(path), fit: BoxFit.cover),
+                child: switch ((path, initialPhotoUrl)) {
+                  (final path?, _) => Image.file(File(path), fit: BoxFit.cover),
+                  (null, final url?) => _PreviousPhotoSlot(photoUrl: url),
+                  (null, null) => const _EmptyPhotoSlot(),
+                },
               ),
             ),
           ),
@@ -406,6 +414,56 @@ class _EmptyPhotoSlot extends StatelessWidget {
           Text('Add a photo of the issue', style: AppTypography.body),
         ],
       ),
+    );
+  }
+}
+
+/// A resubmission's starting point: the rejected report's own photo, dimmed
+/// under a prompt — reference only, since filing still needs a fresh local
+/// file.
+class _PreviousPhotoSlot extends StatelessWidget {
+  const _PreviousPhotoSlot({required this.photoUrl});
+
+  final String photoUrl;
+
+  static const double _scrimOpacity = 0.55;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.network(
+          photoUrl,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) =>
+              const ColoredBox(color: AppColors.fillSubtle),
+        ),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: AppColors.surfaceSunken.withValues(alpha: _scrimOpacity),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.add_a_photo_outlined,
+                size: AppIconSizes.xl,
+                color: AppColors.accent,
+              ),
+              const Gap(AppSpacing.xs2),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                child: Text(
+                  'Photo from the rejected report — tap to replace',
+                  style: AppTypography.body,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

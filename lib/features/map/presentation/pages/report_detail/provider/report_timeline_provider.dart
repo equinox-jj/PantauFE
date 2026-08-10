@@ -49,11 +49,16 @@ Future<List<TimelineStep>> reportTimeline(Ref ref, String reportId) async {
   } else {
     for (var index = 0; index < history.length; index++) {
       final entry = history[index];
+      final isLast = index == history.length - 1;
+      // A status off the happy-path ladder (rejected, closed) is terminal —
+      // nothing is pending after it, so it renders as a completed node with
+      // its own icon rather than the "awaiting next step" dot.
+      final isTerminal = !_statusLadder.contains(entry.toStatus);
       steps.add((
         status: entry.toStatus,
         time: entry.createdAt,
         note: entry.note,
-        state: index == history.length - 1
+        state: isLast && !isTerminal
             ? TimelineStepState.current
             : TimelineStepState.done,
       ));

@@ -170,6 +170,7 @@ class _DetailContent extends StatelessWidget {
                   ),
                 ),
                 const Gap(AppSpacing.lg),
+                ReportRejectionNote(reportId: reportId, status: detail.status),
                 ReportStatusTimeline(
                   reportId: reportId,
                   updatedAt: detail.updatedAt,
@@ -179,6 +180,7 @@ class _DetailContent extends StatelessWidget {
                   reportId: reportId,
                   status: detail.status,
                 ),
+                ReportResubmitButton(detail: detail),
                 const Gap(AppSpacing.lg),
                 ReportDetailRow(
                   icon: Icons.place_outlined,

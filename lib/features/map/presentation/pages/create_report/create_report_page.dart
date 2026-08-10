@@ -11,6 +11,7 @@ import '../../../../../core/di/core_di.dart';
 import '../../../../../core/router/app_routes.dart';
 import '../../../../../core/service/service.dart';
 import '../../../../../core/theme/theme.dart';
+import '../../../domain/entity/entity.dart';
 import '../location_picker/location_picker.dart';
 import 'listener/listener.dart';
 import 'provider/provider.dart';
@@ -34,7 +35,13 @@ typedef _LocationField = ({PickedLocation? value, String? error});
 /// owns only the submit sequence. Each field is a [ValueNotifier] rather than
 /// `setState` state, so picking a photo repaints one row, not the whole form.
 class CreateReportPage extends ConsumerStatefulWidget {
-  const CreateReportPage({super.key});
+  const CreateReportPage({super.key, this.initialReport});
+
+  /// Set when reopened from a rejected report's "Edit & resubmit" — its
+  /// category, description and location pre-fill the form. The photo never
+  /// carries over: filing always needs a fresh local file, so that field
+  /// still starts empty (with the old photo shown for reference only).
+  final ReportDetail? initialReport;
 
   @override
   ConsumerState<CreateReportPage> createState() => _CreateReportPageState();
@@ -55,6 +62,26 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
   @override
   void initState() {
     super.initState();
+
+    final initial = widget.initialReport;
+    final categoryId = initial?.category?.id;
+    if (categoryId != null) _category.value = (id: categoryId, error: null);
+
+    final description = initial?.description;
+    if (description != null) _descriptionController.text = description;
+
+    final latitude = initial?.latitude;
+    final longitude = initial?.longitude;
+    if (latitude != null && longitude != null) {
+      // The rejected report already has a pin; keep it rather than
+      // overwriting it with wherever the device happens to be right now.
+      _location.value = (
+        value: PickedLocation(latitude: latitude, longitude: longitude),
+        error: null,
+      );
+      return;
+    }
+
     // Pre-fills the pin so the common case — reporting what is in front of you
     // — needs no trip to the picker at all.
     WidgetsBinding.instance.addPostFrameCallback((_) => _useMyLocation());
@@ -184,7 +211,11 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
         child: child!,
       ),
       child: Scaffold(
-        appBar: AppBar(title: const Text('New report')),
+        appBar: AppBar(
+          title: Text(
+            widget.initialReport == null ? 'New report' : 'Resubmit report',
+          ),
+        ),
         body: SafeArea(
           child: CreateReportListener(
             child: Form(
@@ -195,7 +226,11 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
                   vertical: AppSpacing.lg,
                 ),
                 children: [
-                  _PhotoSection(field: _photo, onPick: _pickPhoto),
+                  _PhotoSection(
+                    field: _photo,
+                    onPick: _pickPhoto,
+                    initialPhotoUrl: widget.initialReport?.photoUrl,
+                  ),
                   const Gap(AppSpacing.lg),
                   _LocationSection(
                     field: _location,
@@ -224,10 +259,15 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
 
 /// Photo row: rebuilds on a pick, a validation message, or the submit lock.
 class _PhotoSection extends StatelessWidget {
-  const _PhotoSection({required this.field, required this.onPick});
+  const _PhotoSection({
+    required this.field,
+    required this.onPick,
+    this.initialPhotoUrl,
+  });
 
   final ValueListenable<_PhotoField> field;
   final VoidCallback onPick;
+  final String? initialPhotoUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -243,6 +283,7 @@ class _PhotoSection extends StatelessWidget {
             photoPath: photo.path,
             onPick: isSubmitting ? null : onPick,
             errorText: photo.error,
+            initialPhotoUrl: initialPhotoUrl,
           );
         },
       ),

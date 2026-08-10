@@ -31,6 +31,7 @@ abstract final class AppRoutes {
   // Resolver dashboard shell — one branch per tab, mirrors the citizen shell
   // above but for the resolver role.
   static const String queue = '/queue';
+  static const String resolverMap = '/resolver/map';
   static const String resolverProfile = '/resolver/profile';
 
   /// Entry point of the resolver shell: the queue tab.
@@ -48,6 +49,7 @@ abstract final class AppRoutes {
     feed,
     profile,
     queue,
+    resolverMap,
     resolverProfile,
   ];
 }
