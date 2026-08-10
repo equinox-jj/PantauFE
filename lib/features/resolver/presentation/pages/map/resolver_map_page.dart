@@ -11,6 +11,8 @@ import '../../../../../core/router/app_routes.dart';
 import '../../../../../core/service/service.dart';
 import '../../../../../core/theme/theme.dart';
 import '../../../../../core/utils/enums/enums.dart';
+import '../../../../map/domain/entity/entity.dart';
+import '../../../../map/presentation/pages/map/widgets/map_search.dart';
 import '../../../domain/entity/resolver_entity.dart';
 import '../../provider/provider.dart';
 import '../queue/widgets/queue_widgets.dart';
@@ -122,6 +124,56 @@ class _ResolverMapPageState extends ConsumerState<ResolverMapPage> {
     );
   }
 
+  /// Runs a place search biased toward the visible bounds, so "Gambir"
+  /// resolves to the one on screen first.
+  void _searchPlaces(String query) {
+    final bounds = _mapController.camera.visibleBounds;
+
+    ref
+        .read(resolverMapProvider.notifier)
+        .searchPlaces(
+          query,
+          viewBox: PlaceViewBox(
+            minLatitude: bounds.south,
+            minLongitude: bounds.west,
+            maxLatitude: bounds.north,
+            maxLongitude: bounds.east,
+          ),
+        );
+  }
+
+  /// Clears both the results panel and the pin.
+  void _clearSearch() {
+    final notifier = ref.read(resolverMapProvider.notifier);
+    notifier.clearSearch();
+    notifier.clearSearchedPlace();
+  }
+
+  /// Moves the camera to [place], marks it, and reloads the active tab's
+  /// reports around it.
+  Future<void> _handlePlaceSelected(Place place) async {
+    FocusScope.of(context).unfocus();
+
+    final center = LatLng(place.latitude, place.longitude);
+    final notifier = ref.read(resolverMapProvider.notifier);
+    notifier.selectPlace(place);
+    // Close the panel but keep the pin — the field still shows the query.
+    notifier.clearSearch();
+
+    setState(() => _center = center);
+    _mapController.move(center, ResolverMapCanvas.initialZoom);
+
+    final tab = ref.read(resolverMapProvider).tab;
+    await notifier.load(
+      tab: tab,
+      latitude: center.latitude,
+      longitude: center.longitude,
+    );
+    if (!mounted) return;
+
+    _fitToReports(center);
+  }
+
   void _locate() => ref.read(resolverLocationProvider.notifier).locate();
 
   void _openSettings() =>
@@ -205,7 +257,12 @@ class _ResolverMapPageState extends ConsumerState<ResolverMapPage> {
                     initialCenter: center,
                     onReportTap: _selectReport,
                   ),
-                  _MapHeader(onTabSelected: _selectTab),
+                  _MapHeader(
+                    onTabSelected: _selectTab,
+                    onSearchSubmitted: _searchPlaces,
+                    onSearchCleared: _clearSearch,
+                    onPlaceSelected: _handlePlaceSelected,
+                  ),
                   Positioned(
                     left: 0,
                     right: 0,
@@ -235,12 +292,26 @@ class _ResolverMapPageState extends ConsumerState<ResolverMapPage> {
   }
 }
 
-/// Title and the tab selector, scrimmed over the map tiles so the chips stay
-/// legible regardless of what's underneath.
+/// Search field, then either the tab selector or the search results panel,
+/// scrimmed over the map tiles so both stay legible regardless of what's
+/// underneath.
 class _MapHeader extends StatelessWidget {
-  const _MapHeader({required this.onTabSelected});
+  const _MapHeader({
+    required this.onTabSelected,
+    required this.onSearchSubmitted,
+    required this.onSearchCleared,
+    required this.onPlaceSelected,
+  });
 
   final ValueChanged<QueueTab> onTabSelected;
+
+  /// The trimmed query from the keyboard's search action.
+  final ValueChanged<String> onSearchSubmitted;
+
+  /// Fired by the field's clear button.
+  final VoidCallback onSearchCleared;
+
+  final ValueChanged<Place> onPlaceSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -267,22 +338,68 @@ class _MapHeader extends StatelessWidget {
         ),
         child: SafeArea(
           bottom: false,
-          child: Consumer(
-            builder: (context, ref, _) {
-              return QueueTabSelector(
-                currentTab: ref.watch(
-                  resolverMapProvider.select((state) => state.tab),
-                ),
-                counts: ref.watch(
-                  resolverMapProvider.select(
-                    (state) => state.reports.value?.counts,
-                  ),
-                ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              MapSearchField(
+                onSubmitted: onSearchSubmitted,
+                onCleared: onSearchCleared,
+              ),
+              const Gap(AppSpacing.xs2),
+              _TabSelectorOrSearchResults(
                 onTabSelected: onTabSelected,
-              );
-            },
+                onPlaceSelected: onPlaceSelected,
+              ),
+            ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// The row under the search field: the tab selector while no search is open,
+/// the results panel while one is — never both, so nothing overlaps.
+class _TabSelectorOrSearchResults extends StatelessWidget {
+  const _TabSelectorOrSearchResults({
+    required this.onTabSelected,
+    required this.onPlaceSelected,
+  });
+
+  final ValueChanged<QueueTab> onTabSelected;
+  final ValueChanged<Place> onPlaceSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) {
+        final state = ref.watch(
+          resolverMapProvider.select((state) => state.placeSearch),
+        );
+        // Null means the panel is closed; loading, failed, and empty
+        // searches all still have something to show.
+        if (state == null) return child!;
+
+        return MapSearchResults(
+          state: state,
+          onSelected: onPlaceSelected,
+          onRetry: () => ref.read(resolverMapProvider.notifier).retrySearch(),
+        );
+      },
+      child: Consumer(
+        builder: (context, ref, _) {
+          return QueueTabSelector(
+            currentTab: ref.watch(
+              resolverMapProvider.select((state) => state.tab),
+            ),
+            counts: ref.watch(
+              resolverMapProvider.select(
+                (state) => state.reports.value?.counts,
+              ),
+            ),
+            onTabSelected: onTabSelected,
+          );
+        },
       ),
     );
   }

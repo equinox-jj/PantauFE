@@ -51,6 +51,7 @@ class ResolverMapCanvas extends StatelessWidget {
         // target, so it never covers a report pin.
         _QueueRadiusLayer(center: initialCenter),
         _ReportClusterLayer(onReportTap: onReportTap),
+        const _SearchedPlaceLayer(),
         MarkerLayer(
           markers: [
             Marker(
@@ -111,6 +112,59 @@ class _CurrentLocationPin extends StatelessWidget {
         Icons.place,
         size: size,
         color: AppColors.teal400,
+        shadows: AppShadows.floating,
+      ),
+    );
+  }
+}
+
+/// Pin for the searched place. Its own layer so a reports refetch never
+/// rebuilds it.
+class _SearchedPlaceLayer extends StatelessWidget {
+  const _SearchedPlaceLayer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, _) {
+        final place = ref.watch(
+          resolverMapProvider.select((state) => state.searchedPlace),
+        );
+        if (place == null) return const SizedBox.shrink();
+
+        return MarkerLayer(
+          markers: [
+            Marker(
+              point: LatLng(place.latitude, place.longitude),
+              width: _SearchedPlacePin.size,
+              height: _SearchedPlacePin.size,
+              alignment: Alignment.topCenter,
+              child: _SearchedPlacePin(label: place.name),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// Pin for a searched place — same icon as the device pin, distinguished by
+/// color so the two are never mistaken for each other.
+class _SearchedPlacePin extends StatelessWidget {
+  const _SearchedPlacePin({required this.label});
+
+  final String label;
+
+  static const double size = 36;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: 'Searched place: $label',
+      child: const Icon(
+        Icons.place,
+        size: size,
+        color: AppColors.accent,
         shadows: AppShadows.floating,
       ),
     );
