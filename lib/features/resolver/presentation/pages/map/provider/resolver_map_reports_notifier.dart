@@ -10,11 +10,11 @@ part 'resolver_map_reports_notifier.g.dart';
 /// Single-page cap for the map. There is no scroll position to page
 /// against and no "load more" affordance a marker layer could show, so it
 /// fetches one larger page instead of paginating the way the Queue does.
-/// Matches `kQueueRadiusInMeters` (`queue_reports_notifier.dart`) for the
-/// search radius — same API default, not redefined here to avoid a
-/// cross-page-folder import for a single shared literal.
+/// Radius matches `kNearbyRadiusInMeters` (citizen map) rather than
+/// `kQueueRadiusInMeters` (`queue_reports_notifier.dart`) — the map's ring
+/// is meant to mirror the citizen map, not the Queue tab's wider search.
 const int kResolverMapLimit = 50;
-const int kResolverMapRadiusInMeters = 5000;
+const int kResolverMapRadiusInMeters = 1000;
 
 /// Reports plotted on the map for the active tab. One-shot fetch, no
 /// pagination — re-locating or switching tabs is the only refresh trigger.

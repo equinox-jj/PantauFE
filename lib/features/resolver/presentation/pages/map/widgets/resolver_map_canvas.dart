@@ -55,13 +55,10 @@ class ResolverMapCanvas extends StatelessWidget {
           markers: [
             Marker(
               point: initialCenter,
-              width: 36,
-              height: 36,
-              child: const Icon(
-                Icons.my_location,
-                size: 20,
-                color: AppColors.teal400,
-              ),
+              width: _CurrentLocationPin.size,
+              height: _CurrentLocationPin.size,
+              alignment: Alignment.topCenter,
+              child: const _CurrentLocationPin(),
             ),
           ],
         ),
@@ -75,7 +72,8 @@ class ResolverMapCanvas extends StatelessWidget {
 
 /// [kResolverMapRadiusInMeters] ring around the query centre — the device
 /// position, since the resolver map never refetches on pan (unlike the
-/// citizen map, whose ring follows the last fetch instead).
+/// citizen map, whose ring follows the last fetch instead). Same radius as
+/// the citizen map's ring ([kNearbyRadiusInMeters]).
 class _QueueRadiusLayer extends StatelessWidget {
   const _QueueRadiusLayer({required this.center});
 
@@ -94,6 +92,27 @@ class _QueueRadiusLayer extends StatelessWidget {
           borderStrokeWidth: 2,
         ),
       ],
+    );
+  }
+}
+
+/// Pin for the device position — same icon as the citizen map's pin
+/// ([Icons.place]), anchored so its tip sits on the coordinate.
+class _CurrentLocationPin extends StatelessWidget {
+  const _CurrentLocationPin();
+
+  static const double size = 36;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: 'Your location',
+      child: const Icon(
+        Icons.place,
+        size: size,
+        color: AppColors.teal400,
+        shadows: AppShadows.floating,
+      ),
     );
   }
 }
