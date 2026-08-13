@@ -104,49 +104,46 @@ void main() {
   });
 
   group('register', () {
-    test(
-      'hits POST /auth/register with email/password/display_name and parses the body',
-      () async {
-        when(
-          () => dioClient.post<dynamic>(
-            ApiEndpoints.register,
-            data: any(named: 'data'),
-            options: any(named: 'options'),
-          ),
-        ).thenAnswer(
-          (_) async => _response({
-            'status': true,
-            'data': {
-              'token': 'tok2',
-              'user_response': {'uuid': 'u2', 'username': 'newbie'},
-            },
-          }),
-        );
+    test('hits POST /auth/register with email/password/display_name and parses the body', () async {
+      when(
+        () => dioClient.post<dynamic>(
+          ApiEndpoints.register,
+          data: any(named: 'data'),
+          options: any(named: 'options'),
+        ),
+      ).thenAnswer(
+        (_) async => _response({
+          'status': true,
+          'data': {
+            'token': 'tok2',
+            'user_response': {'uuid': 'u2', 'username': 'newbie'},
+          },
+        }),
+      );
 
-        final result = await dataSource.register(
-          email: 'new@b.com',
-          password: 'secret2',
-          displayName: 'New User',
-        );
+      final result = await dataSource.register(
+        email: 'new@b.com',
+        password: 'secret2',
+        displayName: 'New User',
+      );
 
-        expect(result.data?.token, 'tok2');
-        expect(result.data?.userResponse?.username, 'newbie');
+      expect(result.data?.token, 'tok2');
+      expect(result.data?.userResponse?.username, 'newbie');
 
-        final captured = verify(
-          () => dioClient.post<dynamic>(
-            ApiEndpoints.register,
-            data: captureAny(named: 'data'),
-            options: captureAny(named: 'options'),
-          ),
-        ).captured;
-        final body = captured.first as Map<String, dynamic>;
-        expect(body['email'], 'new@b.com');
-        expect(body['password'], 'secret2');
-        expect(body['display_name'], 'New User');
-        final options = captured.last as Options;
-        expect(options.extra?[ApiEndpoints.kNoAuth], isTrue);
-      },
-    );
+      final captured = verify(
+        () => dioClient.post<dynamic>(
+          ApiEndpoints.register,
+          data: captureAny(named: 'data'),
+          options: captureAny(named: 'options'),
+        ),
+      ).captured;
+      final body = captured.first as Map<String, dynamic>;
+      expect(body['email'], 'new@b.com');
+      expect(body['password'], 'secret2');
+      expect(body['display_name'], 'New User');
+      final options = captured.last as Options;
+      expect(options.extra?[ApiEndpoints.kNoAuth], isTrue);
+    });
 
     test('rethrows a DioException as its mapped AppException', () async {
       when(

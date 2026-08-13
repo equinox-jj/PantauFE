@@ -42,9 +42,8 @@ void main() {
     });
 
     test('rethrows an existing CacheException unchanged', () async {
-      when(
-        () => prefs.hasOnboardingSeen(),
-      ).thenThrow(const CacheException('already cache'));
+      when(() => prefs.hasOnboardingSeen())
+          .thenThrow(const CacheException('already cache'));
 
       await expectLater(
         dataSource.hasSeenOnboarding(),
@@ -78,9 +77,8 @@ void main() {
     });
 
     test('rethrows an existing CacheException unchanged', () async {
-      when(
-        () => prefs.setOnboardingSeen(true),
-      ).thenThrow(const CacheException('already cache'));
+      when(() => prefs.setOnboardingSeen(true))
+          .thenThrow(const CacheException('already cache'));
 
       await expectLater(
         dataSource.setOnboardingSeen(),

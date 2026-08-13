@@ -36,9 +36,8 @@ void main() {
     );
 
     expect(result, const Right<Failure, Login>(login));
-    verify(
-      () => repository.login(email: 'a@b.com', password: 'secret'),
-    ).called(1);
+    verify(() => repository.login(email: 'a@b.com', password: 'secret'))
+        .called(1);
   });
 
   test('propagates a Left(Failure) from the repository unchanged', () async {

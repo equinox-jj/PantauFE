@@ -7,7 +7,7 @@ import '../../domain/repository/repository.dart';
 import '../datasources/datasources.dart';
 import '../mapper/mapper.dart';
 
-class MapRepositoryImpl extends MapRepository {
+class MapRepositoryImpl extends MapRepository implements PlaceRepository {
   MapRepositoryImpl({required this._mapRemoteDataSource});
 
   final MapRemoteDataSource _mapRemoteDataSource;
@@ -87,4 +87,39 @@ class MapRepositoryImpl extends MapRepository {
 
     return result.toEntity();
   });
+
+  @override
+  Future<Either<Failure, List<Place>>> searchPlaces({
+    required String query,
+    PlaceViewBox? viewBox,
+    int limit = 6,
+  }) => safeCall(() async {
+    final result = await _mapRemoteDataSource.searchPlaces(
+      query: query,
+      viewBox: viewBox == null ? null : _formatViewBox(viewBox),
+      limit: limit,
+    );
+
+    return result.toEntities();
+  });
+
+  @override
+  Future<Either<Failure, Place?>> reverseGeocode({
+    required double latitude,
+    required double longitude,
+  }) => safeCall(() async {
+    final result = await _mapRemoteDataSource.reverseGeocode(
+      latitude: latitude,
+      longitude: longitude,
+    );
+
+    return result?.toEntity();
+  });
+
+  /// Nominatim expects `minLon,minLat,maxLon,maxLat` — longitude first, which
+  /// is the reverse of how the rest of the app orders coordinates.
+  String _formatViewBox(PlaceViewBox viewBox) {
+    return '${viewBox.minLongitude},${viewBox.minLatitude},'
+        '${viewBox.maxLongitude},${viewBox.maxLatitude}';
+  }
 }

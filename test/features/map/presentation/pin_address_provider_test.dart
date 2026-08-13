@@ -69,9 +69,8 @@ void main() {
   test(
     'a Left(Failure) surfaces as an AsyncError carrying the Failure',
     () async {
-      when(
-        () => usecase(any()),
-      ).thenAnswer((_) async => const Left(Failure.network()));
+      when(() => usecase(any()))
+          .thenAnswer((_) async => const Left(Failure.network()));
 
       final state = await build(0, 0);
 

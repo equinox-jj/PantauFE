@@ -68,9 +68,8 @@ void main() {
       longitude: 2,
       accuracyInMeters: 5,
     );
-    when(
-      () => locationService.getCurrentLocation(),
-    ).thenAnswer((_) async => result);
+    when(() => locationService.getCurrentLocation())
+        .thenAnswer((_) async => result);
 
     await notifier().locate();
 
@@ -117,9 +116,8 @@ void main() {
   );
 
   test('load() failure surfaces an AsyncError carrying the Failure', () async {
-    when(
-      () => usecase(any()),
-    ).thenAnswer((_) async => const Left(Failure.network()));
+    when(() => usecase(any()))
+        .thenAnswer((_) async => const Left(Failure.network()));
 
     await notifier().load(latitude: 0, longitude: 0);
 

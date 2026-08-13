@@ -99,35 +99,32 @@ void main() {
       expect(captured['tab'], 'IN_PROGRESS');
     });
 
-    test(
-      'defaults radiusMeter to 5000, limit to 20 and offset to 0 when not provided',
-      () async {
-        when(
-          () => dioClient.get<dynamic>(
-            ApiEndpoints.queue,
-            queryParameters: any(named: 'queryParameters'),
-          ),
-        ).thenAnswer((_) async => _response({'data': <String, dynamic>{}}));
+    test('defaults radiusMeter to 5000, limit to 20 and offset to 0 when not provided', () async {
+      when(
+        () => dioClient.get<dynamic>(
+          ApiEndpoints.queue,
+          queryParameters: any(named: 'queryParameters'),
+        ),
+      ).thenAnswer((_) async => _response({'data': <String, dynamic>{}}));
 
-        await dataSource.getQueue(
-          tab: QueueTab.resolved,
-          latitude: 1,
-          longitude: 2,
-        );
+      await dataSource.getQueue(
+        tab: QueueTab.resolved,
+        latitude: 1,
+        longitude: 2,
+      );
 
-        final captured =
-            verify(
-                  () => dioClient.get<dynamic>(
-                    ApiEndpoints.queue,
-                    queryParameters: captureAny(named: 'queryParameters'),
-                  ),
-                ).captured.single
-                as Map<String, dynamic>;
-        expect(captured['radius_meter'], 5000);
-        expect(captured['limit'], 20);
-        expect(captured['offset'], 0);
-      },
-    );
+      final captured =
+          verify(
+                () => dioClient.get<dynamic>(
+                  ApiEndpoints.queue,
+                  queryParameters: captureAny(named: 'queryParameters'),
+                ),
+              ).captured.single
+              as Map<String, dynamic>;
+      expect(captured['radius_meter'], 5000);
+      expect(captured['limit'], 20);
+      expect(captured['offset'], 0);
+    });
 
     test('rethrows a DioException as its mapped AppException', () async {
       when(

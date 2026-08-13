@@ -84,9 +84,8 @@ void main() {
     const reportB = NearbyReport(id: 'b', category: ReportCategory(id: 2));
 
     Future<void> loadTwoReports() async {
-      when(
-        () => nearbyUsecase(any()),
-      ).thenAnswer((_) async => const Right([reportA, reportB]));
+      when(() => nearbyUsecase(any()))
+          .thenAnswer((_) async => const Right([reportA, reportB]));
       await notifier().loadNearby(
         latitude: 0,
         longitude: 0,
@@ -126,9 +125,8 @@ void main() {
         longitude: 2,
         accuracyInMeters: 5,
       );
-      when(
-        () => locationService.getCurrentLocation(),
-      ).thenAnswer((_) async => result);
+      when(() => locationService.getCurrentLocation())
+          .thenAnswer((_) async => result);
 
       await notifier().locate();
 
@@ -144,9 +142,8 @@ void main() {
         longitude: 2,
         accuracyInMeters: 5,
       );
-      when(
-        () => locationService.getCurrentLocation(),
-      ).thenAnswer((_) async => result);
+      when(() => locationService.getCurrentLocation())
+          .thenAnswer((_) async => result);
 
       final future = notifier().locate();
 
@@ -171,9 +168,8 @@ void main() {
       'success stores nearbyReports, visibleReports and filteredReports',
       () async {
         const report = NearbyReport(id: 'r1');
-        when(
-          () => nearbyUsecase(any()),
-        ).thenAnswer((_) async => const Right([report]));
+        when(() => nearbyUsecase(any()))
+            .thenAnswer((_) async => const Right([report]));
 
         await notifier().loadNearby(
           latitude: -6.2,
@@ -188,25 +184,21 @@ void main() {
       },
     );
 
-    test(
-      'failure surfaces an AsyncError carrying the Failure and keeps visibleReports',
-      () async {
-        when(
-          () => nearbyUsecase(any()),
-        ).thenAnswer((_) async => const Left(Failure.network()));
+    test('failure surfaces an AsyncError carrying the Failure and keeps visibleReports', () async {
+      when(() => nearbyUsecase(any()))
+          .thenAnswer((_) async => const Left(Failure.network()));
 
-        await notifier().loadNearby(
-          latitude: 0,
-          longitude: 0,
-          radiusInMeters: 500,
-        );
+      await notifier().loadNearby(
+        latitude: 0,
+        longitude: 0,
+        radiusInMeters: 500,
+      );
 
-        final state = container.read(mapProvider);
-        expect(state.nearbyReports.hasError, isTrue);
-        expect(state.nearbyReports.error, const Failure.network());
-        expect(state.visibleReports, isEmpty);
-      },
-    );
+      final state = container.read(mapProvider);
+      expect(state.nearbyReports.hasError, isTrue);
+      expect(state.nearbyReports.error, const Failure.network());
+      expect(state.visibleReports, isEmpty);
+    });
 
     test(
       'a superseded response is dropped in favour of the newer one',
@@ -272,15 +264,12 @@ void main() {
   });
 
   group('searchPlaces', () {
-    test(
-      'an empty (post-trim) query clears the search instead of calling the usecase',
-      () async {
-        await notifier().searchPlaces('   ');
+    test('an empty (post-trim) query clears the search instead of calling the usecase', () async {
+      await notifier().searchPlaces('   ');
 
-        expect(container.read(mapProvider).placeSearch, isNull);
-        verifyNever(() => searchUsecase(any()));
-      },
-    );
+      expect(container.read(mapProvider).placeSearch, isNull);
+      verifyNever(() => searchUsecase(any()));
+    });
 
     test('success stores the results', () async {
       const place = Place(
@@ -290,9 +279,8 @@ void main() {
         latitude: -6.2,
         longitude: 106.8,
       );
-      when(
-        () => searchUsecase(any()),
-      ).thenAnswer((_) async => const Right([place]));
+      when(() => searchUsecase(any()))
+          .thenAnswer((_) async => const Right([place]));
 
       await notifier().searchPlaces('Monas');
 
@@ -301,9 +289,8 @@ void main() {
     });
 
     test('failure surfaces an AsyncError carrying the Failure', () async {
-      when(
-        () => searchUsecase(any()),
-      ).thenAnswer((_) async => const Left(Failure.network()));
+      when(() => searchUsecase(any()))
+          .thenAnswer((_) async => const Left(Failure.network()));
 
       await notifier().searchPlaces('Monas');
 

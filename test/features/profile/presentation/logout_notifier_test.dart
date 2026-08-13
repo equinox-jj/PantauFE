@@ -49,9 +49,8 @@ void main() {
   test(
     'successful logout transitions state to loading then AsyncData(true)',
     () async {
-      when(
-        () => logoutUsecase(any()),
-      ).thenAnswer((_) async => const Right(null));
+      when(() => logoutUsecase(any()))
+          .thenAnswer((_) async => const Right(null));
 
       final states = <AsyncValue<bool>>[];
       container.listen(logoutProvider, (previous, next) => states.add(next));
@@ -69,39 +68,32 @@ void main() {
     },
   );
 
-  test(
-    'failed logout transitions state to loading then AsyncError carrying the Failure',
-    () async {
-      const failure = Failure.server(500, 'boom');
-      when(
-        () => logoutUsecase(any()),
-      ).thenAnswer((_) async => const Left(failure));
+  test('failed logout transitions state to loading then AsyncError carrying the Failure', () async {
+    const failure = Failure.server(500, 'boom');
+    when(() => logoutUsecase(any()))
+        .thenAnswer((_) async => const Left(failure));
 
-      final states = <AsyncValue<bool>>[];
-      container.listen(logoutProvider, (previous, next) => states.add(next));
+    final states = <AsyncValue<bool>>[];
+    container.listen(logoutProvider, (previous, next) => states.add(next));
 
-      await container.read(logoutProvider.notifier).logout();
+    await container.read(logoutProvider.notifier).logout();
 
-      final state = container.read(logoutProvider);
-      expect(state.hasError, isTrue);
-      expect(state.error, failure);
-      expect(states.first, isA<AsyncLoading<bool>>());
-      expect(states.last.hasError, isTrue);
-    },
-  );
+    final state = container.read(logoutProvider);
+    expect(state.hasError, isTrue);
+    expect(state.error, failure);
+    expect(states.first, isA<AsyncLoading<bool>>());
+    expect(states.last.hasError, isTrue);
+  });
 
   test(
     'successful logout invalidates myReportsProvider and currentUserProvider',
     () async {
-      when(
-        () => logoutUsecase(any()),
-      ).thenAnswer((_) async => const Right(null));
-      when(
-        () => myReportsUsecase(any()),
-      ).thenAnswer((_) async => const Right([]));
-      when(
-        () => currentUserUsecase(any()),
-      ).thenAnswer((_) async => const Right(null));
+      when(() => logoutUsecase(any()))
+          .thenAnswer((_) async => const Right(null));
+      when(() => myReportsUsecase(any()))
+          .thenAnswer((_) async => const Right([]));
+      when(() => currentUserUsecase(any()))
+          .thenAnswer((_) async => const Right(null));
 
       // Keep both providers alive with an active listener so an invalidation
       // triggers an eager rebuild instead of merely being marked dirty.

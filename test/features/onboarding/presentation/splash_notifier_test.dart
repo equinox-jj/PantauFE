@@ -57,9 +57,8 @@ void main() {
     'routes to login when no token is stored but onboarding was seen',
     () async {
       when(() => tokenStorage.readAccessToken()).thenAnswer((_) async => null);
-      when(
-        () => onboardingUsecase(any()),
-      ).thenAnswer((_) async => const Right(true));
+      when(() => onboardingUsecase(any()))
+          .thenAnswer((_) async => const Right(true));
 
       final route = await buildSplash();
 
@@ -72,9 +71,8 @@ void main() {
     'routes to onboarding when the stored token is an empty string',
     () async {
       when(() => tokenStorage.readAccessToken()).thenAnswer((_) async => '');
-      when(
-        () => onboardingUsecase(any()),
-      ).thenAnswer((_) async => const Right(false));
+      when(() => onboardingUsecase(any()))
+          .thenAnswer((_) async => const Right(false));
 
       final route = await buildSplash();
 
@@ -86,9 +84,8 @@ void main() {
     'routes to onboarding when no token is stored and onboarding was not seen',
     () async {
       when(() => tokenStorage.readAccessToken()).thenAnswer((_) async => null);
-      when(
-        () => onboardingUsecase(any()),
-      ).thenAnswer((_) async => const Right(false));
+      when(() => onboardingUsecase(any()))
+          .thenAnswer((_) async => const Right(false));
 
       final route = await buildSplash();
 
@@ -96,74 +93,49 @@ void main() {
     },
   );
 
-  test(
-    'routes to onboarding when no token is stored and the onboarding usecase fails',
-    () async {
-      when(() => tokenStorage.readAccessToken()).thenAnswer((_) async => null);
-      when(
-        () => onboardingUsecase(any()),
-      ).thenAnswer((_) async => const Left(Failure.cache()));
+  test('routes to onboarding when no token is stored and the onboarding usecase fails', () async {
+    when(() => tokenStorage.readAccessToken()).thenAnswer((_) async => null);
+    when(() => onboardingUsecase(any()))
+        .thenAnswer((_) async => const Left(Failure.cache()));
 
-      final route = await buildSplash();
+    final route = await buildSplash();
 
-      expect(route, AppRoutes.onboarding);
-    },
-  );
+    expect(route, AppRoutes.onboarding);
+  });
 
-  test(
-    'routes to the resolver dashboard when a token exists and the cached role is resolver',
-    () async {
-      when(
-        () => tokenStorage.readAccessToken(),
-      ).thenAnswer((_) async => 'token');
-      when(
-        () => onboardingUsecase(any()),
-      ).thenAnswer((_) async => const Right(true));
-      when(
-        () => roleUsecase(any()),
-      ).thenAnswer((_) async => const Right(UserRole.resolver));
+  test('routes to the resolver dashboard when a token exists and the cached role is resolver', () async {
+    when(() => tokenStorage.readAccessToken()).thenAnswer((_) async => 'token');
+    when(() => onboardingUsecase(any()))
+        .thenAnswer((_) async => const Right(true));
+    when(() => roleUsecase(any()))
+        .thenAnswer((_) async => const Right(UserRole.resolver));
 
-      final route = await buildSplash();
+    final route = await buildSplash();
 
-      expect(route, AppRoutes.resolverDashboard);
-    },
-  );
+    expect(route, AppRoutes.resolverDashboard);
+  });
 
-  test(
-    'routes to the citizen dashboard when a token exists and the cached role is user',
-    () async {
-      when(
-        () => tokenStorage.readAccessToken(),
-      ).thenAnswer((_) async => 'token');
-      when(
-        () => onboardingUsecase(any()),
-      ).thenAnswer((_) async => const Right(true));
-      when(
-        () => roleUsecase(any()),
-      ).thenAnswer((_) async => const Right(UserRole.user));
+  test('routes to the citizen dashboard when a token exists and the cached role is user', () async {
+    when(() => tokenStorage.readAccessToken()).thenAnswer((_) async => 'token');
+    when(() => onboardingUsecase(any()))
+        .thenAnswer((_) async => const Right(true));
+    when(() => roleUsecase(any()))
+        .thenAnswer((_) async => const Right(UserRole.user));
 
-      final route = await buildSplash();
+    final route = await buildSplash();
 
-      expect(route, AppRoutes.dashboard);
-    },
-  );
+    expect(route, AppRoutes.dashboard);
+  });
 
-  test(
-    'routes to the citizen dashboard when a token exists but the role lookup fails',
-    () async {
-      when(
-        () => tokenStorage.readAccessToken(),
-      ).thenAnswer((_) async => 'token');
-      when(
-        () => onboardingUsecase(any()),
-      ).thenAnswer((_) async => const Right(true));
-      when(
-        () => roleUsecase(any()),
-      ).thenAnswer((_) async => const Left(Failure.unauthorized()));
+  test('routes to the citizen dashboard when a token exists but the role lookup fails', () async {
+    when(() => tokenStorage.readAccessToken()).thenAnswer((_) async => 'token');
+    when(() => onboardingUsecase(any()))
+        .thenAnswer((_) async => const Right(true));
+    when(() => roleUsecase(any()))
+        .thenAnswer((_) async => const Left(Failure.unauthorized()));
 
-      final route = await buildSplash();
+    final route = await buildSplash();
 
-      expect(route, AppRoutes.dashboard);
-    },
-  );
+    expect(route, AppRoutes.dashboard);
+  });
 }

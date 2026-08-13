@@ -20,9 +20,8 @@ void main() {
 
   test('delegates to repository.getReportCategories', () async {
     const categories = [ReportCategory(id: 1, name: 'Pothole')];
-    when(
-      () => repository.getReportCategories(),
-    ).thenAnswer((_) async => const Right(categories));
+    when(() => repository.getReportCategories())
+        .thenAnswer((_) async => const Right(categories));
 
     final result = await usecase(const NoParams());
 
@@ -31,9 +30,8 @@ void main() {
   });
 
   test('propagates a Left(Failure) from the repository unchanged', () async {
-    when(
-      () => repository.getReportCategories(),
-    ).thenAnswer((_) async => const Left(Failure.server(500, 'boom')));
+    when(() => repository.getReportCategories())
+        .thenAnswer((_) async => const Left(Failure.server(500, 'boom')));
 
     final result = await usecase(const NoParams());
 

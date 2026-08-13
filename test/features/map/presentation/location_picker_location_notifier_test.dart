@@ -33,9 +33,8 @@ void main() {
       longitude: 2,
       accuracyInMeters: 5,
     );
-    when(
-      () => locationService.getCurrentLocation(),
-    ).thenAnswer((_) async => result);
+    when(() => locationService.getCurrentLocation())
+        .thenAnswer((_) async => result);
 
     await notifier().locate();
 
@@ -49,9 +48,8 @@ void main() {
     'locate() surfaces a permission-denied result the same as a success',
     () async {
       const result = LocationPermissionDenied();
-      when(
-        () => locationService.getCurrentLocation(),
-      ).thenAnswer((_) async => result);
+      when(() => locationService.getCurrentLocation())
+          .thenAnswer((_) async => result);
 
       await notifier().locate();
 
@@ -68,9 +66,8 @@ void main() {
       longitude: 2,
       accuracyInMeters: 5,
     );
-    when(
-      () => locationService.getCurrentLocation(),
-    ).thenAnswer((_) async => result);
+    when(() => locationService.getCurrentLocation())
+        .thenAnswer((_) async => result);
 
     final future = notifier().locate();
 

@@ -24,15 +24,12 @@ void main() {
   ResolverLocation notifier() =>
       container.read(resolverLocationProvider.notifier);
 
-  test(
-    'build() starts with AsyncData(null) and does not call the location service',
-    () {
-      final state = container.read(resolverLocationProvider);
+  test('build() starts with AsyncData(null) and does not call the location service', () {
+    final state = container.read(resolverLocationProvider);
 
-      expect(state, const AsyncData<LocationResult?>(null));
-      verifyNever(() => locationService.getCurrentLocation());
-    },
-  );
+    expect(state, const AsyncData<LocationResult?>(null));
+    verifyNever(() => locationService.getCurrentLocation());
+  });
 
   test(
     'locate() stores a successful LocationResult from LocationService',
@@ -42,9 +39,8 @@ void main() {
         longitude: 2,
         accuracyInMeters: 5,
       );
-      when(
-        () => locationService.getCurrentLocation(),
-      ).thenAnswer((_) async => result);
+      when(() => locationService.getCurrentLocation())
+          .thenAnswer((_) async => result);
 
       await notifier().locate();
 
@@ -59,9 +55,8 @@ void main() {
     'locate() sets loading state before the location service resolves',
     () async {
       final completer = Completer<LocationResult>();
-      when(
-        () => locationService.getCurrentLocation(),
-      ).thenAnswer((_) => completer.future);
+      when(() => locationService.getCurrentLocation())
+          .thenAnswer((_) => completer.future);
 
       final future = notifier().locate();
       expect(
@@ -83,9 +78,8 @@ void main() {
         LocationPermissionDeniedForever(),
         LocationFailed(debugDetail: 'boom'),
       ]) {
-        when(
-          () => locationService.getCurrentLocation(),
-        ).thenAnswer((_) async => result);
+        when(() => locationService.getCurrentLocation())
+            .thenAnswer((_) async => result);
 
         await notifier().locate();
 

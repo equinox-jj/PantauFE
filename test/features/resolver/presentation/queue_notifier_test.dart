@@ -101,9 +101,8 @@ void main() {
     );
 
     test('failure surfaces an AsyncError carrying the Failure', () async {
-      when(
-        () => usecase(any()),
-      ).thenAnswer((_) async => const Left(Failure.network()));
+      when(() => usecase(any()))
+          .thenAnswer((_) async => const Left(Failure.network()));
 
       await notifier().load(tab: QueueTab.open, latitude: 0, longitude: 0);
 
@@ -251,27 +250,22 @@ void main() {
       await firstLoadMore;
     });
 
-    test(
-      'a failed page keeps existing items, clears the spinner and sets loadMoreFailed',
-      () async {
-        when(() => usecase(any())).thenAnswer(
-          (_) async => Right(
-            _result(items: const [QueueReport(id: 'q1')], hasNext: true),
-          ),
-        );
-        await notifier().load(tab: QueueTab.open, latitude: 0, longitude: 0);
+    test('a failed page keeps existing items, clears the spinner and sets loadMoreFailed', () async {
+      when(() => usecase(any())).thenAnswer(
+        (_) async =>
+            Right(_result(items: const [QueueReport(id: 'q1')], hasNext: true)),
+      );
+      await notifier().load(tab: QueueTab.open, latitude: 0, longitude: 0);
 
-        when(
-          () => usecase(any()),
-        ).thenAnswer((_) async => const Left(Failure.network()));
-        await notifier().loadMore();
+      when(() => usecase(any()))
+          .thenAnswer((_) async => const Left(Failure.network()));
+      await notifier().loadMore();
 
-        final state = container.read(queueProvider).queue.value!;
-        expect(state.items.single.id, 'q1');
-        expect(state.isLoadingMore, isFalse);
-        expect(state.loadMoreFailed, isTrue);
-      },
-    );
+      final state = container.read(queueProvider).queue.value!;
+      expect(state.items.single.id, 'q1');
+      expect(state.isLoadingMore, isFalse);
+      expect(state.loadMoreFailed, isTrue);
+    });
 
     test('a retry after a failed page clears loadMoreFailed', () async {
       when(() => usecase(any())).thenAnswer(
@@ -280,9 +274,8 @@ void main() {
       );
       await notifier().load(tab: QueueTab.open, latitude: 0, longitude: 0);
 
-      when(
-        () => usecase(any()),
-      ).thenAnswer((_) async => const Left(Failure.network()));
+      when(() => usecase(any()))
+          .thenAnswer((_) async => const Left(Failure.network()));
       await notifier().loadMore();
       expect(container.read(queueProvider).queue.value!.loadMoreFailed, isTrue);
 

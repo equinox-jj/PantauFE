@@ -46,19 +46,16 @@ void main() {
       expect(result.message, 'Bad certificate');
     });
 
-    test(
-      'maps unknown with FormatException error to malformed-response UnknownException',
-      () {
-        final dioException = DioException(
-          requestOptions: _options(),
-          type: DioExceptionType.unknown,
-          error: const FormatException('bad json'),
-        );
-        final result = mapDioException(dioException);
-        expect(result, isA<UnknownException>());
-        expect(result.message, 'Malformed response');
-      },
-    );
+    test('maps unknown with FormatException error to malformed-response UnknownException', () {
+      final dioException = DioException(
+        requestOptions: _options(),
+        type: DioExceptionType.unknown,
+        error: const FormatException('bad json'),
+      );
+      final result = mapDioException(dioException);
+      expect(result, isA<UnknownException>());
+      expect(result.message, 'Malformed response');
+    });
 
     test('maps unknown without FormatException to NetworkException', () {
       final result = mapDioException(_dioOf(DioExceptionType.unknown));

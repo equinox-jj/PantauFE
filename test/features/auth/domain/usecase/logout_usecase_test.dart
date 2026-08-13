@@ -27,9 +27,8 @@ void main() {
   });
 
   test('propagates a Left(Failure) from the repository unchanged', () async {
-    when(
-      () => repository.logout(),
-    ).thenAnswer((_) async => const Left(Failure.cache()));
+    when(() => repository.logout())
+        .thenAnswer((_) async => const Left(Failure.cache()));
 
     final result = await usecase(const NoParams());
 

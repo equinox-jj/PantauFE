@@ -20,9 +20,8 @@ void main() {
 
   test('delegates to repository.getCurrentUser', () async {
     const user = CurrentUser(uuid: 'u1');
-    when(
-      () => repository.getCurrentUser(),
-    ).thenAnswer((_) async => const Right(user));
+    when(() => repository.getCurrentUser())
+        .thenAnswer((_) async => const Right(user));
 
     final result = await usecase(const NoParams());
 
@@ -33,9 +32,8 @@ void main() {
   test(
     'propagates a Right(null) from the repository when nothing is cached',
     () async {
-      when(
-        () => repository.getCurrentUser(),
-      ).thenAnswer((_) async => const Right(null));
+      when(() => repository.getCurrentUser())
+          .thenAnswer((_) async => const Right(null));
 
       final result = await usecase(const NoParams());
 
@@ -44,9 +42,8 @@ void main() {
   );
 
   test('propagates a Left(Failure) from the repository unchanged', () async {
-    when(
-      () => repository.getCurrentUser(),
-    ).thenAnswer((_) async => const Left(Failure.network()));
+    when(() => repository.getCurrentUser())
+        .thenAnswer((_) async => const Left(Failure.network()));
 
     final result = await usecase(const NoParams());
 

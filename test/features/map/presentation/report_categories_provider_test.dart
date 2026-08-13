@@ -52,9 +52,8 @@ void main() {
   test(
     'a Left(Failure) surfaces as an AsyncError carrying the Failure',
     () async {
-      when(
-        () => usecase(any()),
-      ).thenAnswer((_) async => const Left(Failure.server(500, 'boom')));
+      when(() => usecase(any()))
+          .thenAnswer((_) async => const Left(Failure.server(500, 'boom')));
 
       await build();
 

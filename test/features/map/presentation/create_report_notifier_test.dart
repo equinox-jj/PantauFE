@@ -58,9 +58,8 @@ void main() {
   });
 
   test('submit() passes every field through as CreateReportParams', () async {
-    when(
-      () => usecase(any()),
-    ).thenAnswer((_) async => const Right(ReportDetail(id: 'r1')));
+    when(() => usecase(any()))
+        .thenAnswer((_) async => const Right(ReportDetail(id: 'r1')));
 
     await notifier().submit(
       photoPath: '/tmp/x.jpg',
@@ -102,9 +101,8 @@ void main() {
   );
 
   test('submit() goes through a loading state before settling', () async {
-    when(
-      () => usecase(any()),
-    ).thenAnswer((_) async => const Right(ReportDetail(id: 'r1')));
+    when(() => usecase(any()))
+        .thenAnswer((_) async => const Right(ReportDetail(id: 'r1')));
 
     final future = notifier().submit(
       photoPath: '/tmp/x.jpg',

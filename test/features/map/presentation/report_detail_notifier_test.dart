@@ -65,13 +65,11 @@ void main() {
     );
     addTearDown(container.dispose);
 
-    when(
-      () => detailUsecase(any()),
-    ).thenAnswer((_) async => const Right(detail));
+    when(() => detailUsecase(any()))
+        .thenAnswer((_) async => const Right(detail));
     when(() => historyUsecase(any())).thenAnswer((_) async => const Right([]));
-    when(
-      () => cachedRoleUsecase(any()),
-    ).thenAnswer((_) async => const Right(UserRole.user));
+    when(() => cachedRoleUsecase(any()))
+        .thenAnswer((_) async => const Right(UserRole.user));
   });
 
   ReportDetailNotifier notifier() =>
@@ -105,18 +103,15 @@ void main() {
     expect(state.history.value, isEmpty);
     expect(state.isResolver.value, isFalse);
 
-    verify(
-      () => detailUsecase(const GetReportDetailParams(id: 'r1')),
-    ).called(1);
-    verify(
-      () => historyUsecase(const GetReportHistoryParams(id: 'r1')),
-    ).called(1);
+    verify(() => detailUsecase(const GetReportDetailParams(id: 'r1')))
+        .called(1);
+    verify(() => historyUsecase(const GetReportHistoryParams(id: 'r1')))
+        .called(1);
   });
 
   test('isResolver is true when the cached role is resolver', () async {
-    when(
-      () => cachedRoleUsecase(any()),
-    ).thenAnswer((_) async => const Right(UserRole.resolver));
+    when(() => cachedRoleUsecase(any()))
+        .thenAnswer((_) async => const Right(UserRole.resolver));
 
     await build();
 
@@ -124,9 +119,8 @@ void main() {
   });
 
   test('isResolver defaults to false when the role lookup fails', () async {
-    when(
-      () => cachedRoleUsecase(any()),
-    ).thenAnswer((_) async => const Left(Failure.cache('no cached role')));
+    when(() => cachedRoleUsecase(any()))
+        .thenAnswer((_) async => const Left(Failure.cache('no cached role')));
 
     await build();
 
@@ -139,9 +133,8 @@ void main() {
   test(
     'a detail failure surfaces an AsyncError carrying the Failure',
     () async {
-      when(
-        () => detailUsecase(any()),
-      ).thenAnswer((_) async => const Left(Failure.notFound()));
+      when(() => detailUsecase(any()))
+          .thenAnswer((_) async => const Left(Failure.notFound()));
 
       await build();
 
@@ -154,9 +147,8 @@ void main() {
   test(
     'a history failure surfaces an AsyncError on both history and timeline',
     () async {
-      when(
-        () => historyUsecase(any()),
-      ).thenAnswer((_) async => const Left(Failure.network()));
+      when(() => historyUsecase(any()))
+          .thenAnswer((_) async => const Left(Failure.network()));
 
       await build();
 
@@ -183,28 +175,25 @@ void main() {
     },
   );
 
-  test(
-    'a non-empty history marks its last non-terminal entry current and appends future steps',
-    () async {
-      when(() => historyUsecase(any())).thenAnswer(
-        (_) async => const Right([
-          StatusHistoryEntry(id: 's1', toStatus: ReportStatus.reported),
-          StatusHistoryEntry(id: 's2', toStatus: ReportStatus.acknowledged),
-        ]),
-      );
+  test('a non-empty history marks its last non-terminal entry current and appends future steps', () async {
+    when(() => historyUsecase(any())).thenAnswer(
+      (_) async => const Right([
+        StatusHistoryEntry(id: 's1', toStatus: ReportStatus.reported),
+        StatusHistoryEntry(id: 's2', toStatus: ReportStatus.acknowledged),
+      ]),
+    );
 
-      await build();
+    await build();
 
-      final steps = container.read(reportDetailProvider('r1')).timeline.value!;
+    final steps = container.read(reportDetailProvider('r1')).timeline.value!;
 
-      expect(steps[0].status, ReportStatus.reported);
-      expect(steps[0].state, TimelineStepState.done);
-      expect(steps[1].status, ReportStatus.acknowledged);
-      expect(steps[1].state, TimelineStepState.current);
-      expect(steps.last.status, ReportStatus.resolved);
-      expect(steps.last.state, TimelineStepState.future);
-    },
-  );
+    expect(steps[0].status, ReportStatus.reported);
+    expect(steps[0].state, TimelineStepState.done);
+    expect(steps[1].status, ReportStatus.acknowledged);
+    expect(steps[1].state, TimelineStepState.current);
+    expect(steps.last.status, ReportStatus.resolved);
+    expect(steps.last.state, TimelineStepState.future);
+  });
 
   test(
     'a terminal status (rejected) leaves no future steps on the ladder',
@@ -247,9 +236,8 @@ void main() {
   group('submitStatus', () {
     test('success stores the updated report in updateStatus', () async {
       const updated = ReportDetail(id: 'r1', status: ReportStatus.acknowledged);
-      when(
-        () => updateStatusUsecase(any()),
-      ).thenAnswer((_) async => const Right(updated));
+      when(() => updateStatusUsecase(any()))
+          .thenAnswer((_) async => const Right(updated));
 
       await build();
 
@@ -273,9 +261,8 @@ void main() {
     });
 
     test('failure surfaces an AsyncError carrying the Failure', () async {
-      when(
-        () => updateStatusUsecase(any()),
-      ).thenAnswer((_) async => const Left(Failure.forbidden()));
+      when(() => updateStatusUsecase(any()))
+          .thenAnswer((_) async => const Left(Failure.forbidden()));
 
       await build();
 
@@ -288,9 +275,8 @@ void main() {
 
     test('goes through a loading state before settling', () async {
       const updated = ReportDetail(id: 'r1', status: ReportStatus.acknowledged);
-      when(
-        () => updateStatusUsecase(any()),
-      ).thenAnswer((_) async => const Right(updated));
+      when(() => updateStatusUsecase(any()))
+          .thenAnswer((_) async => const Right(updated));
 
       await build();
 

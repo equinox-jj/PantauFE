@@ -18,9 +18,8 @@ void main() {
   });
 
   test('delegates to repository.hasSeenOnboarding and returns Right', () async {
-    when(
-      () => repository.hasSeenOnboarding(),
-    ).thenAnswer((_) async => const Right(true));
+    when(() => repository.hasSeenOnboarding())
+        .thenAnswer((_) async => const Right(true));
 
     final result = await usecase(const NoParams());
 
@@ -29,9 +28,8 @@ void main() {
   });
 
   test('propagates a Left(Failure) from the repository unchanged', () async {
-    when(
-      () => repository.hasSeenOnboarding(),
-    ).thenAnswer((_) async => const Left(Failure.cache()));
+    when(() => repository.hasSeenOnboarding())
+        .thenAnswer((_) async => const Left(Failure.cache()));
 
     final result = await usecase(const NoParams());
 

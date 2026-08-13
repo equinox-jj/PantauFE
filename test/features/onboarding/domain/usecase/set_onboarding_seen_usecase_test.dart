@@ -18,9 +18,8 @@ void main() {
   });
 
   test('delegates to repository.setOnboardingSeen and returns Right', () async {
-    when(
-      () => repository.setOnboardingSeen(),
-    ).thenAnswer((_) async => const Right(null));
+    when(() => repository.setOnboardingSeen())
+        .thenAnswer((_) async => const Right(null));
 
     final result = await usecase(const NoParams());
 
@@ -29,9 +28,8 @@ void main() {
   });
 
   test('propagates a Left(Failure) from the repository unchanged', () async {
-    when(
-      () => repository.setOnboardingSeen(),
-    ).thenAnswer((_) async => const Left(Failure.cache()));
+    when(() => repository.setOnboardingSeen())
+        .thenAnswer((_) async => const Left(Failure.cache()));
 
     final result = await usecase(const NoParams());
 

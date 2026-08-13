@@ -44,9 +44,8 @@ void main() {
   });
 
   test('a failed load surfaces an AsyncError carrying the Failure', () async {
-    when(
-      () => usecase(any()),
-    ).thenAnswer((_) async => const Left(Failure.server(500, 'boom')));
+    when(() => usecase(any()))
+        .thenAnswer((_) async => const Left(Failure.server(500, 'boom')));
 
     container.read(myReportsProvider);
     await pumpEventQueue();
@@ -66,9 +65,8 @@ void main() {
 
       await container.read(myReportsProvider.notifier).refresh();
 
-      verify(
-        () => usecase(const GetMyReportsParams(limit: kMyReportsLimit)),
-      ).called(2);
+      verify(() => usecase(const GetMyReportsParams(limit: kMyReportsLimit)))
+          .called(2);
     },
   );
 }

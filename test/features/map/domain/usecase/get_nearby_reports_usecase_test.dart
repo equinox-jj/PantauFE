@@ -17,17 +17,14 @@ void main() {
     usecase = GetNearbyReportsUsecase(mapRepository: repository);
   });
 
-  test(
-    'GetNearbyReportsParams equatable props include every field and default limit',
-    () {
-      const params = GetNearbyReportsParams(
-        latitude: 1,
-        longitude: 2,
-        radiusInMeters: 3,
-      );
-      expect(params.props, [1.0, 2.0, 3, 10]);
-    },
-  );
+  test('GetNearbyReportsParams equatable props include every field and default limit', () {
+    const params = GetNearbyReportsParams(
+      latitude: 1,
+      longitude: 2,
+      radiusInMeters: 3,
+    );
+    expect(params.props, [1.0, 2.0, 3, 10]);
+  });
 
   test(
     'delegates to repository.getNearbyReports with the params fields',

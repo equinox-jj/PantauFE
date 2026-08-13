@@ -111,9 +111,8 @@ void main() {
     test(
       'marks completion as data(true) even when the usecase fails',
       () async {
-        when(
-          () => usecase(any()),
-        ).thenAnswer((_) async => const Left(Failure.cache()));
+        when(() => usecase(any()))
+            .thenAnswer((_) async => const Left(Failure.cache()));
 
         await notifier().complete();
 

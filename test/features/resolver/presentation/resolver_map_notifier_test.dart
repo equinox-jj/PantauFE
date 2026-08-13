@@ -70,41 +70,37 @@ void main() {
   });
 
   group('load', () {
-    test(
-      'success stores the fetched QueueResult with the map-specific radius and limit',
-      () async {
-        when(() => queueUsecase(any())).thenAnswer(
-          (_) async => Right(_result(items: const [QueueReport(id: 'q1')])),
-        );
+    test('success stores the fetched QueueResult with the map-specific radius and limit', () async {
+      when(() => queueUsecase(any())).thenAnswer(
+        (_) async => Right(_result(items: const [QueueReport(id: 'q1')])),
+      );
 
-        await notifier().load(
-          tab: QueueTab.inProgress,
-          latitude: -6.2,
-          longitude: 106.8,
-        );
+      await notifier().load(
+        tab: QueueTab.inProgress,
+        latitude: -6.2,
+        longitude: 106.8,
+      );
 
-        final state = container.read(resolverMapProvider);
-        expect(state.reports.value?.items.single.id, 'q1');
+      final state = container.read(resolverMapProvider);
+      expect(state.reports.value?.items.single.id, 'q1');
 
-        verify(
-          () => queueUsecase(
-            const GetQueueParams(
-              tab: QueueTab.inProgress,
-              latitude: -6.2,
-              longitude: 106.8,
-              radiusMeter: kResolverMapRadiusInMeters,
-              limit: kResolverMapLimit,
-              offset: 0,
-            ),
+      verify(
+        () => queueUsecase(
+          const GetQueueParams(
+            tab: QueueTab.inProgress,
+            latitude: -6.2,
+            longitude: 106.8,
+            radiusMeter: kResolverMapRadiusInMeters,
+            limit: kResolverMapLimit,
+            offset: 0,
           ),
-        ).called(1);
-      },
-    );
+        ),
+      ).called(1);
+    });
 
     test('failure surfaces an AsyncError carrying the Failure', () async {
-      when(
-        () => queueUsecase(any()),
-      ).thenAnswer((_) async => const Left(Failure.network()));
+      when(() => queueUsecase(any()))
+          .thenAnswer((_) async => const Left(Failure.network()));
 
       await notifier().load(tab: QueueTab.open, latitude: 0, longitude: 0);
 
@@ -202,9 +198,8 @@ void main() {
     );
 
     test('success stores the returned places', () async {
-      when(
-        () => searchUsecase(any()),
-      ).thenAnswer((_) async => const Right([place]));
+      when(() => searchUsecase(any()))
+          .thenAnswer((_) async => const Right([place]));
 
       await notifier().searchPlaces('jakarta');
 
@@ -230,21 +225,17 @@ void main() {
       ).called(1);
     });
 
-    test(
-      'an empty (post-trim) query clears the search instead of calling the usecase',
-      () async {
-        notifier().selectPlace(place);
-        await notifier().searchPlaces('   ');
+    test('an empty (post-trim) query clears the search instead of calling the usecase', () async {
+      notifier().selectPlace(place);
+      await notifier().searchPlaces('   ');
 
-        expect(container.read(resolverMapProvider).placeSearch, isNull);
-        verifyNever(() => searchUsecase(any()));
-      },
-    );
+      expect(container.read(resolverMapProvider).placeSearch, isNull);
+      verifyNever(() => searchUsecase(any()));
+    });
 
     test('failure surfaces an AsyncError carrying the Failure', () async {
-      when(
-        () => searchUsecase(any()),
-      ).thenAnswer((_) async => const Left(Failure.network()));
+      when(() => searchUsecase(any()))
+          .thenAnswer((_) async => const Left(Failure.network()));
 
       await notifier().searchPlaces('jakarta');
 

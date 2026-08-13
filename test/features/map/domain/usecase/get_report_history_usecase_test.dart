@@ -24,9 +24,8 @@ void main() {
 
   test('delegates to repository.getReportHistory with the id', () async {
     const history = [StatusHistoryEntry(id: 's1')];
-    when(
-      () => repository.getReportHistory('r1'),
-    ).thenAnswer((_) async => const Right(history));
+    when(() => repository.getReportHistory('r1'))
+        .thenAnswer((_) async => const Right(history));
 
     final result = await usecase(const GetReportHistoryParams(id: 'r1'));
 
@@ -35,9 +34,8 @@ void main() {
   });
 
   test('propagates a Left(Failure) from the repository unchanged', () async {
-    when(
-      () => repository.getReportHistory('r1'),
-    ).thenAnswer((_) async => const Left(Failure.unknown('boom')));
+    when(() => repository.getReportHistory('r1'))
+        .thenAnswer((_) async => const Left(Failure.unknown('boom')));
 
     final result = await usecase(const GetReportHistoryParams(id: 'r1'));
 

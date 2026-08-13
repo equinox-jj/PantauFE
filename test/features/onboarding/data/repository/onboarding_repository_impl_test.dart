@@ -35,9 +35,8 @@ void main() {
     });
 
     test('returns Left(Failure) when the data source throws', () async {
-      when(
-        () => dataSource.hasSeenOnboarding(),
-      ).thenThrow(const CacheException('boom'));
+      when(() => dataSource.hasSeenOnboarding())
+          .thenThrow(const CacheException('boom'));
 
       final result = await repository.hasSeenOnboarding();
 
@@ -59,9 +58,8 @@ void main() {
     });
 
     test('returns Left(Failure) when the data source throws', () async {
-      when(
-        () => dataSource.setOnboardingSeen(),
-      ).thenThrow(const CacheException('boom'));
+      when(() => dataSource.setOnboardingSeen())
+          .thenThrow(const CacheException('boom'));
 
       final result = await repository.setOnboardingSeen();
 

@@ -120,15 +120,14 @@ void main() {
 
   group('getReportCategories', () {
     test('hits GET /categories and parses the body', () async {
-      when(
-        () => dioClient.get<dynamic>(ApiEndpoints.reportCategories),
-      ).thenAnswer(
-        (_) async => _response({
-          'data': [
-            {'id': 1, 'name': 'Pothole'},
-          ],
-        }),
-      );
+      when(() => dioClient.get<dynamic>(ApiEndpoints.reportCategories))
+          .thenAnswer(
+            (_) async => _response({
+              'data': [
+                {'id': 1, 'name': 'Pothole'},
+              ],
+            }),
+          );
 
       final result = await dataSource.getReportCategories();
 
@@ -137,9 +136,8 @@ void main() {
     });
 
     test('an unexpected thrown error becomes UnknownException', () async {
-      when(
-        () => dioClient.get<dynamic>(ApiEndpoints.reportCategories),
-      ).thenThrow(StateError('boom'));
+      when(() => dioClient.get<dynamic>(ApiEndpoints.reportCategories))
+          .thenThrow(StateError('boom'));
 
       await expectLater(
         dataSource.getReportCategories(),
@@ -150,13 +148,12 @@ void main() {
 
   group('getReportDetail', () {
     test('hits GET /reports/{id} and parses the body', () async {
-      when(
-        () => dioClient.get<dynamic>(ApiEndpoints.reportDetail('r1')),
-      ).thenAnswer(
-        (_) async => _response({
-          'data': {'id': 'r1', 'status': 'resolved'},
-        }),
-      );
+      when(() => dioClient.get<dynamic>(ApiEndpoints.reportDetail('r1')))
+          .thenAnswer(
+            (_) async => _response({
+              'data': {'id': 'r1', 'status': 'resolved'},
+            }),
+          );
 
       final result = await dataSource.getReportDetail('r1');
 
@@ -164,19 +161,18 @@ void main() {
     });
 
     test('rethrows a DioException as its mapped AppException', () async {
-      when(
-        () => dioClient.get<dynamic>(ApiEndpoints.reportDetail('missing')),
-      ).thenThrow(
-        DioException(
-          requestOptions: _options(),
-          response: Response(
-            requestOptions: _options(),
-            statusCode: 404,
-            data: {'message': 'Report not found'},
-          ),
-          type: DioExceptionType.badResponse,
-        ),
-      );
+      when(() => dioClient.get<dynamic>(ApiEndpoints.reportDetail('missing')))
+          .thenThrow(
+            DioException(
+              requestOptions: _options(),
+              response: Response(
+                requestOptions: _options(),
+                statusCode: 404,
+                data: {'message': 'Report not found'},
+              ),
+              type: DioExceptionType.badResponse,
+            ),
+          );
 
       await expectLater(
         dataSource.getReportDetail('missing'),
@@ -187,13 +183,12 @@ void main() {
 
   group('getReportHistory', () {
     test('parses a bare-array response body', () async {
-      when(
-        () => dioClient.get<dynamic>(ApiEndpoints.reportHistory('r1')),
-      ).thenAnswer(
-        (_) async => _response([
-          {'id': 's1', 'to_status': 'reported'},
-        ]),
-      );
+      when(() => dioClient.get<dynamic>(ApiEndpoints.reportHistory('r1')))
+          .thenAnswer(
+            (_) async => _response([
+              {'id': 's1', 'to_status': 'reported'},
+            ]),
+          );
 
       final result = await dataSource.getReportHistory('r1');
 
@@ -202,15 +197,14 @@ void main() {
     });
 
     test('parses an enveloped {status,message,data} response body', () async {
-      when(
-        () => dioClient.get<dynamic>(ApiEndpoints.reportHistory('r1')),
-      ).thenAnswer(
-        (_) async => _response({
-          'data': [
-            {'id': 's1', 'to_status': 'reported'},
-          ],
-        }),
-      );
+      when(() => dioClient.get<dynamic>(ApiEndpoints.reportHistory('r1')))
+          .thenAnswer(
+            (_) async => _response({
+              'data': [
+                {'id': 's1', 'to_status': 'reported'},
+              ],
+            }),
+          );
 
       final result = await dataSource.getReportHistory('r1');
 
@@ -219,14 +213,13 @@ void main() {
     });
 
     test('a non-map row in a bare array is dropped', () async {
-      when(
-        () => dioClient.get<dynamic>(ApiEndpoints.reportHistory('r1')),
-      ).thenAnswer(
-        (_) async => _response([
-          {'id': 's1', 'to_status': 'reported'},
-          'not-a-map',
-        ]),
-      );
+      when(() => dioClient.get<dynamic>(ApiEndpoints.reportHistory('r1')))
+          .thenAnswer(
+            (_) async => _response([
+              {'id': 's1', 'to_status': 'reported'},
+              'not-a-map',
+            ]),
+          );
 
       final result = await dataSource.getReportHistory('r1');
 
@@ -401,51 +394,48 @@ void main() {
   });
 
   group('searchPlaces', () {
-    test(
-      'hits GET on the Nominatim search endpoint with expected params and headers',
-      () async {
-        when(
-          () => dioClient.get<List<dynamic>>(
-            any(),
-            options: any(named: 'options'),
-            queryParameters: any(named: 'queryParameters'),
-          ),
-        ).thenAnswer(
-          (_) async => _response<List<dynamic>>([
-            {
-              'place_id': 1,
-              'lat': '-6.2',
-              'lon': '106.8',
-              'display_name': 'Monas',
-            },
-          ]),
-        );
+    test('hits GET on the Nominatim search endpoint with expected params and headers', () async {
+      when(
+        () => dioClient.get<List<dynamic>>(
+          any(),
+          options: any(named: 'options'),
+          queryParameters: any(named: 'queryParameters'),
+        ),
+      ).thenAnswer(
+        (_) async => _response<List<dynamic>>([
+          {
+            'place_id': 1,
+            'lat': '-6.2',
+            'lon': '106.8',
+            'display_name': 'Monas',
+          },
+        ]),
+      );
 
-        final result = await dataSource.searchPlaces(query: 'Monas', limit: 5);
+      final result = await dataSource.searchPlaces(query: 'Monas', limit: 5);
 
-        expect(result, hasLength(1));
-        expect(result.first.displayName, 'Monas');
+      expect(result, hasLength(1));
+      expect(result.first.displayName, 'Monas');
 
-        final captured = verify(
-          () => dioClient.get<List<dynamic>>(
-            captureAny(),
-            options: captureAny(named: 'options'),
-            queryParameters: captureAny(named: 'queryParameters'),
-          ),
-        ).captured;
-        final path = captured[0] as String;
-        final options = captured[1] as Options;
-        final query = captured[2] as Map<String, dynamic>;
+      final captured = verify(
+        () => dioClient.get<List<dynamic>>(
+          captureAny(),
+          options: captureAny(named: 'options'),
+          queryParameters: captureAny(named: 'queryParameters'),
+        ),
+      ).captured;
+      final path = captured[0] as String;
+      final options = captured[1] as Options;
+      final query = captured[2] as Map<String, dynamic>;
 
-        expect(path, contains('nominatim.openstreetmap.org/search'));
-        expect(options.headers?['User-Agent'], isNotNull);
-        expect(options.extra?[ApiEndpoints.kNoAuth], isTrue);
-        expect(query['q'], 'Monas');
-        expect(query['limit'], 5);
-        expect(query['countrycodes'], 'id');
-        expect(query.containsKey('viewbox'), isFalse);
-      },
-    );
+      expect(path, contains('nominatim.openstreetmap.org/search'));
+      expect(options.headers?['User-Agent'], isNotNull);
+      expect(options.extra?[ApiEndpoints.kNoAuth], isTrue);
+      expect(query['q'], 'Monas');
+      expect(query['limit'], 5);
+      expect(query['countrycodes'], 'id');
+      expect(query.containsKey('viewbox'), isFalse);
+    });
 
     test('includes a viewbox query param when provided', () async {
       when(

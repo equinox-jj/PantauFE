@@ -26,7 +26,7 @@ MapRepository mapRepository(Ref ref) {
 PlaceRepository placeRepository(Ref ref) {
   final mapRemoteDataSource = ref.watch(mapRemoteDataSourceProvider);
 
-  return PlaceRepositoryImpl(mapRemoteDataSource: mapRemoteDataSource);
+  return MapRepositoryImpl(mapRemoteDataSource: mapRemoteDataSource);
 }
 
 @Riverpod(keepAlive: true)

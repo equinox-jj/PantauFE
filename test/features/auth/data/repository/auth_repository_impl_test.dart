@@ -30,59 +30,55 @@ void main() {
       userProfileStorage: userProfileStorage,
     );
 
-    when(
-      () => tokenStorage.saveTokens(accessToken: any(named: 'accessToken')),
-    ).thenAnswer((_) async {});
+    when(() => tokenStorage.saveTokens(accessToken: any(named: 'accessToken')))
+        .thenAnswer((_) async {});
     when(() => userProfileStorage.save(any())).thenAnswer((_) async {});
   });
 
   group('register', () {
-    test(
-      'returns Right of the mapped entity and persists token and user on success',
-      () async {
-        when(
-          () => dataSource.register(
-            email: any(named: 'email'),
-            password: any(named: 'password'),
-            displayName: any(named: 'displayName'),
-          ),
-        ).thenAnswer(
-          (_) async => RegisterModel(
-            status: true,
-            data: const RegisterDataModel(
-              token: 'tok',
-              userResponse: RegisterUserModel(
-                uuid: 'u1',
-                email: 'a@b.com',
-                username: 'alice',
-                role: 'USER',
-              ),
+    test('returns Right of the mapped entity and persists token and user on success', () async {
+      when(
+        () => dataSource.register(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+          displayName: any(named: 'displayName'),
+        ),
+      ).thenAnswer(
+        (_) async => RegisterModel(
+          status: true,
+          data: const RegisterDataModel(
+            token: 'tok',
+            userResponse: RegisterUserModel(
+              uuid: 'u1',
+              email: 'a@b.com',
+              username: 'alice',
+              role: 'USER',
             ),
           ),
-        );
+        ),
+      );
 
-        final result = await repository.register(
-          email: 'a@b.com',
-          password: 'secret',
-          displayName: 'Alice',
-        );
+      final result = await repository.register(
+        email: 'a@b.com',
+        password: 'secret',
+        displayName: 'Alice',
+      );
 
-        expect(result.isRight(), isTrue);
-        result.fold(
-          (l) => fail('expected Right, got Left($l)'),
-          (r) => expect(r.data?.user?.uuid, 'u1'),
-        );
+      expect(result.isRight(), isTrue);
+      result.fold(
+        (l) => fail('expected Right, got Left($l)'),
+        (r) => expect(r.data?.user?.uuid, 'u1'),
+      );
 
-        verify(() => tokenStorage.saveTokens(accessToken: 'tok')).called(1);
-        final captured =
-            verify(() => userProfileStorage.save(captureAny())).captured.single
-                as Map<String, dynamic>;
-        expect(captured['uuid'], 'u1');
-        expect(captured['email'], 'a@b.com');
-        expect(captured['username'], 'alice');
-        expect(captured['role'], 'USER');
-      },
-    );
+      verify(() => tokenStorage.saveTokens(accessToken: 'tok')).called(1);
+      final captured =
+          verify(() => userProfileStorage.save(captureAny())).captured.single
+              as Map<String, dynamic>;
+      expect(captured['uuid'], 'u1');
+      expect(captured['email'], 'a@b.com');
+      expect(captured['username'], 'alice');
+      expect(captured['role'], 'USER');
+    });
 
     test('does not persist a token when the response carries none', () async {
       when(
@@ -165,38 +161,35 @@ void main() {
   });
 
   group('login', () {
-    test(
-      'returns Right of the mapped entity and persists token and user on success',
-      () async {
-        when(
-          () => dataSource.login(
-            email: any(named: 'email'),
-            password: any(named: 'password'),
+    test('returns Right of the mapped entity and persists token and user on success', () async {
+      when(
+        () => dataSource.login(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+        ),
+      ).thenAnswer(
+        (_) async => LoginModel(
+          status: true,
+          data: const LoginDataModel(
+            token: 'tok',
+            userResponse: LoginUserModel(uuid: 'u1', email: 'a@b.com'),
           ),
-        ).thenAnswer(
-          (_) async => LoginModel(
-            status: true,
-            data: const LoginDataModel(
-              token: 'tok',
-              userResponse: LoginUserModel(uuid: 'u1', email: 'a@b.com'),
-            ),
-          ),
-        );
+        ),
+      );
 
-        final result = await repository.login(
-          email: 'a@b.com',
-          password: 'secret',
-        );
+      final result = await repository.login(
+        email: 'a@b.com',
+        password: 'secret',
+      );
 
-        expect(result.isRight(), isTrue);
-        result.fold(
-          (l) => fail('expected Right, got Left($l)'),
-          (r) => expect(r.data?.user?.uuid, 'u1'),
-        );
-        verify(() => tokenStorage.saveTokens(accessToken: 'tok')).called(1);
-        verify(() => userProfileStorage.save(any())).called(1);
-      },
-    );
+      expect(result.isRight(), isTrue);
+      result.fold(
+        (l) => fail('expected Right, got Left($l)'),
+        (r) => expect(r.data?.user?.uuid, 'u1'),
+      );
+      verify(() => tokenStorage.saveTokens(accessToken: 'tok')).called(1);
+      verify(() => userProfileStorage.save(any())).called(1);
+    });
 
     test(
       'leaves any previously cached user untouched when the response has none',
@@ -297,9 +290,8 @@ void main() {
             'created_at': '2024-01-01T00:00:00.000Z',
           },
         );
-        when(
-          () => dataSource.getMe(),
-        ).thenAnswer((_) async => UserProfileModel(status: true));
+        when(() => dataSource.getMe())
+            .thenAnswer((_) async => UserProfileModel(status: true));
 
         final result = await repository.getCurrentUser();
 
@@ -377,9 +369,8 @@ void main() {
     );
 
     test('returns Left(Failure) when getMe throws', () async {
-      when(
-        () => userProfileStorage.read(),
-      ).thenAnswer((_) async => {'uuid': 'u1'});
+      when(() => userProfileStorage.read())
+          .thenAnswer((_) async => {'uuid': 'u1'});
       when(() => dataSource.getMe()).thenThrow(const NetworkException());
 
       final result = await repository.getCurrentUser();
@@ -406,9 +397,8 @@ void main() {
 
   group('getCachedRole', () {
     test('returns Right(role) parsed from the cached profile', () async {
-      when(
-        () => userProfileStorage.read(),
-      ).thenAnswer((_) async => {'role': 'RESOLVER'});
+      when(() => userProfileStorage.read())
+          .thenAnswer((_) async => {'role': 'RESOLVER'});
 
       final result = await repository.getCachedRole();
 

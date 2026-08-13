@@ -24,9 +24,8 @@ void main() {
 
   test('delegates to repository.getReportDetail with the id', () async {
     const detail = ReportDetail(id: 'r1');
-    when(
-      () => repository.getReportDetail('r1'),
-    ).thenAnswer((_) async => const Right(detail));
+    when(() => repository.getReportDetail('r1'))
+        .thenAnswer((_) async => const Right(detail));
 
     final result = await usecase(const GetReportDetailParams(id: 'r1'));
 
@@ -35,9 +34,8 @@ void main() {
   });
 
   test('propagates a Left(Failure) from the repository unchanged', () async {
-    when(
-      () => repository.getReportDetail('missing'),
-    ).thenAnswer((_) async => const Left(Failure.notFound()));
+    when(() => repository.getReportDetail('missing'))
+        .thenAnswer((_) async => const Left(Failure.notFound()));
 
     final result = await usecase(const GetReportDetailParams(id: 'missing'));
 

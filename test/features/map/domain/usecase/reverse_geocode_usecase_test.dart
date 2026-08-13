@@ -44,9 +44,8 @@ void main() {
       );
 
       expect(result, const Right<Failure, Place?>(place));
-      verify(
-        () => repository.reverseGeocode(latitude: -6.2, longitude: 106.8),
-      ).called(1);
+      verify(() => repository.reverseGeocode(latitude: -6.2, longitude: 106.8))
+          .called(1);
     },
   );
 
