@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
@@ -53,9 +53,8 @@ class ReportStatusActionPanel extends StatelessWidget {
       builder: (context, ref, _) {
         final isResolver =
             ref.watch(
-              reportDetailProvider(
-                reportId,
-              ).select((state) => state.isResolver.value),
+              reportDetailProvider(reportId)
+                  .select((state) => state.isResolver.value),
             ) ??
             false;
         if (!isResolver) return const SizedBox.shrink();
@@ -152,9 +151,8 @@ class _StatusUpdateSheetState extends ConsumerState<_StatusUpdateSheet> {
     // starts from whatever state a still-mounted page left behind, which is
     // only ever non-null right after this exact callback already popped it.
     ref.listen(
-      reportDetailProvider(
-        widget.reportId,
-      ).select((state) => state.updateStatus),
+      reportDetailProvider(widget.reportId)
+          .select((state) => state.updateStatus),
       (previous, next) {
         if (next case AsyncData(value: final report?)) {
           if (report.id != null && Navigator.of(context).canPop()) {
@@ -165,9 +163,8 @@ class _StatusUpdateSheetState extends ConsumerState<_StatusUpdateSheet> {
     );
 
     final isSubmitting = ref.watch(
-      reportDetailProvider(
-        widget.reportId,
-      ).select((state) => state.updateStatus.isLoading),
+      reportDetailProvider(widget.reportId)
+          .select((state) => state.updateStatus.isLoading),
     );
 
     return Padding(

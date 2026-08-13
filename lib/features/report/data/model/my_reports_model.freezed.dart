@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'my_reports_model.dart';
@@ -9,6 +9,7 @@ part of 'my_reports_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$MyReportsModelCopyWithImpl<$Res>
 /// Create a copy of MyReportsModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? status = freezed,Object? message = freezed,Object? data = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(MyReportsModel(
 status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as bool?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String?,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
@@ -359,7 +360,7 @@ class _$MyReportsDataModelCopyWithImpl<$Res>
 /// Create a copy of MyReportsDataModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? items = freezed,Object? meta = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(MyReportsDataModel(
 items: freezed == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<FeedReportsDataModel>?,meta: freezed == meta ? _self.meta : meta // ignore: cast_nullable_to_non_nullable
 as MyReportsMetaModel?,
@@ -515,7 +516,7 @@ return $default(_that.items,_that.meta);case _:
 @JsonSerializable()
 
 class _MyReportsDataModel implements MyReportsDataModel {
-  const _MyReportsDataModel({@JsonKey(name: "items") final  List<FeedReportsDataModel>? items, @JsonKey(name: "meta") this.meta}): _items = items;
+  const _MyReportsDataModel({@JsonKey(name: "items")  List<FeedReportsDataModel>? items, @JsonKey(name: "meta") this.meta}): _items = items;
   factory _MyReportsDataModel.fromJson(Map<String, dynamic> json) => _$MyReportsDataModelFromJson(json);
 
  final  List<FeedReportsDataModel>? _items;
@@ -657,7 +658,7 @@ class _$MyReportsMetaModelCopyWithImpl<$Res>
 /// Create a copy of MyReportsMetaModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? limit = freezed,Object? offset = freezed,Object? total = freezed,Object? hasNext = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(MyReportsMetaModel(
 limit: freezed == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
 as int?,offset: freezed == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
 as int?,total: freezed == total ? _self.total : total // ignore: cast_nullable_to_non_nullable

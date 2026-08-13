@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'map_notifier.dart';
@@ -9,6 +9,7 @@ part of 'map_notifier.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -103,7 +104,7 @@ class _$MapPageStateCopyWithImpl<$Res>
 /// Create a copy of MapPageState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? currentLocation = freezed,Object? loadedArea = freezed,Object? categoryFilter = freezed,Object? mapLocation = null,Object? nearbyReports = null,Object? visibleReports = null,Object? filteredReports = null,Object? placeSearch = freezed,Object? searchedPlace = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(MapPageState(
 currentLocation: freezed == currentLocation ? _self.currentLocation : currentLocation // ignore: cast_nullable_to_non_nullable
 as LatLng?,loadedArea: freezed == loadedArea ? _self.loadedArea : loadedArea // ignore: cast_nullable_to_non_nullable
 as LatLng?,categoryFilter: freezed == categoryFilter ? _self.categoryFilter : categoryFilter // ignore: cast_nullable_to_non_nullable
@@ -266,7 +267,7 @@ return $default(_that.currentLocation,_that.loadedArea,_that.categoryFilter,_tha
 
 
 class _MapPageState implements MapPageState {
-  const _MapPageState({this.currentLocation, this.loadedArea, this.categoryFilter, this.mapLocation = const AsyncData(null), this.nearbyReports = const AsyncData([]), final  List<NearbyReport> visibleReports = const [], final  List<NearbyReport> filteredReports = const [], this.placeSearch, this.searchedPlace}): _visibleReports = visibleReports,_filteredReports = filteredReports;
+  const _MapPageState({this.currentLocation, this.loadedArea, this.categoryFilter, this.mapLocation = const AsyncData(null), this.nearbyReports = const AsyncData([]),  List<NearbyReport> visibleReports = const [],  List<NearbyReport> filteredReports = const [], this.placeSearch, this.searchedPlace}): _visibleReports = visibleReports,_filteredReports = filteredReports;
   
 
 /// The last device position that resolved, for the pin marking it on the

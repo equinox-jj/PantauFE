@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -32,9 +32,8 @@ class ReportResubmitButton extends StatelessWidget {
       builder: (context, ref, _) {
         final isResolver =
             ref.watch(
-              reportDetailProvider(
-                reportId,
-              ).select((state) => state.isResolver.value),
+              reportDetailProvider(reportId)
+                  .select((state) => state.isResolver.value),
             ) ??
             false;
         if (isResolver) return const SizedBox.shrink();

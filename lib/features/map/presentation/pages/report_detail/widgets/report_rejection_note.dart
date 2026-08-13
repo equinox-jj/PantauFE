@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
@@ -30,9 +30,8 @@ class ReportRejectionNote extends StatelessWidget {
     return Consumer(
       builder: (context, ref, _) {
         final steps = ref.watch(
-          reportDetailProvider(
-            reportId,
-          ).select((state) => state.timeline.value),
+          reportDetailProvider(reportId)
+              .select((state) => state.timeline.value),
         );
         // The rejected entry is always the last step — rejected leaves the
         // ladder, so no future steps are appended after it.

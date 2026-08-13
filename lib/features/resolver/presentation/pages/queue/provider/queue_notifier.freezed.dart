@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'queue_notifier.dart';
@@ -9,6 +9,7 @@ part of 'queue_notifier.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -65,7 +66,7 @@ class _$QueueListStateCopyWithImpl<$Res>
 /// Create a copy of QueueListState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? counts = null,Object? hasNext = null,Object? isLoadingMore = null,Object? loadMoreFailed = null,}) {
-  return _then(_self.copyWith(
+  return _then(QueueListState(
 items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<QueueReport>,counts: null == counts ? _self.counts : counts // ignore: cast_nullable_to_non_nullable
 as QueueCounts,hasNext: null == hasNext ? _self.hasNext : hasNext // ignore: cast_nullable_to_non_nullable
@@ -212,7 +213,7 @@ return $default(_that.items,_that.counts,_that.hasNext,_that.isLoadingMore,_that
 
 
 class _QueueListState implements QueueListState {
-  const _QueueListState({required final  List<QueueReport> items, required this.counts, required this.hasNext, this.isLoadingMore = false, this.loadMoreFailed = false}): _items = items;
+  const _QueueListState({required  List<QueueReport> items, required this.counts, required this.hasNext, this.isLoadingMore = false, this.loadMoreFailed = false}): _items = items;
   
 
  final  List<QueueReport> _items;
@@ -344,7 +345,7 @@ class _$QueuePageStateCopyWithImpl<$Res>
 /// Create a copy of QueuePageState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? tab = null,Object? queue = null,}) {
-  return _then(_self.copyWith(
+  return _then(QueuePageState(
 tab: null == tab ? _self.tab : tab // ignore: cast_nullable_to_non_nullable
 as QueueTab,queue: null == queue ? _self.queue : queue // ignore: cast_nullable_to_non_nullable
 as AsyncValue<QueueListState>,

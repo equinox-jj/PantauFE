@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'nearby_reports_model.dart';
@@ -9,6 +9,7 @@ part of 'nearby_reports_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$NearbyReportsModelCopyWithImpl<$Res>
 /// Create a copy of NearbyReportsModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? status = freezed,Object? message = freezed,Object? data = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(NearbyReportsModel(
 status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as bool?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String?,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
@@ -211,7 +212,7 @@ return $default(_that.status,_that.message,_that.data);case _:
 @JsonSerializable()
 
 class _NearbyReportsModel implements NearbyReportsModel {
-  const _NearbyReportsModel({@JsonKey(name: "status") this.status, @JsonKey(name: "message") this.message, @JsonKey(name: "data") final  List<NearbyReportsDataModel>? data}): _data = data;
+  const _NearbyReportsModel({@JsonKey(name: "status") this.status, @JsonKey(name: "message") this.message, @JsonKey(name: "data")  List<NearbyReportsDataModel>? data}): _data = data;
   factory _NearbyReportsModel.fromJson(Map<String, dynamic> json) => _$NearbyReportsModelFromJson(json);
 
 @override@JsonKey(name: "status") final  bool? status;
@@ -343,7 +344,7 @@ class _$NearbyReportsDataModelCopyWithImpl<$Res>
 /// Create a copy of NearbyReportsDataModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? category = freezed,Object? status = freezed,Object? photoUrl = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? createdAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(NearbyReportsDataModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as NearbyReportsCategoryModel?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -648,7 +649,7 @@ class _$NearbyReportsCategoryModelCopyWithImpl<$Res>
 /// Create a copy of NearbyReportsCategoryModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? slug = freezed,Object? isActive = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(NearbyReportsCategoryModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,slug: freezed == slug ? _self.slug : slug // ignore: cast_nullable_to_non_nullable

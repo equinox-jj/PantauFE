@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
@@ -49,9 +49,8 @@ class ReportStatusTimeline extends StatelessWidget {
           Consumer(
             builder: (context, ref, _) {
               final state = ref.watch(
-                reportDetailProvider(
-                  reportId,
-                ).select((state) => state.timeline),
+                reportDetailProvider(reportId)
+                    .select((state) => state.timeline),
               );
 
               return switch (state) {

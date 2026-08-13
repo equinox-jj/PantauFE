@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'resolver_model.dart';
@@ -9,6 +9,7 @@ part of 'resolver_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -66,7 +67,7 @@ class _$QueueModelCopyWithImpl<$Res>
 /// Create a copy of QueueModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? status = freezed,Object? message = freezed,Object? data = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(QueueModel(
 status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as bool?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String?,data: freezed == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
@@ -359,7 +360,7 @@ class _$QueueDataModelCopyWithImpl<$Res>
 /// Create a copy of QueueDataModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? items = freezed,Object? meta = freezed,Object? counts = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(QueueDataModel(
 items: freezed == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<QueueReportDataModel>?,meta: freezed == meta ? _self.meta : meta // ignore: cast_nullable_to_non_nullable
 as QueueMetaModel?,counts: freezed == counts ? _self.counts : counts // ignore: cast_nullable_to_non_nullable
@@ -528,7 +529,7 @@ return $default(_that.items,_that.meta,_that.counts);case _:
 @JsonSerializable()
 
 class _QueueDataModel implements QueueDataModel {
-  const _QueueDataModel({@JsonKey(name: "items") final  List<QueueReportDataModel>? items, @JsonKey(name: "meta") this.meta, @JsonKey(name: "counts") this.counts}): _items = items;
+  const _QueueDataModel({@JsonKey(name: "items")  List<QueueReportDataModel>? items, @JsonKey(name: "meta") this.meta, @JsonKey(name: "counts") this.counts}): _items = items;
   factory _QueueDataModel.fromJson(Map<String, dynamic> json) => _$QueueDataModelFromJson(json);
 
  final  List<QueueReportDataModel>? _items;
@@ -684,7 +685,7 @@ class _$QueueReportDataModelCopyWithImpl<$Res>
 /// Create a copy of QueueReportDataModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? category = freezed,Object? description = freezed,Object? photoUrl = freezed,Object? status = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceMeter = freezed,Object? createdAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(QueueReportDataModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as QueueCategoryModel?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -995,7 +996,7 @@ class _$QueueCategoryModelCopyWithImpl<$Res>
 /// Create a copy of QueueCategoryModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? slug = freezed,Object? isActive = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(QueueCategoryModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,slug: freezed == slug ? _self.slug : slug // ignore: cast_nullable_to_non_nullable
@@ -1267,7 +1268,7 @@ class _$QueueMetaModelCopyWithImpl<$Res>
 /// Create a copy of QueueMetaModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? limit = freezed,Object? offset = freezed,Object? total = freezed,Object? hasNext = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(QueueMetaModel(
 limit: freezed == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
 as int?,offset: freezed == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
 as int?,total: freezed == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
@@ -1539,7 +1540,7 @@ class _$QueueCountsModelCopyWithImpl<$Res>
 /// Create a copy of QueueCountsModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? open = freezed,Object? inProgress = freezed,Object? resolved = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(QueueCountsModel(
 open: freezed == open ? _self.open : open // ignore: cast_nullable_to_non_nullable
 as int?,inProgress: freezed == inProgress ? _self.inProgress : inProgress // ignore: cast_nullable_to_non_nullable
 as int?,resolved: freezed == resolved ? _self.resolved : resolved // ignore: cast_nullable_to_non_nullable
