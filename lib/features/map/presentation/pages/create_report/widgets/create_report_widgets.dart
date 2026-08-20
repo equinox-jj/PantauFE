@@ -313,70 +313,85 @@ class _LocationLines extends StatelessWidget {
   }
 }
 
-/// Photo slot of the compose form: empty prompt, or the picked image with a
-/// retake action.
+/// Photo slots of the compose form: 1 to [maxPhotos] images as a grid of
+/// square tiles, each removable, plus an add tile while under the cap.
+///
+/// Before any fresh photo is picked on a resubmit, the rejected report's own
+/// photo is shown once as a dimmed reference tile that doubles as the add
+/// trigger — reference only, since filing always needs a fresh local file.
 class ReportPhotoPicker extends StatelessWidget {
   const ReportPhotoPicker({
     super.key,
-    required this.photoPath,
-    required this.onPick,
+    required this.photoPaths,
+    required this.maxPhotos,
+    required this.onAdd,
+    required this.onRemove,
     this.errorText,
     this.initialPhotoUrl,
   });
 
-  final String? photoPath;
+  final List<String> photoPaths;
 
-  /// Null disables the picker (e.g. while submitting), rendering the disabled
+  /// Upper bound on [photoPaths]; the add tile hides once this is reached.
+  final int maxPhotos;
+
+  /// Null disables adding (e.g. while submitting), rendering the disabled
   /// affordance instead of an inert tap target.
-  final VoidCallback? onPick;
+  final VoidCallback? onAdd;
+
+  /// Null disables removal (e.g. while submitting).
+  final ValueChanged<int>? onRemove;
 
   /// Set after a failed validation pass.
   final String? errorText;
 
   /// The photo of the report being resubmitted. Reference only — a report can
-  /// only ever be filed with a fresh local file, so this never satisfies the
-  /// photo requirement on its own; picking a new one still replaces it.
+  /// only ever be filed with fresh local files, so this never satisfies the
+  /// photo requirement on its own; picking the first new photo replaces it.
   final String? initialPhotoUrl;
 
-  /// Local: no token in the scale covers a disabled-affordance dim.
-  static const double _disabledOpacity = 0.5;
+  static const double _tileSize = 84;
 
   @override
   Widget build(BuildContext context) {
-    final path = photoPath;
-    final disabled = onPick == null;
+    final showReference = photoPaths.isEmpty && initialPhotoUrl != null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Opacity(
-          opacity: disabled ? _disabledOpacity : 1,
-          child: GestureDetector(
-            onTap: onPick,
-            child: ClipRRect(
-              borderRadius: AppRadius.radiusXl,
-              child: AspectRatio(
-                aspectRatio: 4 / 3,
-                child: switch ((path, initialPhotoUrl)) {
-                  (final path?, _) => Image.file(File(path), fit: BoxFit.cover),
-                  (null, final url?) => _PreviousPhotoSlot(photoUrl: url),
-                  (null, null) => const _EmptyPhotoSlot(),
-                },
-              ),
+        Row(
+          children: [
+            Text('Photos', style: AppTypography.label),
+            const Spacer(),
+            Text(
+              '${photoPaths.length}/$maxPhotos',
+              style: AppTypography.label.copyWith(color: AppColors.textMuted),
             ),
-          ),
+          ],
         ),
-        if (path != null) ...[
-          const Gap(AppSpacing.xs2),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              onPressed: onPick,
-              icon: const Icon(Icons.refresh, size: AppIconSizes.md),
-              label: const Text('Retake'),
-            ),
-          ),
-        ],
+        const Gap(AppSpacing.xs2),
+        Wrap(
+          spacing: AppSpacing.xs2,
+          runSpacing: AppSpacing.xs2,
+          children: [
+            if (showReference)
+              _PreviousPhotoSlot(
+                photoUrl: initialPhotoUrl,
+                onTap: onAdd,
+                size: _tileSize,
+              )
+            else ...[
+              for (var index = 0; index < photoPaths.length; index++)
+                _PickedPhotoTile(
+                  path: photoPaths[index],
+                  onRemove: onRemove == null ? null : () => onRemove!(index),
+                  size: _tileSize,
+                ),
+              if (photoPaths.length < maxPhotos)
+                _AddPhotoTile(onTap: onAdd, size: _tileSize),
+            ],
+          ],
+        ),
         if (errorText != null) ...[
           const Gap(AppSpacing.xs2),
           Text(
@@ -391,79 +406,188 @@ class ReportPhotoPicker extends StatelessWidget {
   }
 }
 
-class _EmptyPhotoSlot extends StatelessWidget {
-  const _EmptyPhotoSlot();
+/// One picked photo, with a corner button to remove it.
+class _PickedPhotoTile extends StatelessWidget {
+  const _PickedPhotoTile({
+    required this.path,
+    required this.onRemove,
+    required this.size,
+  });
+
+  final String path;
+  final VoidCallback? onRemove;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.fillSubtle,
-        border: Border.all(color: AppColors.borderDefault),
-        borderRadius: AppRadius.radiusXl,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
         children: [
-          const Icon(
-            Icons.add_a_photo_outlined,
-            size: AppIconSizes.xl,
-            color: AppColors.accent,
+          ClipRRect(
+            borderRadius: AppRadius.radiusLg,
+            child: Image.file(
+              File(path),
+              width: size,
+              height: size,
+              fit: BoxFit.cover,
+            ),
           ),
-          const Gap(AppSpacing.xs2),
-          Text('Add a photo of the issue', style: AppTypography.body),
+          if (onRemove != null)
+            Positioned(
+              top: 4,
+              right: 4,
+              child: _RemoveButton(onPressed: onRemove!),
+            ),
         ],
       ),
     );
   }
 }
 
-/// A resubmission's starting point: the rejected report's own photo, dimmed
-/// under a prompt — reference only, since filing still needs a fresh local
-/// file.
-class _PreviousPhotoSlot extends StatelessWidget {
-  const _PreviousPhotoSlot({required this.photoUrl});
+class _RemoveButton extends StatelessWidget {
+  const _RemoveButton({required this.onPressed});
 
-  final String photoUrl;
+  final VoidCallback onPressed;
 
-  static const double _scrimOpacity = 0.55;
+  static const double _size = 22;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Image.network(
-          photoUrl,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) =>
-              const ColoredBox(color: AppColors.fillSubtle),
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: _size,
+        height: _size,
+        decoration: BoxDecoration(
+          color: AppColors.surfaceSunken.withValues(alpha: 0.75),
+          shape: BoxShape.circle,
         ),
-        DecoratedBox(
+        child: const Icon(
+          Icons.close,
+          size: AppIconSizes.sm,
+          color: AppColors.textPrimary,
+        ),
+      ),
+    );
+  }
+}
+
+/// Empty tile that opens the picker; doubles as the only tile shown before
+/// the first photo is picked.
+class _AddPhotoTile extends StatelessWidget {
+  const _AddPhotoTile({required this.onTap, required this.size});
+
+  final VoidCallback? onTap;
+  final double size;
+
+  /// Local: no token in the scale covers a disabled-affordance dim.
+  static const double _disabledOpacity = 0.5;
+
+  @override
+  Widget build(BuildContext context) {
+    return Opacity(
+      opacity: onTap == null ? _disabledOpacity : 1,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: size,
+          height: size,
           decoration: BoxDecoration(
-            color: AppColors.surfaceSunken.withValues(alpha: _scrimOpacity),
+            color: AppColors.fillSubtle,
+            border: Border.all(color: AppColors.borderDefault),
+            borderRadius: AppRadius.radiusLg,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(
                 Icons.add_a_photo_outlined,
-                size: AppIconSizes.xl,
+                size: AppIconSizes.md,
                 color: AppColors.accent,
               ),
-              const Gap(AppSpacing.xs2),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-                child: Text(
-                  'Photo from the rejected report — tap to replace',
-                  style: AppTypography.body,
-                  textAlign: TextAlign.center,
+              const Gap(2),
+              Text('Add', style: AppTypography.label),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A resubmission's starting point: the rejected report's own photo, dimmed
+/// under a prompt — reference only, since filing still needs fresh local
+/// files.
+class _PreviousPhotoSlot extends StatelessWidget {
+  const _PreviousPhotoSlot({
+    required this.photoUrl,
+    required this.onTap,
+    required this.size,
+  });
+
+  final String? photoUrl;
+  final VoidCallback? onTap;
+  final double size;
+
+  static const double _scrimOpacity = 0.55;
+
+  @override
+  Widget build(BuildContext context) {
+    final url = photoUrl;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: ClipRRect(
+        borderRadius: AppRadius.radiusXl,
+        child: AspectRatio(
+          aspectRatio: 4 / 3,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              if (url != null)
+                Image.network(
+                  url,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const ColoredBox(color: AppColors.fillSubtle),
+                )
+              else
+                const ColoredBox(color: AppColors.fillSubtle),
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceSunken.withValues(
+                    alpha: _scrimOpacity,
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.add_a_photo_outlined,
+                      size: AppIconSizes.xl,
+                      color: AppColors.accent,
+                    ),
+                    const Gap(AppSpacing.xs2),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg,
+                      ),
+                      child: Text(
+                        'Photo from the rejected report — tap to add 1 to '
+                        '4 photos',
+                        style: AppTypography.body,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
         ),
-      ],
+      ),
     );
   }
 }

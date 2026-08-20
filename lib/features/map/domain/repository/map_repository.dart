@@ -19,11 +19,12 @@ abstract class MapRepository with BaseRepository {
 
   Future<Either<Failure, List<StatusHistoryEntry>>> getReportHistory(String id);
 
-  /// Creates a report, uploading the photo at [photoPath] in the same request.
+  /// Creates a report, uploading the photos at [photoPaths] (1-4 images) in
+  /// the same request.
   Future<Either<Failure, ReportDetail>> createReport({
     required int categoryId,
     required String description,
-    required String photoPath,
+    required List<String> photoPaths,
     required double latitude,
     required double longitude,
   });

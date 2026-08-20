@@ -13,7 +13,7 @@ abstract class ReportDetail with _$ReportDetail {
     String? id,
     ReportCategory? category,
     String? description,
-    String? photoUrl,
+    @Default(<String>[]) List<String> photoUrls,
     double? latitude,
     double? longitude,
     @Default(ReportStatus.unknown) ReportStatus status,

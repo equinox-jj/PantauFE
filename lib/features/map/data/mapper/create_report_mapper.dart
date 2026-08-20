@@ -21,7 +21,7 @@ extension CreateReportDataModelMapper on CreateReportDataModel {
       id: id,
       category: category?.toEntity(),
       description: description,
-      photoUrl: photoUrl,
+      photoUrls: photoUrls ?? const [],
       latitude: latitude,
       longitude: longitude,
       status: ReportStatus.fromSlug(status),

@@ -34,7 +34,9 @@ _ReportDetailDataModel _$ReportDetailDataModelFromJson(
           json['category'] as Map<String, dynamic>,
         ),
   description: json['description'] as String?,
-  photoUrl: json['photo_url'] as String?,
+  photoUrls: (json['photo_urls'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
   latitude: (json['latitude'] as num?)?.toDouble(),
   longitude: (json['longitude'] as num?)?.toDouble(),
   status: json['status'] as String?,
@@ -48,7 +50,7 @@ Map<String, dynamic> _$ReportDetailDataModelToJson(
   'id': instance.id,
   'category': instance.category,
   'description': instance.description,
-  'photo_url': instance.photoUrl,
+  'photo_urls': instance.photoUrls,
   'latitude': instance.latitude,
   'longitude': instance.longitude,
   'status': instance.status,

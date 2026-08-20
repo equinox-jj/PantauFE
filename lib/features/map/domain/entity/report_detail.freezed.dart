@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ReportDetail {
 
- String? get id; ReportCategory? get category; String? get description; String? get photoUrl; double? get latitude; double? get longitude; ReportStatus get status; DateTime? get createdAt; DateTime? get updatedAt;
+ String? get id; ReportCategory? get category; String? get description; List<String> get photoUrls; double? get latitude; double? get longitude; ReportStatus get status; DateTime? get createdAt; DateTime? get updatedAt;
 /// Create a copy of ReportDetail
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $ReportDetailCopyWith<ReportDetail> get copyWith => _$ReportDetailCopyWithImpl<R
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReportDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReportDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.photoUrls, photoUrls)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,category,description,photoUrl,latitude,longitude,status,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,category,description,const DeepCollectionEquality().hash(photoUrls),latitude,longitude,status,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'ReportDetail(id: $id, category: $category, description: $description, photoUrl: $photoUrl, latitude: $latitude, longitude: $longitude, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ReportDetail(id: $id, category: $category, description: $description, photoUrls: $photoUrls, latitude: $latitude, longitude: $longitude, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $ReportDetailCopyWith<$Res>  {
   factory $ReportDetailCopyWith(ReportDetail value, $Res Function(ReportDetail) _then) = _$ReportDetailCopyWithImpl;
 @useResult
 $Res call({
- String? id, ReportCategory? category, String? description, String? photoUrl, double? latitude, double? longitude, ReportStatus status, DateTime? createdAt, DateTime? updatedAt
+ String? id, ReportCategory? category, String? description, List<String> photoUrls, double? latitude, double? longitude, ReportStatus status, DateTime? createdAt, DateTime? updatedAt
 });
 
 
@@ -63,13 +63,13 @@ class _$ReportDetailCopyWithImpl<$Res>
 
 /// Create a copy of ReportDetail
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? category = freezed,Object? description = freezed,Object? photoUrl = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? status = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? category = freezed,Object? description = freezed,Object? photoUrls = null,Object? latitude = freezed,Object? longitude = freezed,Object? status = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(ReportDetail(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as ReportCategory?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,photoUrl: freezed == photoUrl ? _self.photoUrl : photoUrl // ignore: cast_nullable_to_non_nullable
-as String?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as String?,photoUrls: null == photoUrls ? _self.photoUrls : photoUrls // ignore: cast_nullable_to_non_nullable
+as List<String>,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ReportStatus,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
@@ -171,10 +171,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  ReportCategory? category,  String? description,  String? photoUrl,  double? latitude,  double? longitude,  ReportStatus status,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  ReportCategory? category,  String? description,  List<String> photoUrls,  double? latitude,  double? longitude,  ReportStatus status,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReportDetail() when $default != null:
-return $default(_that.id,_that.category,_that.description,_that.photoUrl,_that.latitude,_that.longitude,_that.status,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.category,_that.description,_that.photoUrls,_that.latitude,_that.longitude,_that.status,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -192,10 +192,10 @@ return $default(_that.id,_that.category,_that.description,_that.photoUrl,_that.l
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  ReportCategory? category,  String? description,  String? photoUrl,  double? latitude,  double? longitude,  ReportStatus status,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  ReportCategory? category,  String? description,  List<String> photoUrls,  double? latitude,  double? longitude,  ReportStatus status,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _ReportDetail():
-return $default(_that.id,_that.category,_that.description,_that.photoUrl,_that.latitude,_that.longitude,_that.status,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.category,_that.description,_that.photoUrls,_that.latitude,_that.longitude,_that.status,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -212,10 +212,10 @@ return $default(_that.id,_that.category,_that.description,_that.photoUrl,_that.l
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  ReportCategory? category,  String? description,  String? photoUrl,  double? latitude,  double? longitude,  ReportStatus status,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  ReportCategory? category,  String? description,  List<String> photoUrls,  double? latitude,  double? longitude,  ReportStatus status,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ReportDetail() when $default != null:
-return $default(_that.id,_that.category,_that.description,_that.photoUrl,_that.latitude,_that.longitude,_that.status,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.category,_that.description,_that.photoUrls,_that.latitude,_that.longitude,_that.status,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -227,13 +227,19 @@ return $default(_that.id,_that.category,_that.description,_that.photoUrl,_that.l
 
 
 class _ReportDetail implements ReportDetail {
-  const _ReportDetail({this.id, this.category, this.description, this.photoUrl, this.latitude, this.longitude, this.status = ReportStatus.unknown, this.createdAt, this.updatedAt});
+  const _ReportDetail({this.id, this.category, this.description,  List<String> photoUrls = const <String>[], this.latitude, this.longitude, this.status = ReportStatus.unknown, this.createdAt, this.updatedAt}): _photoUrls = photoUrls;
   
 
 @override final  String? id;
 @override final  ReportCategory? category;
 @override final  String? description;
-@override final  String? photoUrl;
+ final  List<String> _photoUrls;
+@override@JsonKey() List<String> get photoUrls {
+  if (_photoUrls is EqualUnmodifiableListView) return _photoUrls;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_photoUrls);
+}
+
 @override final  double? latitude;
 @override final  double? longitude;
 @override@JsonKey() final  ReportStatus status;
@@ -250,16 +256,16 @@ _$ReportDetailCopyWith<_ReportDetail> get copyWith => __$ReportDetailCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReportDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReportDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._photoUrls, _photoUrls)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,category,description,photoUrl,latitude,longitude,status,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,category,description,const DeepCollectionEquality().hash(_photoUrls),latitude,longitude,status,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'ReportDetail(id: $id, category: $category, description: $description, photoUrl: $photoUrl, latitude: $latitude, longitude: $longitude, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ReportDetail(id: $id, category: $category, description: $description, photoUrls: $photoUrls, latitude: $latitude, longitude: $longitude, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -270,7 +276,7 @@ abstract mixin class _$ReportDetailCopyWith<$Res> implements $ReportDetailCopyWi
   factory _$ReportDetailCopyWith(_ReportDetail value, $Res Function(_ReportDetail) _then) = __$ReportDetailCopyWithImpl;
 @override @useResult
 $Res call({
- String? id, ReportCategory? category, String? description, String? photoUrl, double? latitude, double? longitude, ReportStatus status, DateTime? createdAt, DateTime? updatedAt
+ String? id, ReportCategory? category, String? description, List<String> photoUrls, double? latitude, double? longitude, ReportStatus status, DateTime? createdAt, DateTime? updatedAt
 });
 
 
@@ -287,13 +293,13 @@ class __$ReportDetailCopyWithImpl<$Res>
 
 /// Create a copy of ReportDetail
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? category = freezed,Object? description = freezed,Object? photoUrl = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? status = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? category = freezed,Object? description = freezed,Object? photoUrls = null,Object? latitude = freezed,Object? longitude = freezed,Object? status = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_ReportDetail(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as ReportCategory?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,photoUrl: freezed == photoUrl ? _self.photoUrl : photoUrl // ignore: cast_nullable_to_non_nullable
-as String?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as String?,photoUrls: null == photoUrls ? _self._photoUrls : photoUrls // ignore: cast_nullable_to_non_nullable
+as List<String>,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ReportStatus,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable

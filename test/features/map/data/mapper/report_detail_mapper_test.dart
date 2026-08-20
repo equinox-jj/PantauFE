@@ -36,7 +36,7 @@ void main() {
           isActive: true,
         ),
         description: 'Big hole',
-        photoUrl: 'https://example.com/p.jpg',
+        photoUrls: ['https://example.com/p.jpg'],
         latitude: -6.2,
         longitude: 106.8,
         status: 'closed',
@@ -49,7 +49,7 @@ void main() {
       expect(entity.id, 'r1');
       expect(entity.category?.name, 'Pothole');
       expect(entity.description, 'Big hole');
-      expect(entity.photoUrl, 'https://example.com/p.jpg');
+      expect(entity.photoUrls, ['https://example.com/p.jpg']);
       expect(entity.latitude, -6.2);
       expect(entity.longitude, 106.8);
       expect(entity.status, ReportStatus.closed);

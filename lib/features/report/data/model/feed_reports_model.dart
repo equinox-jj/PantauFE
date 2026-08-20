@@ -18,9 +18,9 @@ abstract class FeedReportsModel with _$FeedReportsModel {
 /// One report row, shared by `GET /reports/nearby` and `GET /reports/mine`.
 /// The latter carries a couple of fields more; the extras are ignored.
 ///
-/// `photo_url` and `description` are optional on purpose: the marker contract
-/// does not promise them, so a payload without them still parses and the card
-/// falls back to its no-photo state.
+/// `photo_urls` and `description` are optional on purpose: the marker
+/// contract does not promise them, so a payload without them still parses
+/// and the card falls back to its no-photo state.
 @freezed
 abstract class FeedReportsDataModel with _$FeedReportsDataModel {
   const factory FeedReportsDataModel({
@@ -28,7 +28,7 @@ abstract class FeedReportsDataModel with _$FeedReportsDataModel {
     @JsonKey(name: "category") FeedReportsCategoryModel? category,
     @JsonKey(name: "status") String? status,
     @JsonKey(name: "description") String? description,
-    @JsonKey(name: "photo_url") String? photoUrl,
+    @JsonKey(name: "photo_urls") List<String>? photoUrls,
     @JsonKey(name: "latitude") double? latitude,
     @JsonKey(name: "longitude") double? longitude,
     @JsonKey(name: "created_at") String? createdAt,

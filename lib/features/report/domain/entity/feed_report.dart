@@ -17,7 +17,7 @@ abstract class FeedReport with _$FeedReport {
     String? categoryName,
     @Default(ReportStatus.unknown) ReportStatus status,
     String? description,
-    String? photoUrl,
+    @Default(<String>[]) List<String> photoUrls,
     double? latitude,
     double? longitude,
     DateTime? createdAt,

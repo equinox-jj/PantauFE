@@ -8,19 +8,19 @@ part of 'create_report_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Submits a report. The photo rides along as a file part of the same
+/// Submits a report. The photos (1-4) ride along as file parts of the same
 /// multipart request (see `docs/API_REQUEST.md`), so this is one call and the
 /// page derives its progress copy from [AsyncValue.isLoading].
 
 @ProviderFor(CreateReport)
 final createReportProvider = CreateReportProvider._();
 
-/// Submits a report. The photo rides along as a file part of the same
+/// Submits a report. The photos (1-4) ride along as file parts of the same
 /// multipart request (see `docs/API_REQUEST.md`), so this is one call and the
 /// page derives its progress copy from [AsyncValue.isLoading].
 final class CreateReportProvider
     extends $NotifierProvider<CreateReport, AsyncValue<ReportDetail?>> {
-  /// Submits a report. The photo rides along as a file part of the same
+  /// Submits a report. The photos (1-4) ride along as file parts of the same
   /// multipart request (see `docs/API_REQUEST.md`), so this is one call and the
   /// page derives its progress copy from [AsyncValue.isLoading].
   CreateReportProvider._()
@@ -50,9 +50,9 @@ final class CreateReportProvider
   }
 }
 
-String _$createReportHash() => r'd252c1425af2eb5ec923ba9fdc50bf25ff8a75cc';
+String _$createReportHash() => r'1d894342b7a94fbc8a07af513bfa87a5cb8f0148';
 
-/// Submits a report. The photo rides along as a file part of the same
+/// Submits a report. The photos (1-4) ride along as file parts of the same
 /// multipart request (see `docs/API_REQUEST.md`), so this is one call and the
 /// page derives its progress copy from [AsyncValue.isLoading].
 

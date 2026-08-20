@@ -24,12 +24,13 @@ abstract class MapRemoteDataSource with BaseRemoteDataSource {
     String? note,
   });
 
-  /// Creates a report. The photo at [photoPath] is uploaded in the same
-  /// multipart request — the API has no separate upload endpoint.
+  /// Creates a report. The photos at [photoPaths] (1-4 images) are uploaded
+  /// in the same multipart request — the API has no separate upload
+  /// endpoint.
   Future<CreateReportModel> createReport({
     required int categoryId,
     required String description,
-    required String photoPath,
+    required List<String> photoPaths,
     required double latitude,
     required double longitude,
   });
@@ -141,22 +142,29 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
   Future<CreateReportModel> createReport({
     required int categoryId,
     required String description,
-    required String photoPath,
+    required List<String> photoPaths,
     required double latitude,
     required double longitude,
   }) => safeApiCall(() async {
     // Field names follow docs/API_REQUEST.md: scalars as form-data text parts,
-    // the photo as the `photo` file part.
+    // the photos as repeated `photos` file parts (1-4 images).
     final formData = FormData.fromMap({
       'categoryId': '$categoryId',
       'description': description,
       'latitude': '$latitude',
       'longitude': '$longitude',
-      'photo': await MultipartFile.fromFile(
-        photoPath,
-        filename: p.basename(photoPath),
-      ),
     });
+    for (final photoPath in photoPaths) {
+      formData.files.add(
+        MapEntry(
+          'photos',
+          await MultipartFile.fromFile(
+            photoPath,
+            filename: p.basename(photoPath),
+          ),
+        ),
+      );
+    }
 
     final response = await _dioClient.post(
       ApiEndpoints.reports,

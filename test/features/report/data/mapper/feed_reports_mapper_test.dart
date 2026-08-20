@@ -13,7 +13,7 @@ void main() {
           category: FeedReportsCategoryModel(id: 3, name: 'Pothole'),
           status: 'in_progress',
           description: 'Big hole',
-          photoUrl: 'https://example.com/p.jpg',
+          photoUrls: ['https://example.com/p.jpg'],
           latitude: -6.2,
           longitude: 106.8,
           createdAt: '2024-05-01T10:00:00.000Z',
@@ -26,7 +26,7 @@ void main() {
         expect(entity.categoryName, 'Pothole');
         expect(entity.status, ReportStatus.inProgress);
         expect(entity.description, 'Big hole');
-        expect(entity.photoUrl, 'https://example.com/p.jpg');
+        expect(entity.photoUrls, ['https://example.com/p.jpg']);
         expect(entity.latitude, -6.2);
         expect(entity.longitude, 106.8);
         expect(entity.createdAt, DateTime.parse('2024-05-01T10:00:00.000Z'));

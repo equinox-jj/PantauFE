@@ -138,7 +138,7 @@ final class PlaceRepositoryProvider
   }
 }
 
-String _$placeRepositoryHash() => r'222e229e04c741a98824532ef5c57d247d35bb79';
+String _$placeRepositoryHash() => r'739d1e4119316a7a6edaf7e4c45aae0c19a2509d';
 
 @ProviderFor(getNearbyReportsUsecase)
 final getNearbyReportsUsecaseProvider = GetNearbyReportsUsecaseProvider._();

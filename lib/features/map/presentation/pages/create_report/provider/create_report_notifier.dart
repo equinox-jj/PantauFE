@@ -6,7 +6,7 @@ import '../../../../domain/usecase/usecase.dart';
 
 part 'create_report_notifier.g.dart';
 
-/// Submits a report. The photo rides along as a file part of the same
+/// Submits a report. The photos (1-4) ride along as file parts of the same
 /// multipart request (see `docs/API_REQUEST.md`), so this is one call and the
 /// page derives its progress copy from [AsyncValue.isLoading].
 @riverpod
@@ -15,7 +15,7 @@ class CreateReport extends _$CreateReport {
   AsyncValue<ReportDetail?> build() => const AsyncData(null);
 
   Future<void> submit({
-    required String photoPath,
+    required List<String> photoPaths,
     required int categoryId,
     required String description,
     required double latitude,
@@ -27,7 +27,7 @@ class CreateReport extends _$CreateReport {
       CreateReportParams(
         categoryId: categoryId,
         description: description,
-        photoPath: photoPath,
+        photoPaths: photoPaths,
         latitude: latitude,
         longitude: longitude,
       ),

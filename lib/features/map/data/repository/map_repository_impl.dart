@@ -58,14 +58,14 @@ class MapRepositoryImpl extends MapRepository implements PlaceRepository {
   Future<Either<Failure, ReportDetail>> createReport({
     required int categoryId,
     required String description,
-    required String photoPath,
+    required List<String> photoPaths,
     required double latitude,
     required double longitude,
   }) => safeCall(() async {
     final result = await _mapRemoteDataSource.createReport(
       categoryId: categoryId,
       description: description,
-      photoPath: photoPath,
+      photoPaths: photoPaths,
       latitude: latitude,
       longitude: longitude,
     );

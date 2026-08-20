@@ -16,7 +16,7 @@ extension FeedReportsDataModelMapper on FeedReportsDataModel {
       categoryName: category?.name,
       status: ReportStatus.fromSlug(status),
       description: description,
-      photoUrl: photoUrl,
+      photoUrls: photoUrls ?? const [],
       latitude: latitude,
       longitude: longitude,
       createdAt: parseDate(createdAt),

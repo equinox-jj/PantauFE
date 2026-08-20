@@ -173,7 +173,7 @@ void main() {
         () => dataSource.createReport(
           categoryId: any(named: 'categoryId'),
           description: any(named: 'description'),
-          photoPath: any(named: 'photoPath'),
+          photoPaths: any(named: 'photoPaths'),
           latitude: any(named: 'latitude'),
           longitude: any(named: 'longitude'),
         ),
@@ -186,7 +186,7 @@ void main() {
       final result = await repository.createReport(
         categoryId: 1,
         description: 'Big hole',
-        photoPath: '/tmp/x.jpg',
+        photoPaths: const ['/tmp/x.jpg'],
         latitude: 0,
         longitude: 0,
       );
@@ -203,7 +203,7 @@ void main() {
         () => dataSource.createReport(
           categoryId: any(named: 'categoryId'),
           description: any(named: 'description'),
-          photoPath: any(named: 'photoPath'),
+          photoPaths: any(named: 'photoPaths'),
           latitude: any(named: 'latitude'),
           longitude: any(named: 'longitude'),
         ),
@@ -212,7 +212,7 @@ void main() {
       final result = await repository.createReport(
         categoryId: 1,
         description: 'Big hole',
-        photoPath: '/tmp/x.jpg',
+        photoPaths: const ['/tmp/x.jpg'],
         latitude: 0,
         longitude: 0,
       );

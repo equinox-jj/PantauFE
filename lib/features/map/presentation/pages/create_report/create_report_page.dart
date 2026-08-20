@@ -17,8 +17,12 @@ import 'listener/listener.dart';
 import 'provider/provider.dart';
 import 'widgets/create_report_widgets.dart';
 
-/// Photo slot state: the picked file and the validation message for it.
-typedef _PhotoField = ({String? path, String? error});
+/// Photo slots state: the picked files (1-4) and the validation message for
+/// them.
+typedef _PhotoField = ({List<String> paths, String? error});
+
+String? _firstOrNull(List<String>? values) =>
+    values == null || values.isEmpty ? null : values.first;
 
 /// Category slot state: the chosen id and the validation message for it.
 typedef _CategoryField = ({int? id, String? error});
@@ -49,12 +53,13 @@ class CreateReportPage extends ConsumerStatefulWidget {
 
 class _CreateReportPageState extends ConsumerState<CreateReportPage> {
   static const _maxDescriptionLength = 500;
+  static const _maxPhotos = 4;
 
   final _formKey = GlobalKey<FormState>();
   final _descriptionController = TextEditingController();
   final ImagePicker _imagePicker = ImagePicker();
 
-  final _photo = ValueNotifier<_PhotoField>((path: null, error: null));
+  final _photo = ValueNotifier<_PhotoField>((paths: const [], error: null));
   final _category = ValueNotifier<_CategoryField>((id: null, error: null));
   final _location = ValueNotifier<_LocationField>((value: null, error: null));
   final _isLocating = ValueNotifier<bool>(false);
@@ -144,7 +149,9 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
     _location.value = (value: picked, error: null);
   }
 
-  Future<void> _pickPhoto() async {
+  Future<void> _addPhoto() async {
+    if (_photo.value.paths.length >= _maxPhotos) return;
+
     final source = await PhotoSourceSheet.show(context);
     if (source == null) return;
 
@@ -158,17 +165,22 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
     );
     if (file == null || !mounted) return;
 
-    _photo.value = (path: file.path, error: null);
+    _photo.value = (paths: [..._photo.value.paths, file.path], error: null);
+  }
+
+  void _removePhoto(int index) {
+    final paths = [..._photo.value.paths]..removeAt(index);
+    _photo.value = (paths: paths, error: null);
   }
 
   Future<void> _submit() async {
-    final photoPath = _photo.value.path;
+    final photoPaths = _photo.value.paths;
     final categoryId = _category.value.id;
     final location = _location.value.value;
 
     _photo.value = (
-      path: photoPath,
-      error: photoPath == null ? 'A photo is required' : null,
+      paths: photoPaths,
+      error: photoPaths.isEmpty ? 'At least one photo is required' : null,
     );
     _category.value = (
       id: categoryId,
@@ -181,7 +193,7 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
 
     final isFormValid = _formKey.currentState?.validate() ?? false;
     if (!isFormValid ||
-        photoPath == null ||
+        photoPaths.isEmpty ||
         categoryId == null ||
         location == null) {
       return;
@@ -190,7 +202,7 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
     await ref
         .read(createReportProvider.notifier)
         .submit(
-          photoPath: photoPath,
+          photoPaths: photoPaths,
           categoryId: categoryId,
           description: _descriptionController.text.trim(),
           latitude: location.latitude,
@@ -228,8 +240,12 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
                 children: [
                   _PhotoSection(
                     field: _photo,
-                    onPick: _pickPhoto,
-                    initialPhotoUrl: widget.initialReport?.photoUrl,
+                    onAdd: _addPhoto,
+                    onRemove: _removePhoto,
+                    maxPhotos: _maxPhotos,
+                    initialPhotoUrl: _firstOrNull(
+                      widget.initialReport?.photoUrls,
+                    ),
                   ),
                   const Gap(AppSpacing.lg),
                   _LocationSection(
@@ -257,16 +273,21 @@ class _CreateReportPageState extends ConsumerState<CreateReportPage> {
   }
 }
 
-/// Photo row: rebuilds on a pick, a validation message, or the submit lock.
+/// Photo row: rebuilds on a pick, a removal, a validation message, or the
+/// submit lock.
 class _PhotoSection extends StatelessWidget {
   const _PhotoSection({
     required this.field,
-    required this.onPick,
+    required this.onAdd,
+    required this.onRemove,
+    required this.maxPhotos,
     this.initialPhotoUrl,
   });
 
   final ValueListenable<_PhotoField> field;
-  final VoidCallback onPick;
+  final VoidCallback onAdd;
+  final ValueChanged<int> onRemove;
+  final int maxPhotos;
   final String? initialPhotoUrl;
 
   @override
@@ -280,8 +301,10 @@ class _PhotoSection extends StatelessWidget {
           );
 
           return ReportPhotoPicker(
-            photoPath: photo.path,
-            onPick: isSubmitting ? null : onPick,
+            photoPaths: photo.paths,
+            maxPhotos: maxPhotos,
+            onAdd: isSubmitting ? null : onAdd,
+            onRemove: isSubmitting ? null : onRemove,
             errorText: photo.error,
             initialPhotoUrl: initialPhotoUrl,
           );

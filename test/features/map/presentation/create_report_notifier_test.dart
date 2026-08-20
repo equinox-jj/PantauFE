@@ -16,7 +16,7 @@ void main() {
       const CreateReportParams(
         categoryId: 0,
         description: '',
-        photoPath: '',
+        photoPaths: [],
         latitude: 0,
         longitude: 0,
       ),
@@ -46,7 +46,7 @@ void main() {
     when(() => usecase(any())).thenAnswer((_) async => const Right(detail));
 
     await notifier().submit(
-      photoPath: '/tmp/x.jpg',
+      photoPaths: const ['/tmp/x.jpg'],
       categoryId: 1,
       description: 'Big hole',
       latitude: -6.2,
@@ -62,7 +62,7 @@ void main() {
         .thenAnswer((_) async => const Right(ReportDetail(id: 'r1')));
 
     await notifier().submit(
-      photoPath: '/tmp/x.jpg',
+      photoPaths: const ['/tmp/x.jpg', '/tmp/y.jpg'],
       categoryId: 3,
       description: 'Big hole',
       latitude: -6.2,
@@ -74,7 +74,7 @@ void main() {
             as CreateReportParams;
     expect(captured.categoryId, 3);
     expect(captured.description, 'Big hole');
-    expect(captured.photoPath, '/tmp/x.jpg');
+    expect(captured.photoPaths, ['/tmp/x.jpg', '/tmp/y.jpg']);
     expect(captured.latitude, -6.2);
     expect(captured.longitude, 106.8);
   });
@@ -87,7 +87,7 @@ void main() {
       );
 
       await notifier().submit(
-        photoPath: '/tmp/x.jpg',
+        photoPaths: const ['/tmp/x.jpg'],
         categoryId: 1,
         description: 'Big hole',
         latitude: 0,
@@ -105,7 +105,7 @@ void main() {
         .thenAnswer((_) async => const Right(ReportDetail(id: 'r1')));
 
     final future = notifier().submit(
-      photoPath: '/tmp/x.jpg',
+      photoPaths: const ['/tmp/x.jpg'],
       categoryId: 1,
       description: 'x',
       latitude: 0,

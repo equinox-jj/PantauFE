@@ -21,7 +21,7 @@ abstract class ReportDetailDataModel with _$ReportDetailDataModel {
     @JsonKey(name: "id") String? id,
     @JsonKey(name: "category") ReportDetailCategoryModel? category,
     @JsonKey(name: "description") String? description,
-    @JsonKey(name: "photo_url") String? photoUrl,
+    @JsonKey(name: "photo_urls") List<String>? photoUrls,
     @JsonKey(name: "latitude") double? latitude,
     @JsonKey(name: "longitude") double? longitude,
     @JsonKey(name: "status") String? status,

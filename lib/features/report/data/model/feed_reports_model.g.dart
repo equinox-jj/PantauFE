@@ -33,7 +33,9 @@ _FeedReportsDataModel _$FeedReportsDataModelFromJson(
         ),
   status: json['status'] as String?,
   description: json['description'] as String?,
-  photoUrl: json['photo_url'] as String?,
+  photoUrls: (json['photo_urls'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
   latitude: (json['latitude'] as num?)?.toDouble(),
   longitude: (json['longitude'] as num?)?.toDouble(),
   createdAt: json['created_at'] as String?,
@@ -46,7 +48,7 @@ Map<String, dynamic> _$FeedReportsDataModelToJson(
   'category': instance.category,
   'status': instance.status,
   'description': instance.description,
-  'photo_url': instance.photoUrl,
+  'photo_urls': instance.photoUrls,
   'latitude': instance.latitude,
   'longitude': instance.longitude,
   'created_at': instance.createdAt,

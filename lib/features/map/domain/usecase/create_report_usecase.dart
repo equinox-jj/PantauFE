@@ -10,14 +10,14 @@ class CreateReportParams extends Equatable {
   const CreateReportParams({
     required this.categoryId,
     required this.description,
-    required this.photoPath,
+    required this.photoPaths,
     required this.latitude,
     required this.longitude,
   });
 
   final int categoryId;
   final String description;
-  final String photoPath;
+  final List<String> photoPaths;
   final double latitude;
   final double longitude;
 
@@ -25,7 +25,7 @@ class CreateReportParams extends Equatable {
   List<Object?> get props => [
     categoryId,
     description,
-    photoPath,
+    photoPaths,
     latitude,
     longitude,
   ];
@@ -41,7 +41,7 @@ class CreateReportUsecase extends UseCase<ReportDetail, CreateReportParams> {
       _mapRepository.createReport(
         categoryId: params.categoryId,
         description: params.description,
-        photoPath: params.photoPath,
+        photoPaths: params.photoPaths,
         latitude: params.latitude,
         longitude: params.longitude,
       );

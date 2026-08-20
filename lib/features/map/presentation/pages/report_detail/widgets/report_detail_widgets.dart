@@ -3,19 +3,69 @@ import 'package:gap/gap.dart';
 
 import '../../../../../../core/theme/theme.dart';
 
-/// The reporter's photo, with its own loading and error fallbacks. Fills the
-/// box it is given; the hero owns the sizing and the clipping.
-class ReportDetailPhoto extends StatelessWidget {
-  const ReportDetailPhoto({super.key, required this.photoUrl});
+/// The reporter's photos, with their own loading and error fallbacks. Fills
+/// the box it is given; the hero owns the sizing and the clipping.
+///
+/// A single photo renders directly; more than one becomes a swipeable
+/// gallery with a dot indicator.
+class ReportDetailPhoto extends StatefulWidget {
+  const ReportDetailPhoto({super.key, required this.photoUrls});
 
-  final String? photoUrl;
+  final List<String> photoUrls;
+
+  @override
+  State<ReportDetailPhoto> createState() => _ReportDetailPhotoState();
+}
+
+class _ReportDetailPhotoState extends State<ReportDetailPhoto> {
+  final _pageController = PageController();
+  int _page = 0;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final url = photoUrl;
-    if (url == null || url.isEmpty) {
+    final urls = widget.photoUrls;
+    if (urls.isEmpty) {
       return const _PhotoFallback(label: 'No photo attached');
     }
+
+    if (urls.length == 1) {
+      return _NetworkPhoto(url: urls.first);
+    }
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        PageView.builder(
+          controller: _pageController,
+          itemCount: urls.length,
+          onPageChanged: (page) => setState(() => _page = page),
+          itemBuilder: (context, index) => _NetworkPhoto(url: urls[index]),
+        ),
+        Positioned(
+          bottom: AppSpacing.xs2,
+          left: 0,
+          right: 0,
+          child: _PhotoDots(count: urls.length, activeIndex: _page),
+        ),
+      ],
+    );
+  }
+}
+
+class _NetworkPhoto extends StatelessWidget {
+  const _NetworkPhoto({required this.url});
+
+  final String url;
+
+  @override
+  Widget build(BuildContext context) {
+    if (url.isEmpty) return const _PhotoFallback(label: 'No photo attached');
 
     return Image.network(
       url,
@@ -30,6 +80,37 @@ class ReportDetailPhoto extends StatelessWidget {
             ),
       errorBuilder: (context, error, stackTrace) =>
           const _PhotoFallback(label: 'Photo unavailable'),
+    );
+  }
+}
+
+class _PhotoDots extends StatelessWidget {
+  const _PhotoDots({required this.count, required this.activeIndex});
+
+  final int count;
+  final int activeIndex;
+
+  static const double _dotSize = 6;
+  static const double _activeDotWidth = 16;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(count, (index) {
+        final isActive = index == activeIndex;
+
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          margin: const EdgeInsets.symmetric(horizontal: 3),
+          width: isActive ? _activeDotWidth : _dotSize,
+          height: _dotSize,
+          decoration: BoxDecoration(
+            color: AppColors.textPrimary.withValues(alpha: isActive ? 1 : 0.6),
+            borderRadius: AppRadius.radiusFull,
+          ),
+        );
+      }),
     );
   }
 }

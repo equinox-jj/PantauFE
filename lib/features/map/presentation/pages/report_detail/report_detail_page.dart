@@ -128,7 +128,7 @@ class _DetailContent extends StatelessWidget {
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           ReportDetailHero(
-            photoUrl: detail.photoUrl,
+            photoUrls: detail.photoUrls,
             status: detail.status,
             reportId: reportId,
             onShare: _share,
@@ -223,7 +223,7 @@ class _DetailSkeleton extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         ReportDetailHero(
-          photoUrl: null,
+          photoUrls: const [],
           status: ReportStatus.reported,
           reportId: 'loading',
           onShare: () {},

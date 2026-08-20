@@ -21,11 +21,17 @@ void main() {
     const params = CreateReportParams(
       categoryId: 1,
       description: 'Big hole',
-      photoPath: '/tmp/x.jpg',
+      photoPaths: ['/tmp/x.jpg'],
       latitude: 2,
       longitude: 3,
     );
-    expect(params.props, [1, 'Big hole', '/tmp/x.jpg', 2.0, 3.0]);
+    expect(params.props, [
+      1,
+      'Big hole',
+      ['/tmp/x.jpg'],
+      2.0,
+      3.0,
+    ]);
   });
 
   test('delegates to repository.createReport with the params fields', () async {
@@ -34,7 +40,7 @@ void main() {
       () => repository.createReport(
         categoryId: any(named: 'categoryId'),
         description: any(named: 'description'),
-        photoPath: any(named: 'photoPath'),
+        photoPaths: any(named: 'photoPaths'),
         latitude: any(named: 'latitude'),
         longitude: any(named: 'longitude'),
       ),
@@ -44,7 +50,7 @@ void main() {
       const CreateReportParams(
         categoryId: 5,
         description: 'Big hole',
-        photoPath: '/tmp/x.jpg',
+        photoPaths: ['/tmp/x.jpg'],
         latitude: -6.2,
         longitude: 106.8,
       ),
@@ -55,7 +61,7 @@ void main() {
       () => repository.createReport(
         categoryId: 5,
         description: 'Big hole',
-        photoPath: '/tmp/x.jpg',
+        photoPaths: ['/tmp/x.jpg'],
         latitude: -6.2,
         longitude: 106.8,
       ),
@@ -67,7 +73,7 @@ void main() {
       () => repository.createReport(
         categoryId: any(named: 'categoryId'),
         description: any(named: 'description'),
-        photoPath: any(named: 'photoPath'),
+        photoPaths: any(named: 'photoPaths'),
         latitude: any(named: 'latitude'),
         longitude: any(named: 'longitude'),
       ),
@@ -77,7 +83,7 @@ void main() {
       const CreateReportParams(
         categoryId: 1,
         description: 'x',
-        photoPath: '/tmp/x.jpg',
+        photoPaths: ['/tmp/x.jpg'],
         latitude: 0,
         longitude: 0,
       ),

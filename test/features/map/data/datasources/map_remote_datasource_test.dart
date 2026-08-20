@@ -309,11 +309,14 @@ void main() {
 
   group('createReport', () {
     late File photoFile;
+    late File secondPhotoFile;
 
     setUp(() async {
       final dir = await Directory.systemTemp.createTemp('pantau_test_photo');
       photoFile = File('${dir.path}/photo.jpg');
       await photoFile.writeAsBytes([0, 1, 2, 3]);
+      secondPhotoFile = File('${dir.path}/photo2.jpg');
+      await secondPhotoFile.writeAsBytes([4, 5, 6, 7]);
     });
 
     tearDown(() async {
@@ -340,7 +343,7 @@ void main() {
         final result = await dataSource.createReport(
           categoryId: 3,
           description: 'Big hole',
-          photoPath: photoFile.path,
+          photoPaths: [photoFile.path, secondPhotoFile.path],
           latitude: -6.2,
           longitude: 106.8,
         );
@@ -361,8 +364,8 @@ void main() {
         expect(fields['description'], 'Big hole');
         expect(fields['latitude'], '-6.2');
         expect(fields['longitude'], '106.8');
-        expect(captured.files, hasLength(1));
-        expect(captured.files.single.key, 'photo');
+        expect(captured.files, hasLength(2));
+        expect(captured.files.map((f) => f.key), everyElement('photos'));
       },
     );
 
@@ -384,7 +387,7 @@ void main() {
         dataSource.createReport(
           categoryId: 1,
           description: 'x',
-          photoPath: photoFile.path,
+          photoPaths: [photoFile.path],
           latitude: 0,
           longitude: 0,
         ),

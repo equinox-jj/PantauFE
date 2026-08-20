@@ -18,13 +18,13 @@ import 'report_detail_widgets.dart';
 class ReportDetailHero extends StatelessWidget {
   const ReportDetailHero({
     super.key,
-    required this.photoUrl,
+    required this.photoUrls,
     required this.status,
     required this.reportId,
     required this.onShare,
   });
 
-  final String? photoUrl;
+  final List<String> photoUrls;
   final ReportStatus status;
   final String reportId;
   final VoidCallback onShare;
@@ -75,7 +75,7 @@ class ReportDetailHero extends StatelessWidget {
         background: Stack(
           fit: StackFit.expand,
           children: [
-            ReportDetailPhoto(photoUrl: photoUrl),
+            ReportDetailPhoto(photoUrls: photoUrls),
             const Align(
               alignment: Alignment.bottomCenter,
               child: SizedBox(height: _scrimHeight, child: _HeroScrim()),
