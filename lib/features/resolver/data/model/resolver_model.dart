@@ -30,7 +30,7 @@ abstract class QueueDataModel with _$QueueDataModel {
 
 /// One report row.
 ///
-/// `photo_url` and `description` are optional on purpose: a payload without
+/// `photo_urls` and `description` are optional on purpose: a payload without
 /// them still parses and the card falls back to its no-photo state, same as
 /// the citizen feed's row model.
 @freezed
@@ -39,7 +39,7 @@ abstract class QueueReportDataModel with _$QueueReportDataModel {
     @JsonKey(name: "id") String? id,
     @JsonKey(name: "category") QueueCategoryModel? category,
     @JsonKey(name: "description") String? description,
-    @JsonKey(name: "photo_url") String? photoUrl,
+    @JsonKey(name: "photo_urls") List<String>? photoUrls,
     @JsonKey(name: "status") String? status,
     @JsonKey(name: "latitude") double? latitude,
     @JsonKey(name: "longitude") double? longitude,

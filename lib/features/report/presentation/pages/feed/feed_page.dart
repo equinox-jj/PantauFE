@@ -13,7 +13,7 @@ import '../../../../../core/theme/theme.dart';
 import '../../../../../core/utils/helpers/helpers.dart';
 import 'listener/listener.dart';
 import 'provider/provider.dart';
-import 'widgets/feed_widgets.dart';
+import 'widgets/widgets.dart';
 
 /// Feed tab — reports as a photo-led list, in two segments: what is around the
 /// device, and what the caller reported themselves.

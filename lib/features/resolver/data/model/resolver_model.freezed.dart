@@ -634,7 +634,7 @@ $QueueCountsModelCopyWith<$Res>? get counts {
 /// @nodoc
 mixin _$QueueReportDataModel {
 
-@JsonKey(name: "id") String? get id;@JsonKey(name: "category") QueueCategoryModel? get category;@JsonKey(name: "description") String? get description;@JsonKey(name: "photo_url") String? get photoUrl;@JsonKey(name: "status") String? get status;@JsonKey(name: "latitude") double? get latitude;@JsonKey(name: "longitude") double? get longitude;@JsonKey(name: "distance_meter") double? get distanceMeter;@JsonKey(name: "created_at") String? get createdAt;
+@JsonKey(name: "id") String? get id;@JsonKey(name: "category") QueueCategoryModel? get category;@JsonKey(name: "description") String? get description;@JsonKey(name: "photo_urls") List<String>? get photoUrls;@JsonKey(name: "status") String? get status;@JsonKey(name: "latitude") double? get latitude;@JsonKey(name: "longitude") double? get longitude;@JsonKey(name: "distance_meter") double? get distanceMeter;@JsonKey(name: "created_at") String? get createdAt;
 /// Create a copy of QueueReportDataModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -647,16 +647,16 @@ $QueueReportDataModelCopyWith<QueueReportDataModel> get copyWith => _$QueueRepor
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is QueueReportDataModel&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.status, status) || other.status == status)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.distanceMeter, distanceMeter) || other.distanceMeter == distanceMeter)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is QueueReportDataModel&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.photoUrls, photoUrls)&&(identical(other.status, status) || other.status == status)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.distanceMeter, distanceMeter) || other.distanceMeter == distanceMeter)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,category,description,photoUrl,status,latitude,longitude,distanceMeter,createdAt);
+int get hashCode => Object.hash(runtimeType,id,category,description,const DeepCollectionEquality().hash(photoUrls),status,latitude,longitude,distanceMeter,createdAt);
 
 @override
 String toString() {
-  return 'QueueReportDataModel(id: $id, category: $category, description: $description, photoUrl: $photoUrl, status: $status, latitude: $latitude, longitude: $longitude, distanceMeter: $distanceMeter, createdAt: $createdAt)';
+  return 'QueueReportDataModel(id: $id, category: $category, description: $description, photoUrls: $photoUrls, status: $status, latitude: $latitude, longitude: $longitude, distanceMeter: $distanceMeter, createdAt: $createdAt)';
 }
 
 
@@ -667,7 +667,7 @@ abstract mixin class $QueueReportDataModelCopyWith<$Res>  {
   factory $QueueReportDataModelCopyWith(QueueReportDataModel value, $Res Function(QueueReportDataModel) _then) = _$QueueReportDataModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "id") String? id,@JsonKey(name: "category") QueueCategoryModel? category,@JsonKey(name: "description") String? description,@JsonKey(name: "photo_url") String? photoUrl,@JsonKey(name: "status") String? status,@JsonKey(name: "latitude") double? latitude,@JsonKey(name: "longitude") double? longitude,@JsonKey(name: "distance_meter") double? distanceMeter,@JsonKey(name: "created_at") String? createdAt
+@JsonKey(name: "id") String? id,@JsonKey(name: "category") QueueCategoryModel? category,@JsonKey(name: "description") String? description,@JsonKey(name: "photo_urls") List<String>? photoUrls,@JsonKey(name: "status") String? status,@JsonKey(name: "latitude") double? latitude,@JsonKey(name: "longitude") double? longitude,@JsonKey(name: "distance_meter") double? distanceMeter,@JsonKey(name: "created_at") String? createdAt
 });
 
 
@@ -684,13 +684,13 @@ class _$QueueReportDataModelCopyWithImpl<$Res>
 
 /// Create a copy of QueueReportDataModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? category = freezed,Object? description = freezed,Object? photoUrl = freezed,Object? status = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceMeter = freezed,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? category = freezed,Object? description = freezed,Object? photoUrls = freezed,Object? status = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceMeter = freezed,Object? createdAt = freezed,}) {
   return _then(QueueReportDataModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as QueueCategoryModel?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,photoUrl: freezed == photoUrl ? _self.photoUrl : photoUrl // ignore: cast_nullable_to_non_nullable
-as String?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String?,photoUrls: freezed == photoUrls ? _self.photoUrls : photoUrls // ignore: cast_nullable_to_non_nullable
+as List<String>?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,distanceMeter: freezed == distanceMeter ? _self.distanceMeter : distanceMeter // ignore: cast_nullable_to_non_nullable
@@ -792,10 +792,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "category")  QueueCategoryModel? category, @JsonKey(name: "description")  String? description, @JsonKey(name: "photo_url")  String? photoUrl, @JsonKey(name: "status")  String? status, @JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude, @JsonKey(name: "distance_meter")  double? distanceMeter, @JsonKey(name: "created_at")  String? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "category")  QueueCategoryModel? category, @JsonKey(name: "description")  String? description, @JsonKey(name: "photo_urls")  List<String>? photoUrls, @JsonKey(name: "status")  String? status, @JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude, @JsonKey(name: "distance_meter")  double? distanceMeter, @JsonKey(name: "created_at")  String? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _QueueReportDataModel() when $default != null:
-return $default(_that.id,_that.category,_that.description,_that.photoUrl,_that.status,_that.latitude,_that.longitude,_that.distanceMeter,_that.createdAt);case _:
+return $default(_that.id,_that.category,_that.description,_that.photoUrls,_that.status,_that.latitude,_that.longitude,_that.distanceMeter,_that.createdAt);case _:
   return orElse();
 
 }
@@ -813,10 +813,10 @@ return $default(_that.id,_that.category,_that.description,_that.photoUrl,_that.s
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "category")  QueueCategoryModel? category, @JsonKey(name: "description")  String? description, @JsonKey(name: "photo_url")  String? photoUrl, @JsonKey(name: "status")  String? status, @JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude, @JsonKey(name: "distance_meter")  double? distanceMeter, @JsonKey(name: "created_at")  String? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "category")  QueueCategoryModel? category, @JsonKey(name: "description")  String? description, @JsonKey(name: "photo_urls")  List<String>? photoUrls, @JsonKey(name: "status")  String? status, @JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude, @JsonKey(name: "distance_meter")  double? distanceMeter, @JsonKey(name: "created_at")  String? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _QueueReportDataModel():
-return $default(_that.id,_that.category,_that.description,_that.photoUrl,_that.status,_that.latitude,_that.longitude,_that.distanceMeter,_that.createdAt);case _:
+return $default(_that.id,_that.category,_that.description,_that.photoUrls,_that.status,_that.latitude,_that.longitude,_that.distanceMeter,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -833,10 +833,10 @@ return $default(_that.id,_that.category,_that.description,_that.photoUrl,_that.s
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "category")  QueueCategoryModel? category, @JsonKey(name: "description")  String? description, @JsonKey(name: "photo_url")  String? photoUrl, @JsonKey(name: "status")  String? status, @JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude, @JsonKey(name: "distance_meter")  double? distanceMeter, @JsonKey(name: "created_at")  String? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "id")  String? id, @JsonKey(name: "category")  QueueCategoryModel? category, @JsonKey(name: "description")  String? description, @JsonKey(name: "photo_urls")  List<String>? photoUrls, @JsonKey(name: "status")  String? status, @JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude, @JsonKey(name: "distance_meter")  double? distanceMeter, @JsonKey(name: "created_at")  String? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _QueueReportDataModel() when $default != null:
-return $default(_that.id,_that.category,_that.description,_that.photoUrl,_that.status,_that.latitude,_that.longitude,_that.distanceMeter,_that.createdAt);case _:
+return $default(_that.id,_that.category,_that.description,_that.photoUrls,_that.status,_that.latitude,_that.longitude,_that.distanceMeter,_that.createdAt);case _:
   return null;
 
 }
@@ -848,13 +848,21 @@ return $default(_that.id,_that.category,_that.description,_that.photoUrl,_that.s
 @JsonSerializable()
 
 class _QueueReportDataModel implements QueueReportDataModel {
-  const _QueueReportDataModel({@JsonKey(name: "id") this.id, @JsonKey(name: "category") this.category, @JsonKey(name: "description") this.description, @JsonKey(name: "photo_url") this.photoUrl, @JsonKey(name: "status") this.status, @JsonKey(name: "latitude") this.latitude, @JsonKey(name: "longitude") this.longitude, @JsonKey(name: "distance_meter") this.distanceMeter, @JsonKey(name: "created_at") this.createdAt});
+  const _QueueReportDataModel({@JsonKey(name: "id") this.id, @JsonKey(name: "category") this.category, @JsonKey(name: "description") this.description, @JsonKey(name: "photo_urls")  List<String>? photoUrls, @JsonKey(name: "status") this.status, @JsonKey(name: "latitude") this.latitude, @JsonKey(name: "longitude") this.longitude, @JsonKey(name: "distance_meter") this.distanceMeter, @JsonKey(name: "created_at") this.createdAt}): _photoUrls = photoUrls;
   factory _QueueReportDataModel.fromJson(Map<String, dynamic> json) => _$QueueReportDataModelFromJson(json);
 
 @override@JsonKey(name: "id") final  String? id;
 @override@JsonKey(name: "category") final  QueueCategoryModel? category;
 @override@JsonKey(name: "description") final  String? description;
-@override@JsonKey(name: "photo_url") final  String? photoUrl;
+ final  List<String>? _photoUrls;
+@override@JsonKey(name: "photo_urls") List<String>? get photoUrls {
+  final value = _photoUrls;
+  if (value == null) return null;
+  if (_photoUrls is EqualUnmodifiableListView) return _photoUrls;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 @override@JsonKey(name: "status") final  String? status;
 @override@JsonKey(name: "latitude") final  double? latitude;
 @override@JsonKey(name: "longitude") final  double? longitude;
@@ -874,16 +882,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _QueueReportDataModel&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.status, status) || other.status == status)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.distanceMeter, distanceMeter) || other.distanceMeter == distanceMeter)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _QueueReportDataModel&&(identical(other.id, id) || other.id == id)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._photoUrls, _photoUrls)&&(identical(other.status, status) || other.status == status)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.distanceMeter, distanceMeter) || other.distanceMeter == distanceMeter)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,category,description,photoUrl,status,latitude,longitude,distanceMeter,createdAt);
+int get hashCode => Object.hash(runtimeType,id,category,description,const DeepCollectionEquality().hash(_photoUrls),status,latitude,longitude,distanceMeter,createdAt);
 
 @override
 String toString() {
-  return 'QueueReportDataModel(id: $id, category: $category, description: $description, photoUrl: $photoUrl, status: $status, latitude: $latitude, longitude: $longitude, distanceMeter: $distanceMeter, createdAt: $createdAt)';
+  return 'QueueReportDataModel(id: $id, category: $category, description: $description, photoUrls: $photoUrls, status: $status, latitude: $latitude, longitude: $longitude, distanceMeter: $distanceMeter, createdAt: $createdAt)';
 }
 
 
@@ -894,7 +902,7 @@ abstract mixin class _$QueueReportDataModelCopyWith<$Res> implements $QueueRepor
   factory _$QueueReportDataModelCopyWith(_QueueReportDataModel value, $Res Function(_QueueReportDataModel) _then) = __$QueueReportDataModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "id") String? id,@JsonKey(name: "category") QueueCategoryModel? category,@JsonKey(name: "description") String? description,@JsonKey(name: "photo_url") String? photoUrl,@JsonKey(name: "status") String? status,@JsonKey(name: "latitude") double? latitude,@JsonKey(name: "longitude") double? longitude,@JsonKey(name: "distance_meter") double? distanceMeter,@JsonKey(name: "created_at") String? createdAt
+@JsonKey(name: "id") String? id,@JsonKey(name: "category") QueueCategoryModel? category,@JsonKey(name: "description") String? description,@JsonKey(name: "photo_urls") List<String>? photoUrls,@JsonKey(name: "status") String? status,@JsonKey(name: "latitude") double? latitude,@JsonKey(name: "longitude") double? longitude,@JsonKey(name: "distance_meter") double? distanceMeter,@JsonKey(name: "created_at") String? createdAt
 });
 
 
@@ -911,13 +919,13 @@ class __$QueueReportDataModelCopyWithImpl<$Res>
 
 /// Create a copy of QueueReportDataModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? category = freezed,Object? description = freezed,Object? photoUrl = freezed,Object? status = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceMeter = freezed,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? category = freezed,Object? description = freezed,Object? photoUrls = freezed,Object? status = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceMeter = freezed,Object? createdAt = freezed,}) {
   return _then(_QueueReportDataModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as QueueCategoryModel?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,photoUrl: freezed == photoUrl ? _self.photoUrl : photoUrl // ignore: cast_nullable_to_non_nullable
-as String?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String?,photoUrls: freezed == photoUrls ? _self._photoUrls : photoUrls // ignore: cast_nullable_to_non_nullable
+as List<String>?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,distanceMeter: freezed == distanceMeter ? _self.distanceMeter : distanceMeter // ignore: cast_nullable_to_non_nullable

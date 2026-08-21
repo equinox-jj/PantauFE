@@ -34,15 +34,28 @@ class CreateReportParams extends Equatable {
 class CreateReportUsecase extends UseCase<ReportDetail, CreateReportParams> {
   CreateReportUsecase({required this._mapRepository});
 
+  static const _minPhotos = 1;
+  static const _maxPhotos = 4;
+
   final MapRepository _mapRepository;
 
   @override
-  Future<Either<Failure, ReportDetail>> call(CreateReportParams params) =>
-      _mapRepository.createReport(
-        categoryId: params.categoryId,
-        description: params.description,
-        photoPaths: params.photoPaths,
-        latitude: params.latitude,
-        longitude: params.longitude,
+  Future<Either<Failure, ReportDetail>> call(CreateReportParams params) async {
+    final photoCount = params.photoPaths.length;
+    if (photoCount < _minPhotos || photoCount > _maxPhotos) {
+      return const Left(
+        Failure.validation({
+          'photos': ['Attach between $_minPhotos and $_maxPhotos photos'],
+        }),
       );
+    }
+
+    return _mapRepository.createReport(
+      categoryId: params.categoryId,
+      description: params.description,
+      photoPaths: params.photoPaths,
+      latitude: params.latitude,
+      longitude: params.longitude,
+    );
+  }
 }

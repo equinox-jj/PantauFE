@@ -25,7 +25,7 @@ extension QueueReportDataModelMapper on QueueReportDataModel {
       categoryName: category?.name,
       status: ReportStatus.fromSlug(status),
       description: description,
-      photoUrl: photoUrl,
+      photoUrl: photoUrls?.firstOrNull,
       latitude: latitude,
       longitude: longitude,
       distanceMeter: distanceMeter,

@@ -15,7 +15,7 @@ import '../../../domain/entity/entity.dart';
 import '../location_picker/location_picker.dart';
 import 'listener/listener.dart';
 import 'provider/provider.dart';
-import 'widgets/create_report_widgets.dart';
+import 'widgets/widgets.dart';
 
 /// Photo slots state: the picked files (1-4) and the validation message for
 /// them.
@@ -421,7 +421,7 @@ class _SubmitSection extends StatelessWidget {
               const Gap(AppSpacing.xs2),
               Center(
                 child: Text(
-                  'Uploading photo and submitting report…',
+                  'Uploading photos and submitting report…',
                   style: AppTypography.body,
                 ),
               ),

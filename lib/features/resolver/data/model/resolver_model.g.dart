@@ -49,7 +49,9 @@ _QueueReportDataModel _$QueueReportDataModelFromJson(
       ? null
       : QueueCategoryModel.fromJson(json['category'] as Map<String, dynamic>),
   description: json['description'] as String?,
-  photoUrl: json['photo_url'] as String?,
+  photoUrls: (json['photo_urls'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
   status: json['status'] as String?,
   latitude: (json['latitude'] as num?)?.toDouble(),
   longitude: (json['longitude'] as num?)?.toDouble(),
@@ -63,7 +65,7 @@ Map<String, dynamic> _$QueueReportDataModelToJson(
   'id': instance.id,
   'category': instance.category,
   'description': instance.description,
-  'photo_url': instance.photoUrl,
+  'photo_urls': instance.photoUrls,
   'status': instance.status,
   'latitude': instance.latitude,
   'longitude': instance.longitude,

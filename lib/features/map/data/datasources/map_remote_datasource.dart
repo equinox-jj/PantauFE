@@ -154,17 +154,13 @@ class MapRemoteDataSourceImpl extends MapRemoteDataSource {
       'latitude': '$latitude',
       'longitude': '$longitude',
     });
-    for (final photoPath in photoPaths) {
-      formData.files.add(
-        MapEntry(
-          'photos',
-          await MultipartFile.fromFile(
-            photoPath,
-            filename: p.basename(photoPath),
-          ),
-        ),
-      );
-    }
+    final photoFiles = await Future.wait(
+      photoPaths.map(
+        (photoPath) =>
+            MultipartFile.fromFile(photoPath, filename: p.basename(photoPath)),
+      ),
+    );
+    formData.files.addAll(photoFiles.map((file) => MapEntry('photos', file)));
 
     final response = await _dioClient.post(
       ApiEndpoints.reports,

@@ -14,7 +14,7 @@ void main() {
               id: 'q1',
               category: const QueueCategoryModel(id: 3, name: 'Trash'),
               description: 'desc',
-              photoUrl: 'https://x/1.png',
+              photoUrls: ['https://x/1.png'],
               status: 'in_progress',
               latitude: -6.2,
               longitude: 106.8,

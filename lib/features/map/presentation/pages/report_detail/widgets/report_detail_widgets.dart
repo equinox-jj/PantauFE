@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:gap/gap.dart';
 
@@ -20,6 +21,19 @@ class ReportDetailPhoto extends StatefulWidget {
 class _ReportDetailPhotoState extends State<ReportDetailPhoto> {
   final _pageController = PageController();
   int _page = 0;
+
+  @override
+  void didUpdateWidget(covariant ReportDetailPhoto oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // A refresh can hand back a shorter (or reordered) gallery than the one
+    // the user was mid-swipe through; keep the dots and controller in sync
+    // with it instead of pointing past the new photo count.
+    if (_page != 0 && !listEquals(widget.photoUrls, oldWidget.photoUrls)) {
+      _page = 0;
+      if (_pageController.hasClients) _pageController.jumpToPage(0);
+    }
+  }
 
   @override
   void dispose() {

@@ -14,7 +14,7 @@ extension NearbyReportsDataModelMapper on NearbyReportsDataModel {
       id: id,
       category: category?.toEntity(),
       status: ReportStatus.fromSlug(status),
-      photoUrl: photoUrl,
+      photoUrl: photoUrls?.firstOrNull,
       latitude: latitude,
       longitude: longitude,
       createdAt: parseDate(createdAt),

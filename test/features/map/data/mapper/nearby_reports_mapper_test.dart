@@ -34,7 +34,7 @@ void main() {
           id: 'r1',
           category: NearbyReportsCategoryModel(id: 3, name: 'Pothole'),
           status: 'acknowledged',
-          photoUrl: 'https://example.com/p.jpg',
+          photoUrls: ['https://example.com/p.jpg'],
           latitude: -6.2,
           longitude: 106.8,
           createdAt: '2024-05-01T10:00:00.000Z',
