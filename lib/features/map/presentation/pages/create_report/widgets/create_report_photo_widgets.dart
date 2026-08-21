@@ -6,11 +6,9 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../../../core/theme/theme.dart';
 
-/// Camera-or-gallery chooser shown before picking a photo.
 class PhotoSourceSheet extends StatelessWidget {
   const PhotoSourceSheet({super.key});
 
-  /// Returns the chosen source, or null when dismissed.
   static Future<ImageSource?> show(BuildContext context) {
     return showModalBottomSheet<ImageSource>(
       context: context,
@@ -44,12 +42,9 @@ class PhotoSourceSheet extends StatelessWidget {
   }
 }
 
-/// Photo slots of the compose form: 1 to [maxPhotos] images as a grid of
-/// square tiles, each removable, plus an add tile while under the cap.
-///
-/// Before any fresh photo is picked on a resubmit, the rejected report's own
-/// photo is shown once as a dimmed reference tile that doubles as the add
-/// trigger — reference only, since filing always needs a fresh local file.
+/// On a resubmit, the rejected report's own photo is shown once as a dimmed
+/// reference tile that doubles as the add trigger — reference only, since
+/// filing always needs a fresh local file.
 class ReportPhotoPicker extends StatelessWidget {
   const ReportPhotoPicker({
     super.key,
@@ -62,23 +57,17 @@ class ReportPhotoPicker extends StatelessWidget {
   });
 
   final List<String> photoPaths;
-
-  /// Upper bound on [photoPaths]; the add tile hides once this is reached.
   final int maxPhotos;
 
-  /// Null disables adding (e.g. while submitting), rendering the disabled
-  /// affordance instead of an inert tap target.
+  /// Null renders the disabled affordance instead of an inert tap target
+  /// (e.g. while submitting).
   final VoidCallback? onAdd;
-
-  /// Null disables removal (e.g. while submitting).
   final ValueChanged<int>? onRemove;
-
-  /// Set after a failed validation pass.
   final String? errorText;
 
-  /// The photo of the report being resubmitted. Reference only — a report can
-  /// only ever be filed with fresh local files, so this never satisfies the
-  /// photo requirement on its own; picking the first new photo replaces it.
+  /// Reference only — a report can only ever be filed with fresh local
+  /// files, so this never satisfies the photo requirement on its own;
+  /// picking the first new photo replaces it.
   final String? initialPhotoUrl;
 
   static const double _tileSize = 84;
@@ -140,7 +129,6 @@ class ReportPhotoPicker extends StatelessWidget {
   }
 }
 
-/// One picked photo, with a corner button to remove it.
 class _PickedPhotoTile extends StatelessWidget {
   const _PickedPhotoTile({
     required this.path,
@@ -208,8 +196,7 @@ class _RemoveButton extends StatelessWidget {
   }
 }
 
-/// Empty tile that opens the picker; doubles as the only tile shown before
-/// the first photo is picked.
+/// Doubles as the only tile shown before the first photo is picked.
 class _AddPhotoTile extends StatelessWidget {
   const _AddPhotoTile({required this.onTap, required this.size});
 
@@ -251,9 +238,6 @@ class _AddPhotoTile extends StatelessWidget {
   }
 }
 
-/// A resubmission's starting point: the rejected report's own photo, dimmed
-/// under a prompt — reference only, since filing still needs fresh local
-/// files.
 class _PreviousPhotoSlot extends StatelessWidget {
   const _PreviousPhotoSlot({
     required this.photoUrl,

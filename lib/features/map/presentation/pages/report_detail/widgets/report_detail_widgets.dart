@@ -4,11 +4,7 @@ import 'package:gap/gap.dart';
 
 import '../../../../../../core/theme/theme.dart';
 
-/// The reporter's photos, with their own loading and error fallbacks. Fills
-/// the box it is given; the hero owns the sizing and the clipping.
-///
-/// A single photo renders directly; more than one becomes a swipeable
-/// gallery with a dot indicator.
+/// Fills the box it is given; the hero owns the sizing and the clipping.
 class ReportDetailPhoto extends StatefulWidget {
   const ReportDetailPhoto({super.key, required this.photoUrls});
 

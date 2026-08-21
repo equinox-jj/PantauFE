@@ -17,8 +17,6 @@ import 'listener/listener.dart';
 import 'provider/provider.dart';
 import 'widgets/widgets.dart';
 
-/// Photo slots state: the picked files (1-4) and the validation message for
-/// them.
 typedef _PhotoField = ({List<String> paths, String? error});
 
 String? _firstOrNull(List<String>? values) =>

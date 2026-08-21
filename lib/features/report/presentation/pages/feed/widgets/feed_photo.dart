@@ -3,8 +3,6 @@ import 'package:gap/gap.dart';
 
 import '../../../../../../core/theme/theme.dart';
 
-/// The photo band, with its own loading and error fallbacks.
-///
 /// Only the first photo shows — a card in a vertically scrolling list
 /// shouldn't add its own horizontal swipe gesture. When there's more than
 /// one, a count badge signals that the full gallery is one tap away on the
@@ -66,8 +64,6 @@ class _NetworkFeedPhoto extends StatelessWidget {
   }
 }
 
-/// "🖼 3" pill over the photo band, signalling more photos than the one
-/// shown.
 class _PhotoCountBadge extends StatelessWidget {
   const _PhotoCountBadge({required this.count});
 
